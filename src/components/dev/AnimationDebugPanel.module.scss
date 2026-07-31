@@ -1,0 +1,202 @@
+.panel {
+  position: fixed;
+  z-index: 100;
+  inset-block-end: 12px;
+  inset-inline-start: 12px;
+  inline-size: 168px;
+  max-block-size: calc(100vh - 24px);
+  padding: 11px;
+  overflow-y: auto;
+  color: #242424;
+  background: rgb(255 255 255 / 82%);
+  border: 1px solid rgb(23 23 23 / 13%);
+  border-radius: 8px;
+  box-shadow: 0 5px 20px rgb(0 0 0 / 9%);
+  font-family: 'Space Grotesk', system-ui, sans-serif;
+  font-size: 12px;
+  line-height: 1.25;
+  backdrop-filter: blur(10px);
+}
+
+.title,
+.sectionTitle {
+  margin: 0;
+  font: inherit;
+}
+
+.title {
+  font-size: 13px;
+  font-weight: 650;
+  letter-spacing: -0.01em;
+}
+
+.section {
+  margin-block-start: 10px;
+  padding-block-start: 9px;
+  border-block-start: 1px solid rgb(23 23 23 / 10%);
+}
+
+.sectionTitle {
+  margin-block-end: 7px;
+  color: rgb(36 36 36 / 58%);
+  font-size: 11px;
+  font-weight: 650;
+  letter-spacing: 0.055em;
+  text-transform: uppercase;
+}
+
+.motionActions {
+  display: grid;
+  gap: 4px;
+}
+
+.motionActions button {
+  min-block-size: 28px;
+  padding: 5px 8px;
+  color: inherit;
+  text-align: start;
+  background: rgb(255 255 255 / 55%);
+  border: 1px solid rgb(23 23 23 / 12%);
+  border-radius: 5px;
+  font: inherit;
+  cursor: pointer;
+}
+
+.motionActions button:hover {
+  background: rgb(255 255 255 / 92%);
+  border-color: rgb(23 23 23 / 24%);
+}
+
+.motionActions button:focus-visible {
+  outline: 2px solid #242424;
+  outline-offset: 1px;
+}
+
+.motionActions button:active {
+  background: rgb(235 235 232 / 90%);
+}
+
+.parameters,
+.debugOptions {
+  display: grid;
+  gap: 8px;
+}
+
+.parameter {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 4px 8px;
+  align-items: center;
+}
+
+.controlLabel {
+  min-inline-size: 0;
+  font-size: 11px;
+  white-space: nowrap;
+}
+
+.parameter output {
+  color: rgb(36 36 36 / 58%);
+  font: 11px/1 ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-variant-numeric: tabular-nums;
+}
+
+.parameter input[type='range'] {
+  grid-column: 1 / -1;
+  inline-size: 100%;
+  block-size: 12px;
+  margin: 0;
+  accent-color: #62625e;
+  cursor: pointer;
+  opacity: 0.78;
+}
+
+.parameter input[type='range']:disabled {
+  cursor: not-allowed;
+  opacity: 0.45;
+}
+
+.toggleRow {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  min-block-size: 20px;
+  cursor: pointer;
+}
+
+.toggleRow input {
+  position: absolute;
+  inline-size: 1px;
+  block-size: 1px;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.toggle {
+  position: relative;
+  inline-size: 26px;
+  block-size: 15px;
+  background: rgb(36 36 36 / 15%);
+  border: 1px solid rgb(36 36 36 / 12%);
+  border-radius: 999px;
+  opacity: 0.65;
+}
+
+.toggle::after {
+  position: absolute;
+  inset-block-start: 2px;
+  inset-inline-start: 2px;
+  inline-size: 9px;
+  block-size: 9px;
+  background: rgb(255 255 255 / 95%);
+  border-radius: 50%;
+  box-shadow: 0 1px 3px rgb(0 0 0 / 18%);
+  content: '';
+}
+
+.toggleRow input:checked + .toggle {
+  background: rgb(36 36 36 / 44%);
+}
+
+.toggleRow input:checked + .toggle::after {
+  transform: translateX(11px);
+}
+
+.toggleRow:has(input:disabled) {
+  cursor: not-allowed;
+  opacity: 0.62;
+}
+
+.toggleRow:has(input:focus-visible) .toggle {
+  outline: 2px solid #242424;
+  outline-offset: 1px;
+}
+
+.debugReadout {
+  display: grid;
+  gap: 5px;
+  margin: 0;
+  padding: 7px 0;
+  border-block: 1px solid rgb(23 23 23 / 8%);
+}
+
+.debugReadout div {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 6px;
+  align-items: baseline;
+}
+
+.debugReadout dt,
+.debugReadout dd {
+  margin: 0;
+  font-size: 10px;
+}
+
+.debugReadout dd {
+  overflow: hidden;
+  color: rgb(36 36 36 / 58%);
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

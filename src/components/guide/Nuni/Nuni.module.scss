@@ -1,0 +1,73 @@
+.nuni {
+  position: relative;
+  display: block;
+  inline-size: 100%;
+  aspect-ratio: 259.13 / 294.86;
+  margin-inline: auto;
+}
+
+.character,
+.body,
+.eyes,
+.eye,
+.shadow {
+  position: absolute;
+  display: block;
+  pointer-events: none;
+}
+
+.body img,
+.eye img,
+.shadow img {
+  display: block;
+  inline-size: 100%;
+  block-size: auto;
+  user-select: none;
+}
+
+.shadow {
+  z-index: 0;
+  inset-inline-start: 14.9%;
+  inset-block-end: 0;
+  inline-size: 70.2%;
+}
+
+.character {
+  z-index: 1;
+  inset-block-start: 0;
+  inset-inline-start: 0;
+  inline-size: 100%;
+  aspect-ratio: 259.13 / 254.12;
+}
+
+.body {
+  inset: 0;
+  inline-size: 100%;
+}
+
+.eyes {
+  z-index: 2;
+  inset-block-start: 35.13%;
+  inset-inline-start: 38.71%;
+  inline-size: 22.79%;
+  aspect-ratio: 59.05 / 13.03;
+}
+
+.eye {
+  inset-block-start: 0;
+}
+
+.eyeBlink {
+  display: block;
+  inline-size: 100%;
+}
+
+.leftEye {
+  inset-inline-start: 0;
+  inline-size: 22.05%;
+}
+
+.rightEye {
+  inset-inline-start: 78.66%;
+  inline-size: 21.34%;
+}
