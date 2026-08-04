@@ -1,0 +1,9 @@
+<svg preserveAspectRatio="none" overflow="visible" style="display: block;" width="248" height="269" viewBox="0 0 248 269" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path id="card-01-image" d="M232.5 0.5H15.5C7.21573 0.5 0.5 7.21573 0.5 15.5V253.5C0.5 261.784 7.21573 268.5 15.5 268.5H232.5C240.784 268.5 247.5 261.784 247.5 253.5V15.5C247.5 7.21573 240.784 0.5 232.5 0.5Z" fill="url(#paint0_linear_0_31)" stroke="#16150F" stroke-opacity="0.3"/>
+<defs>
+<linearGradient id="paint0_linear_0_31" x1="0.5" y1="0.5" x2="114.038" y2="262.104" gradientUnits="userSpaceOnUse">
+<stop stop-color="#EDE9E0"/>
+<stop offset="1" stop-color="#DCD7CC"/>
+</linearGradient>
+</defs>
+</svg>

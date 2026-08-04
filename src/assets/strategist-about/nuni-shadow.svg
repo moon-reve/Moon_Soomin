@@ -1,0 +1,9 @@
+<svg preserveAspectRatio="none" overflow="visible" style="display: block;" width="111.538" height="15.3365" viewBox="0 0 111.538 15.3365" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path id="nuni-shadow" d="M55.7692 15.3365C86.5697 15.3365 111.538 11.9033 111.538 7.66827C111.538 3.4332 86.5697 0 55.7692 0C24.9687 0 0 3.4332 0 7.66827C0 11.9033 24.9687 15.3365 55.7692 15.3365Z" fill="url(#paint0_radial_0_27)"/>
+<defs>
+<radialGradient id="paint0_radial_0_27" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(55.7692 7.66827) scale(55.7692 7.66827)">
+<stop stop-color="#16150F" stop-opacity="0.16"/>
+<stop offset="0.72" stop-color="#16150F" stop-opacity="0"/>
+</radialGradient>
+</defs>
+</svg>

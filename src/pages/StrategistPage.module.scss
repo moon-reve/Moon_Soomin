@@ -1,0 +1,2025 @@
+@font-face {
+  font-family: 'Bricolage Grotesque';
+  src: url('../assets/fonts/bricolage-grotesque-variable.woff2') format('woff2');
+  font-style: normal;
+  font-weight: 200 800;
+  font-stretch: 100%;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'JetBrains Mono';
+  src: url('../assets/fonts/jetbrains-mono-400.ttf') format('truetype');
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Pretendard';
+  src: url('../assets/fonts/pretendard-400.woff2') format('woff2');
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Pretendard';
+  src: url('../assets/fonts/pretendard-700.woff2') format('woff2');
+  font-style: normal;
+  font-weight: 700 900;
+  font-display: swap;
+}
+
+.strategistPage {
+  min-block-size: 100svh;
+  overflow-x: clip;
+  color: #16150f;
+  background: #ddd0ed;
+}
+
+.heroSection {
+  position: relative;
+  display: grid;
+  min-block-size: 100svh;
+  overflow: hidden;
+  place-items: start center;
+}
+
+.heroCanvas {
+  position: relative;
+  inline-size: 100vw;
+  block-size: 56.25vw;
+  overflow: hidden;
+  container-type: size;
+}
+
+.heroGround,
+.heroGrid {
+  position: absolute;
+  inset: 0;
+  display: block;
+  inline-size: 100%;
+  block-size: 100%;
+  pointer-events: none;
+}
+
+.heroGround {
+  z-index: 0;
+}
+
+.heroGrid {
+  z-index: 1;
+}
+
+.circleAnnotation {
+  position: absolute;
+  z-index: 2;
+  inset: 54.54% 67.29% 26.9% -0.02%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  container-type: size;
+  transform-origin: center;
+}
+
+.copyAccent img,
+.heroDotLinks img,
+.heroDotField img,
+.heroNuni img,
+.sectionNavigation img {
+  display: block;
+  inline-size: 100%;
+  block-size: 100%;
+  user-select: none;
+}
+
+.circleAnnotation img {
+  display: block;
+  inline-size: hypot(99.8663cqw, -1.37289cqh);
+  block-size: hypot(0.133731cqw, 98.6271cqh);
+  max-inline-size: none;
+  flex: none;
+  user-select: none;
+  transform: rotate(-0.25deg) skewX(-0.01deg);
+  transform-origin: center;
+}
+
+.heroKicker {
+  position: absolute;
+  z-index: 4;
+  inset-block-start: 10.15625cqw;
+  inset-inline-start: 2.395833cqw;
+  display: flex;
+  align-items: center;
+  gap: 0.885417cqw;
+}
+
+.heroKicker img {
+  display: block;
+  inline-size: 0.46875cqw;
+  block-size: 0.46875cqw;
+  flex: none;
+  user-select: none;
+}
+
+.heroKicker p {
+  margin: 0;
+  color: rgb(22 21 15 / 55%);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.833333cqw;
+  font-weight: 400;
+  line-height: normal;
+  white-space: nowrap;
+}
+
+.heroTitle {
+  position: absolute;
+  z-index: 3;
+  inset-block-start: 21.2037%;
+  inset-inline-start: 2.0833%;
+  color: #16150f;
+  font-family: 'Bricolage Grotesque', sans-serif;
+  font-size: 10.4167cqw;
+  font-weight: 800;
+  font-variation-settings: 'opsz' 96, 'wdth' 100;
+  letter-spacing: -0.3125cqw;
+  line-height: 0.9;
+  white-space: nowrap;
+}
+
+.heroTitle p {
+  margin: 0;
+}
+
+.copyAccent {
+  position: absolute;
+  z-index: 4;
+  inset-block-start: 63.7963%;
+  inset-inline-start: 24.8958%;
+  inline-size: 7.96875%;
+  block-size: 9.3519%;
+}
+
+.beliefCopy {
+  position: absolute;
+  z-index: 4;
+  inset-block-start: 78.5185%;
+  inset-inline-start: 2.5%;
+  margin: 0;
+  color: #000;
+  font-family: 'SF Pro Text', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 0.8333cqw;
+  font-weight: 400;
+  line-height: 1.6;
+  white-space: nowrap;
+}
+
+.heroNuni {
+  position: fixed;
+  z-index: 60;
+  inset-block-start: 0;
+  inset-inline-start: 0;
+  inline-size: 6.96875vw;
+  block-size: 7.552083vw;
+  pointer-events: none;
+  transform: translate3d(73.0208vw, 10.7813vw, 0);
+  transform-origin: 0 0;
+  will-change: transform;
+}
+
+.heroNuniCharacter,
+.heroNuniBody,
+.heroNuniShading,
+.heroNuniCheeks,
+.heroNuniMouth,
+.heroNuniEyes,
+.heroNuniShadow {
+  position: absolute;
+  display: block;
+  pointer-events: none;
+}
+
+.heroNuniCharacter {
+  inset: 0 0 auto;
+  inline-size: 100%;
+  block-size: 88.9586%;
+}
+
+.heroNuniBody {
+  z-index: 1;
+  inset: -0.18%;
+}
+
+.heroNuniShading {
+  z-index: 2;
+  inset-block-start: -3.092%;
+  inset-inline-start: -1.719%;
+  inline-size: 103.126%;
+  block-size: 105.109%;
+  mask-image: var(--hero-nuni-mask);
+  mask-repeat: no-repeat;
+  mask-position: 55% 60.5%;
+  mask-size: 96.969% 95.14%;
+}
+
+.heroNuniCheeks {
+  z-index: 3;
+  inset-block-start: 47.46%;
+  inset-inline-start: 20.03%;
+  inline-size: 59.63%;
+  block-size: 8.73%;
+}
+
+.heroNuniMouth {
+  z-index: 4;
+  inset-block-start: 50.19%;
+  inset-inline-start: 47.04%;
+  inline-size: 5.963%;
+  block-size: 0.986%;
+}
+
+.heroNuniMouth img {
+  position: absolute;
+  inset: -18.67% -2.98%;
+  inline-size: 105.96%;
+  block-size: 137.34%;
+}
+
+.heroNuniEyes {
+  z-index: 5;
+  inset-block-start: 42.78%;
+  inset-inline-start: 33.49%;
+  inline-size: 32.62%;
+  block-size: 8.44%;
+}
+
+.heroNuniEyes img {
+  position: absolute;
+  inset: -2.18% -0.54%;
+  inline-size: 101.08%;
+  block-size: 104.36%;
+}
+
+.heroNuniShadow {
+  z-index: 0;
+  inset-block-start: 90.35%;
+  inset-inline-start: 11.76%;
+  inline-size: 76.12%;
+  block-size: 9.66%;
+}
+
+.sectionNavigation {
+  position: fixed;
+  z-index: 70;
+  inset-block-start: 50%;
+  inset-inline-end: 20px;
+  display: block;
+  inline-size: 4.257813cqw;
+  block-size: 12.083333cqw;
+  transform: translateY(-50%);
+}
+
+.sectionNavigationLayer {
+  position: absolute;
+  inset: 0;
+  inline-size: 100%;
+  block-size: 100%;
+}
+
+.sectionNavigationInverse {
+  color: #fff;
+  clip-path: inset(100% 0 0 0);
+  pointer-events: none;
+}
+
+.sectionNavigation a {
+  position: absolute;
+  inset-inline-end: 0;
+  display: flex;
+  inline-size: 100%;
+  block-size: 0.885417cqw;
+  align-items: flex-start;
+  justify-content: flex-end;
+  color: rgb(22 21 15 / 42%);
+  font-family: 'SF Pro Text', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 0.7318cqw;
+  font-style: italic;
+  font-weight: 400;
+  line-height: 1.2;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.sectionNavigation a:nth-child(1) {
+  inset-block-start: 0;
+}
+
+.sectionNavigation a:nth-child(2) {
+  inset-block-start: 2.239583cqw;
+}
+
+.sectionNavigation a:nth-child(3) {
+  inset-block-start: 4.479167cqw;
+}
+
+.sectionNavigation a:nth-child(4) {
+  inset-block-start: 6.71875cqw;
+}
+
+.sectionNavigation a:nth-child(5) {
+  inset-block-start: 8.958333cqw;
+}
+
+.sectionNavigation a:nth-child(6) {
+  inset-block-start: 11.197917cqw;
+}
+
+.sectionNavigation a > span:first-child {
+  position: absolute;
+  inset-block-start: 0;
+  inset-inline-end: 1.3932cqw;
+  text-align: right;
+}
+
+.sectionNavigation a.activeSection {
+  color: #16150f;
+}
+
+.sectionNavigationInverse a {
+  color: rgb(255 255 255 / 42%);
+}
+
+.sectionNavigationInverse a.activeSection {
+  color: #fff;
+}
+
+.sectionNavigationInverse .sectionDot img {
+  filter: brightness(0) invert(1);
+}
+
+.sectionDot {
+  position: absolute;
+  inset-block-start: 0.3843cqh;
+  inset-inline-end: 0.0391cqw;
+  display: block;
+  inline-size: 0.5208cqw;
+  block-size: 0.9259cqh;
+}
+
+.sectionDot img {
+  position: absolute;
+  inset: -5%;
+  inline-size: 110%;
+  block-size: 110%;
+  max-inline-size: none;
+}
+
+.sectionNavigation .activeSection .sectionDot {
+  inset-block-start: 0.3148cqh;
+  inset-inline-end: 0;
+  inline-size: 0.599cqw;
+  block-size: 1.0648cqh;
+}
+
+.sectionNavigation .activeSection .sectionDot img {
+  inset: 0;
+  inline-size: 100%;
+  block-size: 100%;
+}
+
+.heroDotLinks {
+  position: absolute;
+  z-index: 5;
+  inset-block-start: 16.9815%;
+  inset-inline-start: 39.71875%;
+  inline-size: 18.0886%;
+  block-size: 74.3148%;
+  pointer-events: none;
+}
+
+.heroDotLinks img {
+  position: absolute;
+  inset: 0 -0.1728%;
+  inline-size: 100.3456%;
+}
+
+.heroDotField {
+  position: absolute;
+  z-index: 5;
+  inset-block-start: 16.5463%;
+  inset-inline-start: 34.1979%;
+  inline-size: 57.2292%;
+  block-size: 75.1944%;
+  pointer-events: none;
+}
+
+.aboutSection {
+  position: relative;
+  inline-size: 100%;
+  overflow: hidden;
+}
+
+.aboutCanvas {
+  position: relative;
+  inline-size: 100vw;
+  block-size: 36.5625vw;
+  overflow: hidden;
+  container-type: size;
+  background: #fffeea;
+}
+
+.aboutGround,
+.aboutGrid {
+  position: absolute;
+  inset-block-start: 0;
+  inset-inline-start: 0;
+  display: block;
+  inline-size: 100%;
+  pointer-events: none;
+  user-select: none;
+}
+
+.aboutGround {
+  z-index: 0;
+  block-size: 100%;
+}
+
+.aboutGrid {
+  z-index: 1;
+  block-size: 56.25vw;
+  opacity: 0.3;
+}
+
+.skillsTicker {
+  position: absolute;
+  z-index: 8;
+  inset: 0 0 auto;
+  block-size: 4.84375cqw;
+  overflow: hidden;
+  color: #ddd0ed;
+  background: #000;
+}
+
+.tickerTrack,
+.tickerSequence,
+.tickerItem {
+  display: flex;
+  align-items: center;
+}
+
+.tickerTrack {
+  inline-size: max-content;
+  block-size: 100%;
+  animation: about-ticker 55s linear infinite;
+  will-change: transform;
+}
+
+.tickerSequence {
+  flex: none;
+  block-size: 100%;
+}
+
+.tickerItem {
+  flex: none;
+  block-size: 100%;
+  gap: 0.520833cqw;
+  margin-inline-end: 0.520833cqw;
+}
+
+.tickerItem span {
+  display: flex;
+  block-size: 100%;
+  align-items: center;
+  justify-content: center;
+  padding: 1.242813cqw;
+  font-family: 'Bricolage Grotesque', sans-serif;
+  font-size: 1.988542cqw;
+  font-weight: 800;
+  font-variation-settings: 'opsz' 96, 'wdth' 100;
+  line-height: normal;
+  white-space: nowrap;
+}
+
+.tickerItem img {
+  display: block;
+  inline-size: 3.645833cqw;
+  block-size: 3.645833cqw;
+  flex: none;
+  user-select: none;
+}
+
+@keyframes about-ticker {
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.aboutLabel {
+  position: absolute;
+  z-index: 4;
+  inset-block-start: 13.020833cqw;
+  inset-inline-start: 11.822917cqw;
+  display: flex;
+  align-items: center;
+  gap: 0.572917cqw;
+}
+
+.aboutLabel > span {
+  display: block;
+  inline-size: 0.46875cqw;
+  block-size: 0.46875cqw;
+  background: #16150f;
+  clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%);
+}
+
+.aboutLabel p {
+  margin: 0;
+  color: #000;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.729167cqw;
+  font-weight: 400;
+  letter-spacing: 0.13125cqw;
+  line-height: normal;
+  white-space: nowrap;
+}
+
+.aboutTitle {
+  display: contents;
+  color: #000;
+  font-family: 'Bricolage Grotesque', sans-serif;
+  font-size: 5cqw;
+  font-weight: 800;
+  font-variation-settings: 'opsz' 96, 'wdth' 100;
+  letter-spacing: -0.25cqw;
+  line-height: 0.9;
+}
+
+.aboutTitle > p,
+.aboutTitle > div {
+  position: absolute;
+  z-index: 4;
+  margin: 0;
+}
+
+.aboutTitle > p {
+  inset-block-start: 15.104167cqw;
+  inset-inline-start: 11.822917cqw;
+  white-space: nowrap;
+}
+
+.aboutTitle > div {
+  inset-block-start: 19.479167cqw;
+  inset-inline-start: 11.822917cqw;
+  inline-size: 21.302083cqw;
+  text-align: center;
+}
+
+.aboutTitle > div p {
+  margin: 0;
+}
+
+.aboutUnderline {
+  position: absolute;
+  z-index: 5;
+  inset-block-start: 23.984375cqw;
+  inset-inline-start: 11.744792cqw;
+  display: block;
+  inline-size: 21.71875cqw;
+  block-size: 0.520833cqw;
+  max-inline-size: none;
+  user-select: none;
+}
+
+.aboutBiography {
+  position: absolute;
+  z-index: 4;
+  inset-block-start: 20.520833cqw;
+  inset-inline-start: 57.604167cqw;
+  inline-size: 26.666667cqw;
+  block-size: 7.838542cqw;
+}
+
+.aboutCopy {
+  position: absolute;
+  inset-block-start: 0;
+  inset-inline-start: 0;
+  margin: 0;
+  color: #16150f;
+  font-family: 'SF Pro Text', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 0.833333cqw;
+  font-weight: 400;
+  line-height: 1.6;
+  white-space: nowrap;
+}
+
+.aboutTags {
+  position: absolute;
+  inset-block-start: 7.109375cqw;
+  inset-inline-start: 0;
+  display: flex;
+  align-items: center;
+  gap: 1.666667cqw;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.aboutTags li {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.520833cqw;
+}
+
+.aboutTags li > span {
+  display: block;
+  inline-size: 0.260417cqw;
+  block-size: 0.260417cqw;
+  flex: none;
+  background: #000;
+  transform: rotate(45deg);
+}
+
+.aboutTags p {
+  margin: 0;
+  color: #16150f;
+  font-family: 'Pretendard', sans-serif;
+  font-size: 0.625cqw;
+  font-weight: 400;
+  letter-spacing: 0.0375cqw;
+  line-height: normal;
+  white-space: nowrap;
+}
+
+.journeySection {
+  position: relative;
+  inline-size: 100%;
+  overflow: hidden;
+}
+
+.journeyCanvas {
+  position: relative;
+  inline-size: 100vw;
+  block-size: 56.25vw;
+  overflow: hidden;
+  container-type: size;
+  background: #242424;
+}
+
+.journeyCanvasLight {
+  background: #ddd0ed;
+}
+
+.journeyCanvasWhite {
+  background: #fff;
+}
+
+.journeyGround,
+.journeyGrid {
+  position: absolute;
+  inset-block-start: 0;
+  inset-inline-start: 0;
+  display: block;
+  inline-size: 100%;
+  pointer-events: none;
+  user-select: none;
+}
+
+.journeyGround {
+  z-index: 0;
+  block-size: 100%;
+}
+
+.journeyGrid {
+  z-index: 1;
+  block-size: 56.328125cqw;
+}
+
+.journeyGhostNumber {
+  position: absolute;
+  z-index: 2;
+  inset-block-start: 29.649635cqw;
+  inset-inline-start: 74.479167cqw;
+  margin: 0;
+  color: rgb(22 21 15 / 9%);
+  font-family: 'SF Pro Text', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 26.027448cqw;
+  font-weight: 900;
+  letter-spacing: -3.123292cqw;
+  line-height: normal;
+  white-space: nowrap;
+}
+
+.journeyGhostNumberWhite {
+  color: rgb(255 255 255 / 9%);
+}
+
+.journeyChapter {
+  position: absolute;
+  z-index: 3;
+  inset-block-start: 15.156245cqw;
+  inset-inline-start: 14.010417cqw;
+  inline-size: 18.541667cqw;
+  block-size: 30.052083cqw;
+  color: #fff;
+}
+
+.journeyChapterLight {
+  color: #16150f;
+}
+
+.journeyEyebrow,
+.journeyCategory,
+.journeyHeadline,
+.journeyBody,
+.journeyDuration {
+  position: absolute;
+  margin: 0;
+}
+
+.journeyEyebrow,
+.journeyCategory,
+.journeyBeats,
+.journeyDuration {
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 400;
+}
+
+.journeyEyebrow {
+  inset-block-start: 0;
+  inset-inline-start: 0.260417cqw;
+  color: rgb(255 255 255 / 55%);
+  font-size: 0.729167cqw;
+  letter-spacing: 0.13125cqw;
+  line-height: normal;
+  white-space: nowrap;
+}
+
+.journeyDurationCompact {
+  inline-size: auto;
+  padding-inline: 1.5625cqw;
+}
+
+.journeyDurationInverse {
+  color: #fff;
+  border-color: #fff;
+}
+
+.journeyCategory {
+  inset-block-start: 2.447917cqw;
+  inset-inline-start: 0.3125cqw;
+  font-size: 0.729167cqw;
+  letter-spacing: 0.13125cqw;
+  line-height: normal;
+  white-space: nowrap;
+}
+
+.journeyHeadline {
+  inset-block-start: 4.0625cqw;
+  inset-inline-start: 0;
+  color: #fff;
+  font-family: 'Bricolage Grotesque', sans-serif;
+  font-size: 5cqw;
+  font-weight: 800;
+  font-variation-settings: 'opsz' 96, 'wdth' 100;
+  letter-spacing: 0;
+  line-height: 0.9;
+  white-space: nowrap;
+}
+
+.journeyBody {
+  inset-block-start: 14.010417cqw;
+  inset-inline-start: 0.3125cqw;
+  color: #fff;
+  font-family: 'Pretendard', sans-serif;
+  font-size: 0.833333cqw;
+  font-weight: 400;
+  letter-spacing: -0.016667cqw;
+  line-height: 1.9;
+  white-space: nowrap;
+}
+
+.journeyBeats {
+  position: absolute;
+  inset-block-start: 21.614583cqw;
+  inset-inline-start: 0.3125cqw;
+  display: flex;
+  flex-direction: column;
+  gap: 0.572917cqw;
+  margin: 0;
+  padding: 0;
+  color: rgb(255 255 255 / 70%);
+  font-size: 0.729167cqw;
+  letter-spacing: 0.036458cqw;
+  line-height: 0.9375cqw;
+  list-style: none;
+  white-space: nowrap;
+}
+
+.journeyDuration {
+  inset-block-start: 28.385417cqw;
+  inset-inline-start: 0.416667cqw;
+  display: flex;
+  inline-size: 12.135417cqw;
+  block-size: 1.614583cqw;
+  align-items: center;
+  justify-content: center;
+  color: #16150f;
+  border: 0.052083cqw solid #000;
+  border-radius: 2.5cqw;
+  font-size: 0.625cqw;
+  letter-spacing: -0.03125cqw;
+  line-height: normal;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.journeyPhotoFrame {
+  position: absolute;
+  z-index: 3;
+  inset-block-start: 15.364583cqw;
+  inset-inline-start: 51.145833cqw;
+  inline-size: 36.666667cqw;
+  block-size: 28.854167cqw;
+  margin: 0;
+}
+
+.journeyPhoto,
+.journeyPhotoBorder,
+.journeyCropMarks,
+.journeyRulers {
+  position: absolute;
+  display: block;
+  max-inline-size: none;
+  user-select: none;
+}
+
+.journeyPhoto {
+  z-index: 0;
+  inset-block-start: 1.666667cqw;
+  inset-inline-start: 1.666667cqw;
+  inline-size: 33.333333cqw;
+  block-size: 25.520833cqw;
+}
+
+.journeyPhotoBorder {
+  z-index: 1;
+  inset-block-start: 1.640625cqw;
+  inset-inline-start: 1.666667cqw;
+  inline-size: 33.333333cqw;
+  block-size: 25.572917cqw;
+  pointer-events: none;
+}
+
+.journeyCropMarks {
+  z-index: 2;
+  inset: 0;
+  inline-size: 36.666667cqw;
+  block-size: 28.854167cqw;
+  pointer-events: none;
+}
+
+.journeyRulers {
+  z-index: 3;
+  inset-block-start: 0.9375cqw;
+  inset-inline-start: 0.9375cqw;
+  inline-size: 33.229167cqw;
+  block-size: 25.130208cqw;
+  pointer-events: none;
+}
+
+.journeyPhotoFrame figcaption {
+  position: absolute;
+  z-index: 4;
+  inset-block-start: 28.125cqw;
+  inset-inline-end: 2.708334cqw;
+  margin: 0;
+  color: rgb(22 21 15 / 45%);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.625cqw;
+  font-style: normal;
+  font-weight: 400;
+  letter-spacing: 0.18em;
+  line-height: normal;
+  text-align: right;
+  white-space: nowrap;
+}
+
+.journeyPhotoFrame .journeyCaptionInverse {
+  color: rgb(255 255 255 / 45%);
+}
+
+.journeyChapterLight .journeyEyebrow {
+  color: rgb(22 21 15 / 55%);
+}
+
+.journeyChapterLight .journeyCategory,
+.journeyChapterLight .journeyHeadline,
+.journeyChapterLight .journeyBody {
+  color: #16150f;
+}
+
+.journeyChapterLight .journeyBeats {
+  color: rgb(22 21 15 / 70%);
+}
+
+.projectsIntroSection {
+  position: relative;
+  inline-size: 100%;
+  overflow: hidden;
+}
+
+.projectsIntroCanvas {
+  position: relative;
+  inline-size: 100vw;
+  block-size: 56.25vw;
+  overflow: hidden;
+  container-type: size;
+  background: #ddd0ed;
+}
+
+.projectsIntroGround,
+.projectsIntroGrid {
+  position: absolute;
+  inset-block-start: 0;
+  inset-inline-start: 0;
+  display: block;
+  inline-size: 100%;
+  pointer-events: none;
+  user-select: none;
+}
+
+.projectsIntroGround {
+  z-index: 0;
+  block-size: 100%;
+}
+
+.projectsIntroGrid {
+  z-index: 1;
+  block-size: 56.328125cqw;
+}
+
+.projectsIntroChapter {
+  position: absolute;
+  z-index: 3;
+  inset-block-start: 15.15625cqw;
+  inset-inline-start: 14.010417cqw;
+  inline-size: 20cqw;
+  block-size: 18.75cqw;
+  color: #16150f;
+}
+
+.projectsIntroEyebrow,
+.projectsIntroCategory,
+.projectsIntroHeadline,
+.projectsIntroBody {
+  position: absolute;
+  margin: 0;
+}
+
+.projectsIntroEyebrow,
+.projectsIntroCategory {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.729167cqw;
+  font-weight: 400;
+  letter-spacing: 0.13125cqw;
+  line-height: normal;
+  white-space: nowrap;
+}
+
+.projectsIntroEyebrow {
+  inset-block-start: 0;
+  inset-inline-start: 0.260417cqw;
+  color: rgb(22 21 15 / 55%);
+}
+
+.projectsIntroCategory {
+  inset-block-start: 2.447917cqw;
+  inset-inline-start: 0.3125cqw;
+  color: #16150f;
+}
+
+.projectsIntroHeadline {
+  inset-block-start: 4.0625cqw;
+  inset-inline-start: 0;
+  color: #16150f;
+  font-family: 'Bricolage Grotesque', sans-serif;
+  font-size: 5cqw;
+  font-weight: 800;
+  font-variation-settings: 'opsz' 96, 'wdth' 100;
+  letter-spacing: 0;
+  line-height: 0.9;
+  white-space: nowrap;
+}
+
+.projectsIntroBody {
+  inset-block-start: 14.010417cqw;
+  inset-inline-start: 0.3125cqw;
+  color: #16150f;
+  font-family: 'Pretendard', sans-serif;
+  font-size: 0.833333cqw;
+  font-weight: 400;
+  letter-spacing: -0.016667cqw;
+  line-height: 1.9;
+  white-space: nowrap;
+}
+
+.projectsDeck {
+  position: absolute;
+  z-index: 3;
+  inset: 0;
+  outline: none;
+  pointer-events: none;
+}
+
+.projectsDeck:focus-visible::after {
+  position: absolute;
+  z-index: 4;
+  inset-block-start: 13.802083cqw;
+  inset-inline-start: 47.083333cqw;
+  inline-size: 40.104167cqw;
+  block-size: 27.083333cqw;
+  border: 0.104167cqw solid rgb(22 21 15 / 45%);
+  border-radius: 1.25cqw;
+  content: '';
+  pointer-events: none;
+}
+
+.projectCardSlot {
+  position: absolute;
+  inline-size: 15.625cqw;
+  block-size: 22.708333cqw;
+  margin: 0;
+  cursor: pointer;
+  pointer-events: auto;
+  transform-origin: center;
+}
+
+.projectsCard03 {
+  z-index: 0;
+  inset-block-start: 17.510417cqw;
+  inset-inline-start: 58.739583cqw;
+  transform: rotate(-4deg);
+}
+
+.projectsCard02 {
+  z-index: 1;
+  inset-block-start: 15.5cqw;
+  inset-inline-start: 61.479167cqw;
+  transform: rotate(2deg);
+}
+
+.projectsCard01 {
+  z-index: 2;
+  inset-block-start: 14.947917cqw;
+  inset-inline-start: 59.739583cqw;
+}
+
+.projectsDeckExpanded .projectsCard03 {
+  inset-block-start: 16.453125cqw;
+  inset-inline-start: 48.296875cqw;
+}
+
+.projectsDeckExpanded .projectsCard02 {
+  inset-block-start: 15.109375cqw;
+  inset-inline-start: 70.518229cqw;
+}
+
+.projectsDeckExpanded .projectsCard01 {
+  inset-inline-start: 59.270833cqw;
+}
+
+.projectCardStage {
+  position: relative;
+  inline-size: 100%;
+  block-size: 100%;
+  transform-style: preserve-3d;
+}
+
+.projectCardFace {
+  position: absolute;
+  inset-block-start: 0;
+  inset-inline-start: 0;
+  inline-size: 100%;
+  margin: 0;
+  backface-visibility: hidden;
+}
+
+.projectCardFrontFace {
+  block-size: 100%;
+}
+
+.projectCardBackFace {
+  block-size: 21.875cqw;
+  overflow: hidden;
+  color: #000;
+  background: #fffeea;
+  border: 0.052083cqw solid #000;
+  border-radius: 1.25cqw;
+  transform: rotateY(180deg);
+}
+
+.projectCardShadow,
+.projectCardShell,
+.projectCoverBorder {
+  position: absolute;
+  display: block;
+  max-inline-size: none;
+  pointer-events: none;
+  user-select: none;
+}
+
+.projectCardShadow {
+  inset: 3.67% 3.33% 0;
+  inline-size: 93.34%;
+  block-size: 96.33%;
+}
+
+.projectCardShell {
+  inset: 0 0 3.67%;
+  inline-size: 100%;
+  block-size: 96.33%;
+}
+
+.projectCardCover {
+  position: absolute;
+  z-index: 1;
+  inset-block-start: 6.42%;
+  inset-inline-start: 9.33%;
+  inline-size: 82.34%;
+  block-size: 61.47%;
+  overflow: hidden;
+  border-radius: 0.78125cqw;
+}
+
+.projectCoverBorder {
+  z-index: 4;
+  inset: 0;
+  inline-size: 100%;
+  block-size: 100%;
+}
+
+.routeCoverArtwork {
+  position: absolute;
+  z-index: 0;
+  inset-block-start: -4.18%;
+  inset-inline-start: -23.56%;
+  display: block;
+  inline-size: 139.11%;
+  block-size: 128.21%;
+  max-inline-size: none;
+}
+
+.routeCoverBrand {
+  position: absolute;
+  z-index: 3;
+  inset: 41.42% 12.47% 41.42% 12.96%;
+  display: flex;
+  align-items: center;
+  gap: 7.76%;
+}
+
+.routeCoverBrand img {
+  display: block;
+  inline-size: 30.23%;
+  block-size: 77.8%;
+}
+
+.routeCoverBrand span {
+  color: #1a1c1e;
+  font-family: 'Pretendard', sans-serif;
+  font-size: 2cqw;
+  font-weight: 700;
+  letter-spacing: 0.041667cqw;
+  line-height: normal;
+}
+
+.marshallCoverPhoto {
+  position: absolute;
+  inset-block-start: 0;
+  inset-inline-start: -68.15%;
+  display: block;
+  inline-size: 168.15%;
+  block-size: 100%;
+  max-inline-size: none;
+}
+
+.marshallCoverRule {
+  position: absolute;
+  z-index: 2;
+  inset-block-start: 0;
+  display: block;
+  inline-size: 0.013021cqw;
+  block-size: 100%;
+}
+
+.marshallCoverTitle {
+  position: absolute;
+  z-index: 3;
+  inset-block-start: 69.03%;
+  inset-inline-start: 10.12%;
+  color: rgb(194 135 36 / 78%);
+  font-family: 'Amplify Personal Use Only', 'Brush Script MT', cursive;
+  font-size: 3.90625cqw;
+  line-height: normal;
+  white-space: nowrap;
+}
+
+.vinerCoverPhoto {
+  position: absolute;
+  inset: 0;
+  display: block;
+  inline-size: 100%;
+  block-size: 100%;
+  max-inline-size: none;
+}
+
+.projectCardLabel,
+.projectCardTitle,
+.projectCardFlipLabel {
+  position: absolute;
+  z-index: 2;
+  margin: 0;
+  color: #16150f;
+  line-height: normal;
+  white-space: nowrap;
+}
+
+.projectCardLabel {
+  inset-block-start: 73.94%;
+  inset-inline-start: 9.33%;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.677083cqw;
+  font-style: italic;
+  font-weight: 400;
+}
+
+.projectCardTitle {
+  inset-block-start: 78.46%;
+  inset-inline-start: 9.33%;
+}
+
+.projectCardTitleroute {
+  font-family: 'Pretendard', sans-serif;
+  font-size: 0.9375cqw;
+  font-weight: 800;
+  letter-spacing: -0.01875cqw;
+}
+
+.projectCardTitlemarshall {
+  font-family: 'Amplify Personal Use Only', 'Brush Script MT', cursive;
+  font-size: 1.666667cqw;
+}
+
+.projectCardTitleviner {
+  inset-block-start: 78.9%;
+  color: #831317;
+  font-family: 'Delmon Delicate', Georgia, serif;
+  font-size: 1.5625cqw;
+  letter-spacing: -0.03125cqw;
+  line-height: 1;
+}
+
+.projectCardFlipLabel {
+  inset-block-start: 86.1%;
+  inset-inline-end: 9.33%;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.677083cqw;
+  font-weight: 400;
+  letter-spacing: 0.067708cqw;
+  text-align: right;
+}
+
+.routeBackBrand {
+  position: absolute;
+  inset-block-start: 2.708333cqw;
+  inset-inline-start: 2.03125cqw;
+  display: flex;
+  align-items: center;
+  gap: 0.9375cqw;
+}
+
+.routeBackBrand span {
+  display: grid;
+  inline-size: 2.551458cqw;
+  block-size: 2.551615cqw;
+  place-items: center;
+  background: #e8941a;
+  border-radius: 0.471094cqw;
+}
+
+.routeBackBrand img {
+  display: block;
+  inline-size: 1.787307cqw;
+  block-size: 1.140557cqw;
+}
+
+.routeBackBrand p {
+  margin: 0;
+  color: #1a1c1e;
+  font-family: 'Pretendard', sans-serif;
+  font-size: 2.782604cqw;
+  font-weight: 700;
+  letter-spacing: -0.052083cqw;
+  line-height: normal;
+}
+
+.marshallBackBrand {
+  position: absolute;
+  inset-block-start: 1.302083cqw;
+  inset-inline-start: 2.291667cqw;
+  inline-size: 11.041667cqw;
+  margin: 0;
+  color: #000;
+  font-family: 'Amplify Personal Use Only', 'Brush Script MT', cursive;
+  font-size: 4.21875cqw;
+  line-height: normal;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.vinerBackBrand {
+  position: absolute;
+  inset-block-start: 1.822917cqw;
+  inset-inline-start: 2.395833cqw;
+  display: block;
+  inline-size: 10.9375cqw;
+  block-size: 2.053089cqw;
+}
+
+.projectBackProblemLabel,
+.projectBackApproachLabel,
+.projectBackOpen,
+.projectBackProblemCopy,
+.projectBackApproachCopy {
+  position: absolute;
+  margin: 0;
+  color: #000;
+  line-height: normal;
+  white-space: nowrap;
+}
+
+.projectBackProblemLabel,
+.projectBackApproachLabel,
+.projectBackOpen {
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 400;
+}
+
+.projectBackProblemLabel,
+.projectBackApproachLabel {
+  inset-inline-start: 1.458333cqw;
+  font-size: 0.677083cqw;
+  letter-spacing: 0.067708cqw;
+}
+
+.projectBackProblemLabel {
+  inset-block-start: 6.09375cqw;
+}
+
+.projectBackApproachLabel {
+  inset-block-start: 11.875cqw;
+}
+
+.projectBackProblemCopy,
+.projectBackApproachCopy {
+  inset-inline-start: 1.927083cqw;
+  font-family: 'SF Pro Text', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 0.625cqw;
+  font-weight: 400;
+  letter-spacing: -0.008047cqw;
+}
+
+.projectBackProblemCopy {
+  inset-block-start: 7.5cqw;
+}
+
+.projectBackApproachCopy {
+  inset-block-start: 13.4375cqw;
+  letter-spacing: -0.00625cqw;
+}
+
+.projectBackOpen {
+  inset-block-start: 17.760417cqw;
+  inset-inline-start: 50%;
+  font-size: 0.78125cqw;
+  font-weight: 500;
+  letter-spacing: 0.078125cqw;
+  transform: translateX(-50%);
+}
+
+.projectCardBackRoute .projectBackProblemLabel {
+  inset-block-start: 5.572917cqw;
+}
+
+.projectCardBackRoute .projectBackProblemCopy {
+  inset-block-start: 6.979167cqw;
+}
+
+.projectCardBackRoute .projectBackApproachLabel {
+  inset-block-start: 11.614583cqw;
+}
+
+.projectCardBackRoute .projectBackApproachCopy {
+  inset-block-start: 13.177083cqw;
+}
+
+.skillsSection {
+  position: relative;
+  inline-size: 100%;
+  overflow: hidden;
+}
+
+.skillsCanvas {
+  position: relative;
+  inline-size: 100vw;
+  block-size: 56.25vw;
+  overflow: hidden;
+  container-type: size;
+  background: #ddd0ed;
+}
+
+.skillsGround,
+.skillsGrid {
+  position: absolute;
+  inset-block-start: 0;
+  inset-inline-start: 0;
+  display: block;
+  inline-size: 100%;
+  pointer-events: none;
+  user-select: none;
+}
+
+.skillsGround {
+  z-index: 0;
+  block-size: 100%;
+}
+
+.skillsGrid {
+  z-index: 1;
+  block-size: 56.328125cqw;
+  filter: brightness(0);
+}
+
+.skillsTitle {
+  position: absolute;
+  z-index: 2;
+  margin: 0;
+  color: #16150f;
+  font-family: 'Bricolage Grotesque', sans-serif;
+  line-height: normal;
+  white-space: nowrap;
+}
+
+.skillsTitle {
+  inset-block-start: 9.320625cqw;
+  inset-inline-start: 15.260417cqw;
+  font-size: 5cqw;
+  font-weight: 800;
+  font-variation-settings: 'opsz' 96, 'wdth' 100;
+}
+
+.skillsInstruction {
+  position: absolute;
+  z-index: 2;
+  inset-block-start: 13.697917cqw;
+  inset-inline-start: 54.166667cqw;
+  display: flex;
+  align-items: center;
+  gap: 0.260417cqw;
+}
+
+.skillsInstruction img {
+  display: block;
+  inline-size: 0.46875cqw;
+  block-size: 0.46875cqw;
+}
+
+.skillsInstruction p {
+  margin: 0;
+  color: rgb(22 21 15 / 60%);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.729167cqw;
+  font-weight: 400;
+  letter-spacing: 0.13125cqw;
+  line-height: normal;
+  white-space: nowrap;
+}
+
+.skillsPlayBox {
+  position: absolute;
+  z-index: 2;
+  inset-block-start: 17.0775cqw;
+  inset-inline-start: 15.260417cqw;
+  inline-size: 69.375cqw;
+  block-size: 27.411cqw;
+  overflow: hidden;
+  border-radius: 1.3125cqw;
+}
+
+.skillsPlayBoxBase,
+.skillsPlayBoxGrid {
+  position: absolute;
+  display: block;
+  max-inline-size: none;
+  pointer-events: none;
+  user-select: none;
+}
+
+.skillsPlayBoxBase {
+  z-index: 0;
+  inset: 0;
+  inline-size: 100%;
+  block-size: 100%;
+}
+
+.skillsPlayBoxGrid {
+  z-index: 1;
+  inset-block-start: -14.269323cqw;
+  inset-inline-start: -10.326458cqw;
+  inline-size: 90.121875cqw;
+  block-size: 50.69349cqw;
+}
+
+.skillsChips {
+  position: absolute;
+  z-index: 3;
+  inset: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  pointer-events: none;
+}
+
+.skillsChip {
+  position: absolute;
+  block-size: 2.11224cqw;
+  transform-origin: center;
+}
+
+.skillsChip img {
+  position: absolute;
+  inset: 0;
+  display: block;
+  inline-size: 100%;
+  block-size: 100%;
+  max-inline-size: none;
+  user-select: none;
+}
+
+.skillsChip span {
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #16150f;
+  font-family: 'SF Pro Text', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 0.75099cqw;
+  font-style: italic;
+  font-weight: 400;
+  line-height: normal;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.skillsChip .skillsChipInverse {
+  color: #fffeea;
+}
+
+.contactSection {
+  position: relative;
+  inline-size: 100%;
+  overflow: hidden;
+}
+
+.contactCanvas {
+  position: relative;
+  inline-size: 100vw;
+  block-size: 56.25vw;
+  overflow: hidden;
+  container-type: size;
+  background: #ddd0ed;
+}
+
+.contactGround,
+.contactGrid {
+  position: absolute;
+  inset-block-start: 0;
+  inset-inline-start: 0;
+  display: block;
+  inline-size: 100%;
+  pointer-events: none;
+  user-select: none;
+}
+
+.contactGround {
+  z-index: 0;
+  block-size: 100%;
+}
+
+.contactGrid {
+  z-index: 1;
+  block-size: 56.328125cqw;
+  filter: brightness(0);
+}
+
+.contactIntro {
+  position: absolute;
+  z-index: 2;
+  inset-block-start: 10.364583cqw;
+  inset-inline-start: 15.3125cqw;
+  display: flex;
+  flex-direction: column;
+  gap: 2.864583cqw;
+  align-items: flex-start;
+}
+
+.contactTitle {
+  margin: 0;
+  color: #16150f;
+  font-family: 'Bricolage Grotesque', sans-serif;
+  font-size: 8.90625cqw;
+  font-weight: 800;
+  font-variation-settings: 'opsz' 96, 'wdth' 100;
+  letter-spacing: -0.35625cqw;
+  line-height: 0.9;
+  white-space: nowrap;
+}
+
+.contactIntro > p {
+  margin: 0;
+  color: rgb(22 21 15 / 72%);
+  font-family: 'Pretendard', sans-serif;
+  font-size: 1.041667cqw;
+  font-weight: 400;
+  line-height: normal;
+  white-space: nowrap;
+}
+
+.contactCta {
+  position: absolute;
+  z-index: 2;
+  inset: 0;
+}
+
+.contactAvailability {
+  position: absolute;
+  inset-block-start: 33.75cqw;
+  inset-inline-start: 15.3125cqw;
+  display: flex;
+  align-items: center;
+  gap: 0.520833cqw;
+}
+
+.contactAvailability img {
+  display: block;
+  inline-size: 0.625cqw;
+  block-size: 0.625cqw;
+}
+
+.contactAvailability p {
+  margin: 0;
+  color: rgb(22 21 15 / 70%);
+  font-family: 'SF Pro Text', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 0.833333cqw;
+  font-style: italic;
+  font-weight: 400;
+  line-height: normal;
+  white-space: nowrap;
+}
+
+.contactHelloButton {
+  position: absolute;
+  inset-block-start: 35.184375cqw;
+  inset-inline-start: 15.3125cqw;
+  display: block;
+  inline-size: 10.46875cqw;
+  block-size: 3.4375cqw;
+  color: #fffeea;
+  text-decoration: none;
+}
+
+.contactHelloButton img {
+  position: absolute;
+  inset: 0;
+  display: block;
+  inline-size: 100%;
+  block-size: 100%;
+}
+
+.contactHelloButton span {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'SF Pro Text', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 1.25cqw;
+  font-style: italic;
+  font-weight: 400;
+  line-height: normal;
+  white-space: nowrap;
+}
+
+.contactMethods {
+  position: absolute;
+  z-index: 2;
+  inset-block-start: 42.8125cqw;
+  inset-inline-start: 15.3125cqw;
+  inline-size: 79.0625cqw;
+  block-size: 4.6875cqw;
+}
+
+.contactMethodsRule {
+  position: absolute;
+  inset-block-start: 0;
+  inset-inline-start: 0;
+  display: block;
+  inline-size: 79.0625cqw;
+  block-size: 0.052083cqw;
+}
+
+.contactMethod {
+  position: absolute;
+  inset-block-start: 0;
+  display: block;
+  block-size: 4.166667cqw;
+  color: #16150f;
+  font-family: 'SF Pro Text', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 0.833333cqw;
+  font-style: italic;
+  font-weight: 400;
+  line-height: normal;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.contactMethodEmail {
+  inset-inline-start: 1.041667cqw;
+  inline-size: 8.072917cqw;
+}
+
+.contactMethodGithub {
+  inset-inline-start: 17.083333cqw;
+  inline-size: 12.083333cqw;
+}
+
+.contactMethodResume {
+  inset-inline-start: 34.53125cqw;
+  inline-size: 10.104167cqw;
+}
+
+.contactMethodTick,
+.contactMethodUnderline {
+  position: absolute;
+  inset-inline-start: 0;
+  display: block;
+}
+
+.contactMethodTick {
+  inset-block-start: 0.520833cqw;
+  inline-size: 0.052083cqw;
+  block-size: 0.625cqw;
+}
+
+.contactMethodLabel,
+.contactMethodValue {
+  position: absolute;
+  inset-inline-start: 0;
+}
+
+.contactMethodLabel {
+  inset-block-start: 1.432292cqw;
+  color: rgb(22 21 15 / 50%);
+}
+
+.contactMethodValue {
+  inset-block-start: 2.995833cqw;
+  color: #16150f;
+}
+
+.contactMethodUnderline {
+  inset-block-start: 4.140625cqw;
+  inline-size: 100%;
+  block-size: 0.052083cqw;
+}
+
+.closingSection {
+  position: relative;
+  inline-size: 100%;
+  overflow: hidden;
+}
+
+.closingCanvas {
+  position: relative;
+  inline-size: 100vw;
+  block-size: 23.958333vw;
+  overflow: hidden;
+  container-type: size;
+  background: #242424;
+}
+
+.closingGround,
+.closingGrid {
+  position: absolute;
+  inset-block-start: 0;
+  inset-inline-start: 0;
+  display: block;
+  inline-size: 100%;
+  pointer-events: none;
+  user-select: none;
+}
+
+.closingGround {
+  z-index: 0;
+  block-size: 100%;
+}
+
+.closingGrid {
+  z-index: 1;
+  block-size: 24.006563cqw;
+}
+
+.closingBrand,
+.closingDisciplines,
+.closingWordmark {
+  position: absolute;
+  z-index: 2;
+  margin: 0;
+  white-space: nowrap;
+}
+
+.closingBrand,
+.closingDisciplines {
+  inset-inline-start: 2.083333cqw;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.729167cqw;
+  font-weight: 400;
+  letter-spacing: 0.13125cqw;
+  line-height: normal;
+}
+
+.closingBrand {
+  inset-block-start: 3.124167cqw;
+  color: #ddd0ed;
+}
+
+.closingDisciplines {
+  inset-block-start: 4.219063cqw;
+  color: #fff;
+}
+
+.closingWordmark {
+  inset-block-start: 6.35375cqw;
+  inset-inline-start: 2.083333cqw;
+  color: transparent;
+  font-family: 'Bricolage Grotesque', sans-serif;
+  font-size: 12.5cqw;
+  font-weight: 800;
+  font-variation-settings: 'opsz' 96, 'wdth' 100;
+  letter-spacing: -0.625cqw;
+  line-height: 0.9;
+  -webkit-text-stroke: 0.052083cqw #ddd0ed;
+}
+
+.mainHeader {
+  position: fixed;
+  z-index: 100;
+  inset-block-start: 1.4815svh;
+  inset-inline-start: 2.0833vw;
+  display: flex;
+  inline-size: 95.7292vw;
+  align-items: center;
+  justify-content: space-between;
+  color: #16150f;
+  font-family: 'Bricolage Grotesque', sans-serif;
+}
+
+.mainWordmark {
+  padding: 0.5208vw;
+  color: #000;
+  font-size: 1.25vw;
+  font-weight: 800;
+  font-variation-settings: 'opsz' 96, 'wdth' 100;
+  line-height: 1.2083;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.mainNavigation {
+  display: flex;
+  gap: 1.09375vw;
+  align-items: flex-start;
+}
+
+.mainNavigation a {
+  display: flex;
+  min-block-size: 2.2396vw;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5208vw;
+  color: #16150f;
+  font-size: 0.78125vw;
+  font-weight: 600;
+  font-variation-settings: 'opsz' 14, 'wdth' 100;
+  line-height: 1.2;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.mainNavigation .guideChangeLink {
+  gap: 0.625vw;
+}
+
+.guideChangeLink img {
+  display: block;
+  inline-size: 0.5208vw;
+  block-size: 0.5208vw;
+}
+
+.mainNavigation .contactLink {
+  inline-size: 7.8125vw;
+  block-size: 2.2396vw;
+  padding: 0;
+  color: #fff;
+  background: #000;
+  border-radius: 4.21875vw;
+}
+
+@media (max-width: 760px) {
+  .heroCanvas {
+    block-size: 100svh;
+  }
+
+  .mainHeader {
+    inset-block-start: 10px;
+    inset-inline-start: 4vw;
+    inline-size: 92vw;
+  }
+
+  .mainWordmark {
+    padding: 6px 0;
+    font-size: 18px;
+  }
+
+  .mainNavigation {
+    gap: 4px;
+  }
+
+  .mainNavigation a {
+    min-block-size: 34px;
+    padding: 6px;
+    font-size: 10px;
+  }
+
+  .mainNavigation .guideChangeLink,
+  .mainNavigation a[href='#about'],
+  .mainNavigation a[href='#projects'] {
+    display: none;
+  }
+
+  .mainNavigation .contactLink {
+    inline-size: 104px;
+    block-size: 34px;
+  }
+
+  .heroTitle {
+    inset-block-start: 24%;
+    inset-inline-start: 5%;
+    font-size: 18cqw;
+    letter-spacing: -0.6cqw;
+  }
+
+  .circleAnnotation {
+    inset-block-start: 49%;
+    inline-size: 58%;
+    block-size: 17%;
+  }
+
+  .beliefCopy {
+    inset-block-start: 72%;
+    inset-inline-start: 5%;
+    font-size: 2.6cqw;
+    white-space: normal;
+  }
+
+  .heroNuni {
+    inset-block-start: 0;
+    inset-inline-start: 0;
+    inline-size: 12vw;
+    block-size: 13vw;
+  }
+
+  .sectionNavigation {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tickerTrack {
+    animation-play-state: paused;
+  }
+}

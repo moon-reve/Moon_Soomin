@@ -1,0 +1,21 @@
+<svg preserveAspectRatio="none" overflow="visible" style="display: block;" width="291.733" height="286.771" viewBox="0 0 291.733 286.771" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="nuni-shading">
+<path id="Vector" d="M291.733 3.96916H7.54386e-05V286.771H291.733V3.96916Z" fill="url(#paint0_radial_0_14)"/>
+<path id="Vector_2" d="M291.733 202.427H7.54386e-05V286.771H291.733V202.427Z" fill="url(#paint1_linear_0_14)"/>
+<path id="Vector_3" d="M89.306 130.982C137.532 130.982 176.627 101.661 176.627 65.4911C176.627 29.3213 137.532 0 89.306 0C41.0798 0 1.98464 29.3213 1.98464 65.4911C1.98464 101.661 41.0798 130.982 89.306 130.982Z" fill="url(#paint2_radial_0_14)"/>
+</g>
+<defs>
+<radialGradient id="paint0_radial_0_14" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(110.859 66.1856) scale(233.386 226.242)">
+<stop offset="0.48" stop-color="#C0AE99" stop-opacity="0"/>
+<stop offset="1" stop-color="#C0AE99" stop-opacity="0.3"/>
+</radialGradient>
+<linearGradient id="paint1_linear_0_14" x1="7.54386e-05" y1="286.771" x2="7.54386e-05" y2="202.427" gradientUnits="userSpaceOnUse">
+<stop stop-color="white" stop-opacity="0.4"/>
+<stop offset="1" stop-color="white" stop-opacity="0"/>
+</linearGradient>
+<radialGradient id="paint2_radial_0_14" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(89.306 65.4911) scale(87.3214 65.4911)">
+<stop stop-color="white" stop-opacity="0.85"/>
+<stop offset="1" stop-color="white" stop-opacity="0"/>
+</radialGradient>
+</defs>
+</svg>

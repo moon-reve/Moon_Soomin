@@ -1,3 +1,5 @@
+import GuideSelectionPage from './GuideSelectionPage';
+
 export default function HomePage() {
-  return <main />;
+  return <GuideSelectionPage />;
 }

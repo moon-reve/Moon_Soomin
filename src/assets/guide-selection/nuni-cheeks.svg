@@ -1,0 +1,18 @@
+<svg preserveAspectRatio="none" overflow="visible" style="display: block;" width="168.689" height="23.8149" viewBox="0 0 168.689 23.8149" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="nuni-cheeks">
+<path id="Vector" d="M19.8458 23.8149C30.8063 23.8149 39.6916 18.4838 39.6916 11.9075C39.6916 5.33115 30.8063 0 19.8458 0C8.88528 0 2.28882e-05 5.33115 2.28882e-05 11.9075C2.28882e-05 18.4838 8.88528 23.8149 19.8458 23.8149Z" fill="url(#paint0_radial_0_6)"/>
+<path id="Vector_2" d="M148.843 23.8149C159.804 23.8149 168.689 18.4838 168.689 11.9075C168.689 5.33116 159.804 6.88425e-06 148.843 6.88425e-06C137.883 6.88425e-06 128.998 5.33116 128.998 11.9075C128.998 18.4838 137.883 23.8149 148.843 23.8149Z" fill="url(#paint1_radial_0_6)"/>
+</g>
+<defs>
+<radialGradient id="paint0_radial_0_6" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(19.8458 11.9075) scale(19.8458 11.9075)">
+<stop stop-color="#F6A8A4" stop-opacity="0.6"/>
+<stop offset="0.62" stop-color="#F6A8A4" stop-opacity="0.26"/>
+<stop offset="1" stop-color="#F6A8A4" stop-opacity="0"/>
+</radialGradient>
+<radialGradient id="paint1_radial_0_6" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(148.843 11.9075) scale(19.8458 11.9075)">
+<stop stop-color="#F6A8A4" stop-opacity="0.6"/>
+<stop offset="0.62" stop-color="#F6A8A4" stop-opacity="0.26"/>
+<stop offset="1" stop-color="#F6A8A4" stop-opacity="0"/>
+</radialGradient>
+</defs>
+</svg>

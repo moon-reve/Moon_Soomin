@@ -1,0 +1,9 @@
+<svg preserveAspectRatio="none" overflow="visible" style="display: block;" width="199.622" height="23.2893" viewBox="0 0 199.622 23.2893" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path id="contact-shadow" d="M99.8111 23.2893C154.935 23.2893 199.622 18.0758 199.622 11.6446C199.622 5.21348 154.935 0 99.8111 0C44.687 0 0 5.21348 0 11.6446C0 18.0758 44.687 23.2893 99.8111 23.2893Z" fill="url(#paint0_radial_0_5)"/>
+<defs>
+<radialGradient id="paint0_radial_0_5" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(99.8111 11.6446) scale(99.8111 11.6446)">
+<stop stop-color="#16150F" stop-opacity="0.2"/>
+<stop offset="0.7" stop-color="#16150F" stop-opacity="0"/>
+</radialGradient>
+</defs>
+</svg>

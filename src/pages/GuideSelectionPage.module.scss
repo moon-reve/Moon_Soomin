@@ -1,0 +1,537 @@
+@font-face {
+  font-family: 'Bricolage Grotesque';
+  src: url('../assets/fonts/bricolage-grotesque-variable.woff2') format('woff2');
+  font-style: normal;
+  font-weight: 200 800;
+  font-stretch: 100%;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'JetBrains Mono';
+  src: url('../assets/fonts/jetbrains-mono-400.ttf') format('truetype');
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'JetBrains Mono';
+  src: url('../assets/fonts/jetbrains-mono-500.ttf') format('truetype');
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Pretendard';
+  src: url('../assets/fonts/pretendard-400.woff2') format('woff2');
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Pretendard';
+  src: url('../assets/fonts/pretendard-700.woff2') format('woff2');
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+}
+
+.page {
+  position: relative;
+  min-block-size: 100svh;
+  overflow-x: clip;
+  color: #16150f;
+  background: #ddd0ed;
+  container-type: inline-size;
+}
+
+.section {
+  position: relative;
+  display: grid;
+  min-block-size: 100svh;
+  overflow: hidden;
+  place-items: center;
+}
+
+.canvas {
+  position: relative;
+  inline-size: min(100vw, calc(100svh * 16 / 9));
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  container-type: inline-size;
+}
+
+.textureGrid {
+  position: absolute;
+  z-index: 0;
+  inset: 0;
+  display: block;
+  inline-size: 100%;
+  block-size: 100%;
+  pointer-events: none;
+}
+
+.header {
+  position: fixed;
+  z-index: 100;
+  inset-block-start: 1.4815svh;
+  inset-inline-start: 2.0833%;
+  display: flex;
+  inline-size: 95.8333%;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.wordmark,
+.sessionStatus,
+.intro p,
+.intro h1,
+.guideCopy h2,
+.guideCopy p {
+  margin: 0;
+}
+
+.wordmark {
+  padding: 0.5208cqw;
+  font-family: 'Bricolage Grotesque', sans-serif;
+  font-size: 1.25cqw;
+  font-weight: 800;
+  line-height: 1.2083;
+}
+
+.sessionStatus {
+  display: flex;
+  gap: 0.4688cqw;
+  align-items: center;
+  padding: 0.5208cqw;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.625cqw;
+  font-weight: 500;
+  letter-spacing: 0.1125cqw;
+  line-height: 1.3333;
+}
+
+.sessionStatus img {
+  display: block;
+  inline-size: 0.625cqw;
+  block-size: 0.625cqw;
+}
+
+.intro {
+  position: absolute;
+  z-index: 3;
+  inset-block-start: 16.4815%;
+  inset-inline-start: 50%;
+  text-align: center;
+  transform: translateX(-50%);
+}
+
+.intro h1 {
+  font-family: 'Bricolage Grotesque', sans-serif;
+  font-size: 5.4167cqw;
+  font-weight: 800;
+  font-variation-settings: 'opsz' 96, 'wdth' 100;
+  line-height: 1.2019;
+  white-space: nowrap;
+}
+
+.eyebrow {
+  position: absolute;
+  z-index: 1;
+  inset-block-start: 0;
+  inset-inline-start: 50%;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.7292cqw;
+  font-weight: 400;
+  letter-spacing: 0.13125cqw;
+  line-height: 1.2857;
+  text-transform: uppercase;
+  white-space: nowrap;
+  transform: translate(-50%, 0);
+}
+
+.nuniScene {
+  position: absolute;
+  z-index: 2;
+  inset-block-start: 22.2222%;
+  inset-inline-start: 32.8125%;
+  inline-size: 34.375%;
+  block-size: 48.1481%;
+}
+
+.lightPool {
+  position: absolute;
+  inset: 0;
+  display: block;
+  inline-size: 100%;
+  block-size: 100%;
+  pointer-events: none;
+}
+
+.floatLayer {
+  position: absolute;
+  z-index: 2;
+  inset-block-start: 24.1093%;
+  inset-inline-start: 28.6448%;
+  inline-size: 42.862%;
+  block-size: 52.4673%;
+  will-change: transform;
+}
+
+.bodyLook {
+  position: absolute;
+  inset: 0;
+  will-change: transform;
+}
+
+.body,
+.shading,
+.cheeks,
+.mouth,
+.eyes,
+.contactShadow {
+  position: absolute;
+  display: block;
+  pointer-events: none;
+}
+
+.body {
+  z-index: 1;
+  inset: -0.1818%;
+}
+
+.body img,
+.shading img,
+.cheeks img,
+.mouth img,
+.eyes img,
+.contactShadow img {
+  display: block;
+  inline-size: 100%;
+  block-size: 100%;
+  user-select: none;
+}
+
+.shading {
+  z-index: 2;
+  inset-block-start: -3.0914%;
+  inset-inline-start: -1.7187%;
+  inline-size: 103.1263%;
+  block-size: 105.1088%;
+  mask-image: var(--nuni-mask);
+  mask-repeat: no-repeat;
+  mask-position: 55% 60.5%;
+  mask-size: 96.9687% 95.1396%;
+}
+
+.cheeks {
+  z-index: 3;
+  inset-block-start: 47.4631%;
+  inset-inline-start: 20.0284%;
+  inline-size: 59.6309%;
+  block-size: 8.7289%;
+}
+
+.mouth {
+  z-index: 4;
+  inset-block-start: 50.1899%;
+  inset-inline-start: 47.0395%;
+  inline-size: 5.9631%;
+  block-size: 0.9856%;
+}
+
+.mouth img {
+  position: absolute;
+  inset: -18.45% -2.94%;
+  inline-size: 105.88%;
+  block-size: 136.9%;
+}
+
+.eyes {
+  z-index: 5;
+  inset-block-start: 42.7768%;
+  inset-inline-start: 33.495%;
+  inline-size: 32.6216%;
+  block-size: 8.438%;
+  transform-origin: center;
+  will-change: transform;
+}
+
+.eyes img {
+  position: absolute;
+  inset: -2.16% -0.54%;
+  inline-size: 101.08%;
+  block-size: 104.32%;
+}
+
+.contactShadow {
+  z-index: 1;
+  inset-block-start: 76.6751%;
+  inset-inline-start: 34.8899%;
+  inline-size: 30.2458%;
+  block-size: 4.4787%;
+  transform-origin: center;
+  will-change: transform, opacity;
+}
+
+.nuniHoverArea {
+  position: absolute;
+  z-index: 5;
+  inset: 5% 18% 12%;
+  touch-action: manipulation;
+}
+
+.guideCopy {
+  position: absolute;
+  z-index: 4;
+  inset-block-start: 65.5556%;
+  inset-inline-start: 50%;
+  text-align: center;
+  transform: translateX(-50%);
+}
+
+.guideCopy h2 {
+  color: #16150f;
+  font-family: 'Pretendard', sans-serif;
+  font-size: 0.9896cqw;
+  font-weight: 700;
+  line-height: 1.2105;
+  white-space: nowrap;
+}
+
+.guideCopy p {
+  margin-block-start: 0.78125cqw;
+  color: #5e5e5e;
+  font-family: 'Pretendard', sans-serif;
+  font-size: 0.7292cqw;
+  font-weight: 700;
+  line-height: 1.2143;
+  white-space: nowrap;
+}
+
+.rail {
+  position: absolute;
+  z-index: 6;
+  inset-block-start: 76.2037%;
+  inset-inline-start: 28.59375%;
+  display: flex;
+  inline-size: 42.8646%;
+  block-size: 7.2222%;
+  align-items: center;
+  justify-content: space-between;
+  padding-inline: 0.6771cqw;
+  background: rgb(255 255 255 / 50%);
+  border: 0.0484cqw solid rgb(22 21 15 / 13%);
+  border-radius: 4.375cqw;
+}
+
+.rail button,
+.rail a {
+  appearance: none;
+  padding: 0;
+  color: #16150f;
+  background: transparent;
+  border: 0;
+  font-family: 'Pretendard', sans-serif;
+  font-size: 0.8705cqw;
+  font-weight: 400;
+  line-height: 1.197;
+  opacity: 1;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.guideOption,
+.activeGuide {
+  display: grid;
+  block-size: 3.7037%;
+  min-block-size: 2.0833cqw;
+  place-items: center;
+}
+
+.guideOption {
+  padding-inline: 0.5208cqw !important;
+  cursor: default;
+}
+
+.activeGuide {
+  inline-size: 8.5417cqw;
+  block-size: 2.5cqw;
+  color: #fffeea !important;
+  background: #16150f !important;
+  border-radius: 4.53125cqw !important;
+}
+
+.beginButton {
+  display: flex;
+  inline-size: 9.21875cqw;
+  block-size: 2.7083cqw;
+  align-items: center;
+  justify-content: space-between;
+  padding-inline: 1.5625cqw !important;
+  color: #fffeea !important;
+  background: #16150f !important;
+  border-radius: 3.3333cqw !important;
+  cursor: pointer;
+}
+
+.beginButton:hover,
+.beginButton:focus-visible {
+  background: #302e27 !important;
+}
+
+.beginButton:focus-visible,
+.skipButton:focus-visible {
+  outline: 0.1042cqw solid #16150f;
+  outline-offset: 0.15625cqw;
+}
+
+.skipButton {
+  position: absolute;
+  z-index: 6;
+  inset-block-start: 85.9259%;
+  inset-inline-start: 50%;
+  padding: 0;
+  color: rgb(22 21 15 / 55%);
+  background: transparent;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.8333cqw;
+  font-weight: 400;
+  line-height: 1.3125;
+  text-decoration: underline;
+  text-underline-position: from-font;
+  white-space: nowrap;
+  cursor: pointer;
+  transform: translateX(-50%);
+}
+
+.dotLinks,
+.dotField {
+  position: absolute;
+  display: block;
+  pointer-events: none;
+}
+
+.dotLinks {
+  z-index: 1;
+  inset-block-start: 16.9815%;
+  inset-inline-start: 39.71875%;
+  inline-size: 18.0886%;
+  block-size: 74.3148%;
+}
+
+.dotLinks img {
+  position: absolute;
+  inset: 0 -0.1728%;
+  display: block;
+  inline-size: 100.3456%;
+  block-size: 100%;
+}
+
+.dotField {
+  z-index: 2;
+  inset-block-start: 16.5463%;
+  inset-inline-start: 34.1979%;
+  inline-size: 57.2292%;
+  block-size: 75.1944%;
+}
+
+.dotField img {
+  display: block;
+  inline-size: 100%;
+  block-size: 100%;
+}
+
+@media (max-aspect-ratio: 3 / 4) {
+  .canvas {
+    inline-size: 100vw;
+    block-size: 100svh;
+    aspect-ratio: auto;
+  }
+
+  .header {
+    inset-block-start: 2%;
+    inline-size: 91.6667%;
+  }
+
+  .wordmark {
+    font-size: 3.8cqw;
+  }
+
+  .sessionStatus {
+    font-size: 1.7cqw;
+  }
+
+  .sessionStatus img {
+    inline-size: 1.8cqw;
+    block-size: 1.8cqw;
+  }
+
+  .intro {
+    inset-block-start: 16%;
+  }
+
+  .intro h1 {
+    font-size: 10cqw;
+  }
+
+  .eyebrow {
+    font-size: 1.8cqw;
+  }
+
+  .nuniScene {
+    inset-block-start: 27%;
+    inset-inline-start: 5%;
+    inline-size: 90%;
+    block-size: auto;
+    aspect-ratio: 660 / 520;
+  }
+
+  .guideCopy {
+    inset-block-start: 65%;
+  }
+
+  .guideCopy h2 {
+    font-size: 3.2cqw;
+  }
+
+  .guideCopy p {
+    margin-block-start: 2cqw;
+    font-size: 2.5cqw;
+  }
+
+  .rail {
+    inset-block-start: 75%;
+    inset-inline-start: 5%;
+    inline-size: 90%;
+    block-size: 7%;
+  }
+
+  .rail button {
+    font-size: 2.3cqw;
+  }
+
+  .activeGuide {
+    inline-size: 17cqw;
+    block-size: 8cqw;
+  }
+
+  .beginButton {
+    inline-size: 18cqw;
+    block-size: 9cqw;
+  }
+
+  .skipButton {
+    inset-block-start: 84.5%;
+    font-size: 2.5cqw;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .beginButton {
+    transition: none;
+  }
+}
