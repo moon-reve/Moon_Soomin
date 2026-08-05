@@ -81,31 +81,33 @@ function SelectionNuni() {
     <div className={styles.nuniScene} aria-label="전략가 누니" role="img">
       <img className={styles.lightPool} src={lightPoolSrc} alt="" draggable="false" />
 
-      <span ref={shadowRef} className={styles.contactShadow} aria-hidden="true">
-        <img src={contactShadowSrc} alt="" draggable="false" />
-      </span>
+      <div className={styles.nuniCharacterScale}>
+        <span ref={shadowRef} className={styles.contactShadow} aria-hidden="true">
+          <img src={contactShadowSrc} alt="" draggable="false" />
+        </span>
 
-      <div ref={floatLayerRef} className={styles.floatLayer}>
-        <div ref={bodyLookRef} className={styles.bodyLook}>
-          <span className={styles.body} aria-hidden="true">
-            <img src={nuniBodySrc} alt="" draggable="false" />
-          </span>
-          <span
-            className={styles.shading}
-            style={{ '--nuni-mask': `url("${nuniMaskSrc}")` } as CSSProperties}
-            aria-hidden="true"
-          >
-            <img src={nuniShadingSrc} alt="" draggable="false" />
-          </span>
-          <span className={styles.cheeks} aria-hidden="true">
-            <img src={nuniCheeksSrc} alt="" draggable="false" />
-          </span>
-          <span className={styles.mouth} aria-hidden="true">
-            <img src={nuniMouthSrc} alt="" draggable="false" />
-          </span>
-          <span ref={eyesRef} className={styles.eyes} aria-hidden="true">
-            <img src={nuniEyesSrc} alt="" draggable="false" />
-          </span>
+        <div ref={floatLayerRef} className={styles.floatLayer}>
+          <div ref={bodyLookRef} className={styles.bodyLook}>
+            <span className={styles.body} aria-hidden="true">
+              <img src={nuniBodySrc} alt="" draggable="false" />
+            </span>
+            <span
+              className={styles.shading}
+              style={{ '--nuni-mask': `url("${nuniMaskSrc}")` } as CSSProperties}
+              aria-hidden="true"
+            >
+              <img src={nuniShadingSrc} alt="" draggable="false" />
+            </span>
+            <span className={styles.cheeks} aria-hidden="true">
+              <img src={nuniCheeksSrc} alt="" draggable="false" />
+            </span>
+            <span className={styles.mouth} aria-hidden="true">
+              <img src={nuniMouthSrc} alt="" draggable="false" />
+            </span>
+            <span ref={eyesRef} className={styles.eyes} aria-hidden="true">
+              <img src={nuniEyesSrc} alt="" draggable="false" />
+            </span>
+          </div>
         </div>
       </div>
     </div>

@@ -171,6 +171,14 @@
   pointer-events: none;
 }
 
+.nuniCharacterScale {
+  position: absolute;
+  z-index: 2;
+  inset: 0;
+  transform: scale(0.75);
+  transform-origin: center;
+}
+
 .floatLayer {
   position: absolute;
   z-index: 2;

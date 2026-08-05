@@ -1193,24 +1193,24 @@ function JourneySection() {
             step.
           </h2>
 
-          <p className={`${styles.journeyBody} journey-body`}>
-            커피를 배우고 싶다는 마음 하나로
-            <br />
-            처음 해외를 선택했습니다.
-            <br />
-            이 작은 호기심이 모든 시작이 되었습니다.
-          </p>
+          <div className={styles.journeyDetails}>
+            <p className={`${styles.journeyBody} journey-body`}>
+              커피를 배우고 싶다는
+              <br />
+              작은 호기심이 모든 시작이었습니다.
+            </p>
 
-          <ul className={styles.journeyBeats}>
-            <li>→ Barista studies</li>
-            <li>→ Brewing &amp; sensory training</li>
-            <li>→ Customer experience</li>
-            <li>→ My first serious passion</li>
-          </ul>
+            <ul className={styles.journeyBeats}>
+              <li>→ Barista studies</li>
+              <li>→ Brewing &amp; sensory training</li>
+              <li>→ Customer experience</li>
+              <li>→ My first serious passion</li>
+            </ul>
 
-          <p className={`${styles.journeyDuration} ${styles.journeyDurationInverse}`}>
-            Studied coffee for 2 years
-          </p>
+            <p className={`${styles.journeyDuration} ${styles.journeyDurationInverse}`}>
+              Studied coffee for 2 years
+            </p>
+          </div>
         </div>
 
         <figure className={`${styles.journeyPhotoFrame} journey-photo-frame`}>
@@ -1265,22 +1265,22 @@ function JourneyDiscoverySection() {
             borders.
           </h2>
 
-          <p className={`${styles.journeyBody} journey-body`}>
-            일본에서 생활하며 다양한 사람을 만났습니다.
-            <br />
-            화장품 판매와 온라인 MD를 경험하며
-            <br />
-            사람을 이해하는 시야를 넓혔습니다.
-          </p>
+          <div className={styles.journeyDetails}>
+            <p className={`${styles.journeyBody} journey-body`}>
+              일본에서의 다양한 경험은
+              <br />
+              사람을 이해하는 시야를 넓혀주었습니다.
+            </p>
 
-          <ul className={styles.journeyBeats}>
-            <li>→ Studied abroad</li>
-            <li>→ Beauty retail</li>
-            <li>→ E-commerce MD</li>
-            <li>→ Cross-cultural experience</li>
-          </ul>
+            <ul className={styles.journeyBeats}>
+              <li>→ Studied abroad</li>
+              <li>→ Beauty retail</li>
+              <li>→ E-commerce MD</li>
+              <li>→ Cross-cultural experience</li>
+            </ul>
 
-          <p className={styles.journeyDuration}>Lived in Japan for 6 years</p>
+            <p className={styles.journeyDuration}>Lived in Japan for 6 years</p>
+          </div>
         </div>
 
         <figure className={`${styles.journeyPhotoFrame} journey-photo-frame`}>
@@ -1339,24 +1339,24 @@ function JourneyObservationSection() {
             matters.
           </h2>
 
-          <p className={`${styles.journeyBody} journey-body`}>
-            순간을 기록하는 것에서 시작해
-            <br />
-            사람과 공간을 바라보는 시선을 배웠습니다.
-            <br />
-            관찰은 저의 가장 큰 습관이 되었습니다.
-          </p>
+          <div className={styles.journeyDetails}>
+            <p className={`${styles.journeyBody} journey-body`}>
+              순간을 기록하며
+              <br />
+              관찰하는 습관을 배웠습니다.
+            </p>
 
-          <ul className={styles.journeyBeats}>
-            <li>→ Visual storytelling</li>
-            <li>→ Composition &amp; lighting</li>
-            <li>→ Human observation</li>
-            <li>→ Capturing moments</li>
-          </ul>
+            <ul className={styles.journeyBeats}>
+              <li>→ Visual storytelling</li>
+              <li>→ Composition &amp; lighting</li>
+              <li>→ Human observation</li>
+              <li>→ Capturing moments</li>
+            </ul>
 
-          <p className={`${styles.journeyDuration} ${styles.journeyDurationCompact}`}>
-            Photography since 2018
-          </p>
+            <p className={`${styles.journeyDuration} ${styles.journeyDurationCompact}`}>
+              Photography since 2018
+            </p>
+          </div>
         </div>
 
         <figure className={`${styles.journeyPhotoFrame} journey-photo-frame`}>
@@ -1420,26 +1420,26 @@ function JourneyMovementSection() {
             in motion.
           </h2>
 
-          <p className={`${styles.journeyBody} journey-body`}>
-            정적인 장면을 넘어
-            <br />
-            시간과 흐름을 담기 시작했습니다.
-            <br />
-            움직임은 경험을 전달하는 또 다른 언어였습니다.
-          </p>
+          <div className={styles.journeyDetails}>
+            <p className={`${styles.journeyBody} journey-body`}>
+              새로운 환경은
+              <br />
+              더 넓은 관점을 갖게 했습니다.
+            </p>
 
-          <ul className={styles.journeyBeats}>
-            <li>→ Motion graphics</li>
-            <li>→ Video editing</li>
-            <li>→ Storytelling</li>
-            <li>→ Visual rhythm</li>
-          </ul>
+            <ul className={styles.journeyBeats}>
+              <li>→ Motion graphics</li>
+              <li>→ Video editing</li>
+              <li>→ Storytelling</li>
+              <li>→ Visual rhythm</li>
+            </ul>
 
-          <p
-            className={`${styles.journeyDuration} ${styles.journeyDurationCompact} ${styles.journeyDurationInverse}`}
-          >
-            Worked with motion &amp; video
-          </p>
+            <p
+              className={`${styles.journeyDuration} ${styles.journeyDurationCompact} ${styles.journeyDurationInverse}`}
+            >
+              Worked with motion &amp; video
+            </p>
+          </div>
         </div>
 
         <figure className={`${styles.journeyPhotoFrame} journey-photo-frame`}>
@@ -1498,24 +1498,24 @@ function JourneyExpansionSection() {
             by the world.
           </h2>
 
-          <p className={`${styles.journeyBody} journey-body`}>
-            새로운 환경은 익숙했던 시선을 바꿔주었습니다.
-            <br />
-            다양한 문화와 사람을 경험하며
-            <br />
-            더 넓은 관점을 갖게 되었습니다.
-          </p>
+          <div className={styles.journeyDetails}>
+            <p className={`${styles.journeyBody} journey-body`}>
+              새로운 환경은
+              <br />
+              더 넓은 관점을 갖게 했습니다.
+            </p>
 
-          <ul className={styles.journeyBeats}>
-            <li>→ Living abroad</li>
-            <li>→ Cultural diversity</li>
-            <li>→ Adaptability</li>
-            <li>→ New perspectives</li>
-          </ul>
+            <ul className={styles.journeyBeats}>
+              <li>→ Living abroad</li>
+              <li>→ Cultural diversity</li>
+              <li>→ Adaptability</li>
+              <li>→ New perspectives</li>
+            </ul>
 
-          <p className={`${styles.journeyDuration} ${styles.journeyDurationCompact}`}>
-            Lived in Indonesia for 1 Year
-          </p>
+            <p className={`${styles.journeyDuration} ${styles.journeyDurationCompact}`}>
+              Lived in Indonesia for 1 Year
+            </p>
+          </div>
         </div>
 
         <figure className={`${styles.journeyPhotoFrame} journey-photo-frame`}>
@@ -1574,24 +1574,24 @@ function JourneyRealitySection() {
             into reality.
           </h2>
 
-          <p className={`${styles.journeyBody} journey-body`}>
-            커피에서 시작된 호기심은 사진과 영상,
-            <br />
-            그리고 다양한 경험으로 이어졌습니다.
-            <br />
-            이제 저는 사용자의 경험을 설계하는 디자이너입니다.
-          </p>
+          <div className={styles.journeyDetails}>
+            <p className={`${styles.journeyBody} journey-body`}>
+              다양한 경험은
+              <br />
+              사용자 경험을 설계하는 기반이 되었습니다.
+            </p>
 
-          <ul className={styles.journeyBeats}>
-            <li>→ UX Strategy</li>
-            <li>→ UI Design</li>
-            <li>→ Front-end Development</li>
-            <li>→ AI Workflow</li>
-          </ul>
+            <ul className={styles.journeyBeats}>
+              <li>→ UX Strategy</li>
+              <li>→ UI Design</li>
+              <li>→ Front-end Development</li>
+              <li>→ AI Workflow</li>
+            </ul>
 
-          <p className={`${styles.journeyDuration} ${styles.journeyDurationCompact}`}>
-            Building better experiences
-          </p>
+            <p className={`${styles.journeyDuration} ${styles.journeyDurationCompact}`}>
+              Building better experiences
+            </p>
+          </div>
         </div>
 
         <figure className={`${styles.journeyPhotoFrame} journey-photo-frame`}>
