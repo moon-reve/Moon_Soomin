@@ -16,7 +16,6 @@ import aboutStarSrc from '../assets/strategist-about/star.svg';
 import aboutTextureGridSrc from '../assets/strategist-about/texture-grid.svg';
 import aboutUnderlineSrc from '../assets/strategist-about/underline.svg';
 import contactTickSrc from '../assets/strategist-contact/contact-tick.svg';
-import contactsRuleSrc from '../assets/strategist-contact/contacts-rule.svg';
 import contactButtonSrc from '../assets/strategist-contact/cta-button.svg';
 import contactEmailUnderlineSrc from '../assets/strategist-contact/email-underline.svg';
 import contactGithubUnderlineSrc from '../assets/strategist-contact/github-underline.svg';
@@ -1636,6 +1635,62 @@ const projectCardLabels: Record<ProjectCardName, string> = {
   viner: 'Viner',
 };
 
+const projectCaptionLabels: Record<ProjectCardName, string> = {
+  route: 'Route',
+  marshall: 'Marshall',
+  viner: 'Viner',
+};
+
+const projectShortDescriptions: Record<ProjectCardName, readonly [string, string]> = {
+  route: ['취업 준비 과정을 관리하는', '커리어 플랫폼'],
+  marshall: ['브랜드를 경험하는', '인터랙티브 웹사이트'],
+  viner: ['AI 기반 와인 커뮤니티', '모바일 서비스'],
+};
+
+const projectRoles: Record<ProjectCardName, string> = {
+  route: 'Solo Project',
+  marshall: 'Team Leader',
+  viner: 'Team Leader',
+};
+
+const projectContributions: Record<ProjectCardName, readonly string[]> = {
+  route: ['Research', 'UX/UI', 'Front-end Development'],
+  marshall: ['Project Planning', 'UX/UI', 'Front-end Development'],
+  viner: ['Planning', 'UX/UI', 'React Development'],
+};
+
+const projectResponsibilities: Record<ProjectCardName, readonly string[]> = {
+  route: [
+    '사용자 리서치 및 인터뷰',
+    'IA · User Flow 설계',
+    'UX/UI 디자인 시스템 구축',
+    'React 기반 서비스 개발',
+    '휴리스틱 평가 및 UX 개선',
+  ],
+  marshall: [
+    '프로젝트 기획 및 일정 관리',
+    'IA 및 콘텐츠 구조 설계',
+    '메인 인터랙션 기획',
+    'UI 디자인 및 퍼블리싱',
+    'Front-end 개발',
+  ],
+  viner: [
+    '프로젝트 기획 및 일정 관리',
+    'React 초기 세팅 및 개발 환경 구축',
+    'UX/UI 디자인 및 주요 화면 개발',
+    'AI 기능 UX 기획 및 더미데이터 구성',
+    '오류 수정 및 프로젝트 최종 통합',
+  ],
+};
+
+const getProjectRevealStyle = (lineIndex: number) => (
+  { '--project-line-index': lineIndex } as CSSProperties
+);
+
+const getProjectExitStyle = (lineIndex: number) => (
+  { '--project-exit-index': lineIndex } as CSSProperties
+);
+
 const projectCardUrls: Record<ProjectCardName, string> = {
   route: 'https://route-react-three.vercel.app/',
   marshall: 'https://marshall-rebrand.vercel.app/',
@@ -1838,7 +1893,11 @@ function ProjectCard({
       onSelect();
       return;
     }
-    if (isFlipped) onFlip();
+    if (isFlipped) {
+      onFlip();
+      return;
+    }
+    onSelect();
   };
 
   return (
@@ -1871,8 +1930,16 @@ function ProjectsIntroSection() {
   const [isDeckExpanded, setIsDeckExpanded] = useState(false);
   const [cardSlots, setCardSlots] = useState(initialProjectCardSlots);
   const [flippedProject, setFlippedProject] = useState<ProjectCardName | null>(null);
+  const [selectedProject, setSelectedProject] = useState<ProjectCardName | null>(null);
+  const [previousProject, setPreviousProject] = useState<ProjectCardName | null>(null);
+  const [isReturningToIntro, setIsReturningToIntro] = useState(false);
+  const prefersReducedMotion = useReducedMotion();
 
   const bringProjectForward = (project: ProjectCardName) => {
+    if (project === selectedProject) return;
+    setIsReturningToIntro(false);
+    setPreviousProject(prefersReducedMotion ? null : selectedProject);
+    setSelectedProject(project);
     setCardSlots((currentSlots) => {
       if (currentSlots[project] === 'front') return currentSlots;
       const currentFront = (Object.keys(currentSlots) as ProjectCardName[])
@@ -1887,12 +1954,32 @@ function ProjectsIntroSection() {
     setFlippedProject(null);
   };
 
+  const resetProjectCopy = () => {
+    if (!selectedProject) return;
+    if (prefersReducedMotion) {
+      setPreviousProject(null);
+      setIsReturningToIntro(true);
+    } else {
+      setPreviousProject(selectedProject);
+      setIsReturningToIntro(false);
+    }
+    setSelectedProject(null);
+  };
+
+  const finishPreviousProjectExit = () => {
+    setPreviousProject(null);
+    if (!selectedProject) setIsReturningToIntro(true);
+  };
+
   useEffect(() => {
     const openDeck = () => setIsDeckExpanded(true);
     const closeDeck = () => {
       setIsDeckExpanded(false);
       setCardSlots(initialProjectCardSlots);
       setFlippedProject(null);
+      setSelectedProject(null);
+      setPreviousProject(null);
+      setIsReturningToIntro(false);
     };
     window.addEventListener(projectDeckOpenEvent, openDeck);
     window.addEventListener(projectDeckCloseEvent, closeDeck);
@@ -1908,25 +1995,208 @@ function ProjectsIntroSection() {
       className={styles.projectsIntroSection}
       aria-labelledby="projects-intro-title"
     >
-      <div className={styles.projectsIntroCanvas}>
+      <div
+        className={styles.projectsIntroCanvas}
+        onClick={(event) => {
+          if (event.target === event.currentTarget) resetProjectCopy();
+        }}
+      >
         <img className={styles.projectsIntroGround} src={projectsGroundSrc} alt="" aria-hidden="true" />
         <img className={styles.projectsIntroGrid} src={projectsTextureGridSrc} alt="" aria-hidden="true" />
 
         <div className={styles.projectsIntroChapter}>
           <p className={styles.projectsIntroEyebrow}>Portfolio</p>
-          <p className={styles.projectsIntroCategory}>Portfolio</p>
-          <h2 className={styles.projectsIntroHeadline} id="projects-intro-title">
-            Selected
-            <br />
-            Projects
-          </h2>
-          <p className={styles.projectsIntroBody}>
-            기획부터 디자인, 구현까지.
-            <br />
-            문제를 해결하기 위해 고민했던
-            <br />
-            프로젝트를 담았습니다.
+          <p
+            className={styles.projectsIntroCategory}
+            aria-label={selectedProject ? projectCaptionLabels[selectedProject] : undefined}
+            aria-live="polite"
+          >
+            {previousProject && (
+              <span
+                className={styles.projectBodyLineOutgoing}
+                style={getProjectExitStyle(0)}
+                aria-hidden="true"
+              >
+                {projectCaptionLabels[previousProject]}
+              </span>
+            )}
+            {selectedProject && (
+              <span
+                key={selectedProject}
+                className={styles.projectRevealLine}
+                style={getProjectRevealStyle(0)}
+                aria-hidden="true"
+              >
+                {projectCaptionLabels[selectedProject]}
+              </span>
+            )}
           </p>
+          <div className={styles.projectsIntroHeadlineSlot} aria-live="polite">
+            <h2 className={styles.projectsIntroHeadline} id="projects-intro-title">
+              <span
+                className={`${styles.projectsIntroHeadlineLine} ${
+                  selectedProject
+                    ? styles.projectsHeadlineOutgoing
+                    : isReturningToIntro
+                      ? styles.projectRevealLine
+                      : previousProject
+                        ? styles.projectIntroLineHidden
+                        : ''
+                }`}
+                style={{ '--project-headline-index': 0, '--project-line-index': 0 } as CSSProperties}
+              >
+                Selected
+              </span>
+              <span
+                className={`${styles.projectsIntroHeadlineLine} ${
+                  selectedProject
+                    ? styles.projectsHeadlineOutgoing
+                    : isReturningToIntro
+                      ? styles.projectRevealLine
+                      : previousProject
+                        ? styles.projectIntroLineHidden
+                        : ''
+                }`}
+                style={{ '--project-headline-index': 1, '--project-line-index': 1 } as CSSProperties}
+              >
+                Projects
+              </span>
+            </h2>
+            {previousProject && (
+              <div className={styles.projectsSummaryContent}>
+                <div className={styles.projectsShortDescription}>
+                  {projectShortDescriptions[previousProject].map((line, lineIndex) => (
+                    <p
+                      key={line}
+                      className={styles.projectBodyLineOutgoing}
+                      style={getProjectExitStyle(lineIndex + 1)}
+                    >
+                      {line}
+                    </p>
+                  ))}
+                </div>
+                <div className={styles.projectsSummaryMeta}>
+                  <p
+                    className={`${styles.projectsSummaryRole} ${styles.projectBodyLineOutgoing}`}
+                    style={getProjectExitStyle(3)}
+                  >
+                    {projectRoles[previousProject]}
+                  </p>
+                  <div className={styles.projectsSummaryContributions}>
+                    {projectContributions[previousProject].map((contribution, lineIndex) => (
+                      <p
+                        key={contribution}
+                        className={styles.projectBodyLineOutgoing}
+                        style={getProjectExitStyle(lineIndex + 4)}
+                      >
+                        {contribution}
+                      </p>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            )}
+            {selectedProject && (
+              <div
+                key={selectedProject}
+                className={styles.projectsSummaryContent}
+              >
+                <div className={styles.projectsShortDescription}>
+                  {projectShortDescriptions[selectedProject].map((line, lineIndex) => (
+                    <p
+                      key={line}
+                      className={styles.projectRevealLine}
+                      style={getProjectRevealStyle(lineIndex + 1)}
+                    >
+                      {line}
+                    </p>
+                  ))}
+                </div>
+                <div className={styles.projectsSummaryMeta}>
+                  <p
+                    className={`${styles.projectsSummaryRole} ${styles.projectRevealLine}`}
+                    style={getProjectRevealStyle(3)}
+                  >
+                    {projectRoles[selectedProject]}
+                  </p>
+                  <div className={styles.projectsSummaryContributions}>
+                    {projectContributions[selectedProject].map((contribution, lineIndex) => (
+                      <p
+                        key={contribution}
+                        className={styles.projectRevealLine}
+                        style={getProjectRevealStyle(lineIndex + 4)}
+                      >
+                        {contribution}
+                      </p>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+          <div className={styles.projectsIntroBodySlot} aria-live="polite">
+            <div className={styles.projectsIntroBody}>
+              {[
+                '기획부터 디자인, 구현까지.',
+                '문제를 해결하기 위해 고민했던',
+                '프로젝트를 담았습니다.',
+              ].map((line, lineIndex) => (
+                <p
+                  key={line}
+                  className={
+                    selectedProject
+                      ? styles.projectBodyLineOutgoing
+                      : isReturningToIntro
+                        ? styles.projectRevealLine
+                        : previousProject
+                          ? styles.projectIntroLineHidden
+                          : undefined
+                  }
+                  style={
+                    selectedProject
+                      ? getProjectExitStyle(lineIndex)
+                      : getProjectRevealStyle(lineIndex + 2)
+                  }
+                >
+                  {line}
+                </p>
+              ))}
+            </div>
+            {previousProject && (
+              <div className={styles.projectsResponsibilities}>
+                {projectResponsibilities[previousProject].map((responsibility, lineIndex) => (
+                  <p
+                    key={responsibility}
+                    className={styles.projectBodyLineOutgoing}
+                    style={getProjectExitStyle(lineIndex + 7)}
+                    onAnimationEnd={
+                      lineIndex === projectResponsibilities[previousProject].length - 1
+                        ? finishPreviousProjectExit
+                        : undefined
+                    }
+                  >
+                    • {responsibility}
+                  </p>
+                ))}
+              </div>
+            )}
+            {selectedProject && (
+              <div
+                key={selectedProject}
+                className={styles.projectsResponsibilities}
+              >
+                {projectResponsibilities[selectedProject].map((responsibility, lineIndex) => (
+                  <p
+                    key={responsibility}
+                    className={styles.projectRevealLine}
+                    style={getProjectRevealStyle(lineIndex + 7)}
+                  >
+                    • {responsibility}
+                  </p>
+                ))}
+              </div>
+            )}
+          </div>
         </div>
 
         <div
@@ -2647,58 +2917,62 @@ function ContactSection() {
   return (
     <section id="contact" className={styles.contactSection} aria-labelledby="contact-title">
       <div className={styles.contactCanvas}>
+        <div className={styles.contactLayoutGroup}>
+          <div className={styles.contactContentGroup}>
+            <div className={styles.contactTextBox}>
+              <h2 className={styles.contactTitle} id="contact-title">
+                Let's build
+                <br />
+                together.
+              </h2>
+              <p>좋은 경험은 좋은 대화에서 시작된다고 믿습니다</p>
+            </div>
+
+            <div className={styles.contactActionGroup}>
+              <div className={styles.contactAvailabilityBox}>
+                <img src={contactStatusDotSrc} alt="" aria-hidden="true" />
+                <p>Open to opportunities</p>
+              </div>
+              <div className={styles.contactHelloButtonBox}>
+                <a className={styles.contactHelloButton} href="mailto:ssachra@gmail.com">
+                  <img src={contactButtonSrc} alt="" aria-hidden="true" />
+                  <span>Say Hello →</span>
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <div className={styles.contactMethods}>
+            <a className={`${styles.contactMethod} ${styles.contactMethodEmail}`} href="mailto:ssachra@gmail.com">
+              <img className={styles.contactMethodTick} src={contactTickSrc} alt="" aria-hidden="true" />
+              <span className={styles.contactMethodLabel}>Email</span>
+              <span className={styles.contactMethodValue}>ssachra@gmail.com</span>
+              <img className={styles.contactMethodUnderline} src={contactEmailUnderlineSrc} alt="" aria-hidden="true" />
+            </a>
+
+            <a
+              className={`${styles.contactMethod} ${styles.contactMethodGithub}`}
+              href="https://github.com/moon-reve"
+              target="_blank"
+              rel="noreferrer"
+            >
+              <img className={styles.contactMethodTick} src={contactTickSrc} alt="" aria-hidden="true" />
+              <span className={styles.contactMethodLabel}>GitHub</span>
+              <span className={styles.contactMethodValue}>https://github.com/moon-reve</span>
+              <img className={styles.contactMethodUnderline} src={contactGithubUnderlineSrc} alt="" aria-hidden="true" />
+            </a>
+
+            <div className={`${styles.contactMethod} ${styles.contactMethodResume}`}>
+              <img className={styles.contactMethodTick} src={contactTickSrc} alt="" aria-hidden="true" />
+              <span className={styles.contactMethodLabel}>Resume</span>
+              <span className={styles.contactMethodValue}>PDF Preview &amp; Download</span>
+              <img className={styles.contactMethodUnderline} src={contactResumeUnderlineSrc} alt="" aria-hidden="true" />
+            </div>
+          </div>
+        </div>
+
         <img className={styles.contactGround} src={contactGroundSrc} alt="" aria-hidden="true" />
         <img className={styles.contactGrid} src={journeyTextureGridSrc} alt="" aria-hidden="true" />
-
-        <div className={styles.contactIntro}>
-          <h2 className={styles.contactTitle} id="contact-title">
-            Let's build
-            <br />
-            together.
-          </h2>
-          <p>좋은 경험은 좋은 대화에서 시작된다고 믿습니다</p>
-        </div>
-
-        <div className={styles.contactCta}>
-          <div className={styles.contactAvailability}>
-            <img src={contactStatusDotSrc} alt="" aria-hidden="true" />
-            <p>Open to opportunities</p>
-          </div>
-          <a className={styles.contactHelloButton} href="mailto:ssachra@gmail.com">
-            <img src={contactButtonSrc} alt="" aria-hidden="true" />
-            <span>Say Hello →</span>
-          </a>
-        </div>
-
-        <div className={styles.contactMethods}>
-          <img className={styles.contactMethodsRule} src={contactsRuleSrc} alt="" aria-hidden="true" />
-
-          <a className={`${styles.contactMethod} ${styles.contactMethodEmail}`} href="mailto:ssachra@gmail.com">
-            <img className={styles.contactMethodTick} src={contactTickSrc} alt="" aria-hidden="true" />
-            <span className={styles.contactMethodLabel}>Email</span>
-            <span className={styles.contactMethodValue}>ssachra@gmail.com</span>
-            <img className={styles.contactMethodUnderline} src={contactEmailUnderlineSrc} alt="" aria-hidden="true" />
-          </a>
-
-          <a
-            className={`${styles.contactMethod} ${styles.contactMethodGithub}`}
-            href="https://github.com/moon-reve"
-            target="_blank"
-            rel="noreferrer"
-          >
-            <img className={styles.contactMethodTick} src={contactTickSrc} alt="" aria-hidden="true" />
-            <span className={styles.contactMethodLabel}>GitHub</span>
-            <span className={styles.contactMethodValue}>https://github.com/moon-reve</span>
-            <img className={styles.contactMethodUnderline} src={contactGithubUnderlineSrc} alt="" aria-hidden="true" />
-          </a>
-
-          <div className={`${styles.contactMethod} ${styles.contactMethodResume}`}>
-            <img className={styles.contactMethodTick} src={contactTickSrc} alt="" aria-hidden="true" />
-            <span className={styles.contactMethodLabel}>Resume</span>
-            <span className={styles.contactMethodValue}>PDF Preview &amp; Download</span>
-            <img className={styles.contactMethodUnderline} src={contactResumeUnderlineSrc} alt="" aria-hidden="true" />
-          </div>
-        </div>
       </div>
     </section>
   );

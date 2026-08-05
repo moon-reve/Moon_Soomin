@@ -1146,8 +1146,7 @@
 
 .projectsIntroEyebrow,
 .projectsIntroCategory,
-.projectsIntroHeadline,
-.projectsIntroBody {
+.projectsIntroHeadline {
   position: absolute;
   margin: 0;
 }
@@ -1162,6 +1161,10 @@
   white-space: nowrap;
 }
 
+.projectsIntroHeadlineLine {
+  display: block;
+}
+
 .projectsIntroEyebrow {
   inset-block-start: 0;
   inset-inline-start: 0.260417cqw;
@@ -1171,12 +1174,30 @@
 .projectsIntroCategory {
   inset-block-start: 2.447917cqw;
   inset-inline-start: 0.3125cqw;
+  inline-size: 6.25cqw;
+  block-size: 1.041667cqw;
+  overflow: hidden;
   color: #16150f;
 }
 
-.projectsIntroHeadline {
+.projectsIntroCategory > span {
+  position: absolute;
+  inset: 0;
+  display: block;
+  will-change: transform;
+}
+
+.projectsIntroHeadlineSlot {
+  position: absolute;
   inset-block-start: 4.0625cqw;
   inset-inline-start: 0;
+  inline-size: 20cqw;
+  block-size: 9.5cqw;
+  overflow: hidden;
+}
+
+.projectsIntroHeadline {
+  inset: 0;
   color: #16150f;
   font-family: 'Bricolage Grotesque', sans-serif;
   font-size: 5cqw;
@@ -1186,9 +1207,74 @@
   white-space: nowrap;
 }
 
-.projectsIntroBody {
+.projectsSummaryContent {
+  position: absolute;
+  inset: 0;
+  inset-inline-start: 0.3125cqw;
+  will-change: transform;
+}
+
+.projectsShortDescription,
+.projectsSummaryMeta p {
+  margin: 0;
+  color: #16150f;
+  font-family: 'Pretendard', sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.4;
+  white-space: nowrap;
+}
+
+.projectsShortDescription p {
+  margin: 0;
+}
+
+.projectsSummaryMeta {
+  display: flex;
+  flex-direction: column;
+  margin-block-start: 20px;
+}
+
+.projectsSummaryMeta .projectsSummaryRole {
+  margin-block-end: 12px;
+}
+
+.projectsSummaryContributions {
+  display: flex;
+  flex-direction: column;
+}
+
+.projectsHeadlineOutgoing {
+  animation: project-headline-out 0.52s cubic-bezier(0.76, 0, 0.24, 1) both;
+  animation-delay: calc(var(--project-headline-index, 0) * 0.11s);
+}
+
+@keyframes project-headline-out {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  to {
+    opacity: 0;
+    transform: translateY(45%);
+  }
+}
+
+.projectsIntroBodySlot {
+  position: absolute;
   inset-block-start: 14.010417cqw;
   inset-inline-start: 0.3125cqw;
+  inline-size: 20cqw;
+  block-size: 9cqw;
+  overflow: hidden;
+}
+
+.projectsIntroBody,
+.projectsResponsibilities {
+  position: absolute;
+  inset: 0;
+  margin: 0;
   color: #16150f;
   font-family: 'Pretendard', sans-serif;
   font-size: 0.833333cqw;
@@ -1196,6 +1282,51 @@
   letter-spacing: -0.016667cqw;
   line-height: 1.9;
   white-space: nowrap;
+}
+
+.projectsIntroBody p,
+.projectsResponsibilities p {
+  margin: 0;
+}
+
+.projectBodyLineOutgoing {
+  animation: project-body-line-out 0.35s cubic-bezier(0.76, 0, 0.24, 1) both;
+  animation-delay: calc(var(--project-exit-index, 0) * 0.06s);
+}
+
+.projectIntroLineHidden {
+  opacity: 0;
+}
+
+@keyframes project-body-line-out {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  to {
+    opacity: 0;
+    transform: translateY(80%);
+  }
+}
+
+.projectRevealLine {
+  opacity: 0;
+  animation: project-line-reveal 0.45s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation-delay: calc(0.18s + var(--project-line-index, 0) * 0.125s);
+  will-change: opacity, transform;
+}
+
+@keyframes project-line-reveal {
+  from {
+    opacity: 0;
+    transform: translateY(-0.8em);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .projectsDeck {
@@ -1892,12 +2023,29 @@
   filter: brightness(0);
 }
 
-.contactIntro {
+.contactLayoutGroup {
   position: absolute;
   z-index: 2;
-  inset-block-start: 10.364583cqw;
+  inset-block-start: 50%;
   inset-inline-start: 15.3125cqw;
+  inset-inline-end: 15.3125cqw;
+  block-size: 37.135417cqw;
+  transform: translateY(-50%);
+}
+
+.contactContentGroup {
+  position: relative;
   display: flex;
+  inline-size: fit-content;
+  block-size: fit-content;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.contactTextBox {
+  display: flex;
+  inline-size: fit-content;
+  block-size: fit-content;
   flex-direction: column;
   gap: 2.864583cqw;
   align-items: flex-start;
@@ -1907,10 +2055,11 @@
   margin: 0;
   color: #16150f;
   font-family: 'Bricolage Grotesque', sans-serif;
-  font-size: 8.90625cqw;
+  font-size: 170px;
   font-weight: 800;
   font-variation-settings: 'opsz' 96, 'wdth' 100;
-  letter-spacing: -0.35625cqw;
+  letter-spacing: -6px;
+  transform-origin: left top;
   white-space: nowrap;
 }
 
@@ -1918,16 +2067,16 @@
 .journeyHeadline,
 .projectsIntroHeadline,
 .skillsTitle,
-.contactTitle,
 .closingWordmark {
   line-height: 90%;
 }
 
-.heroTitle {
+.heroTitle,
+.contactTitle {
   line-height: 80%;
 }
 
-.contactIntro > p {
+.contactTextBox > p {
   margin: 0;
   color: rgb(22 21 15 / 72%);
   font-family: 'Pretendard', sans-serif;
@@ -1937,28 +2086,30 @@
   white-space: nowrap;
 }
 
-.contactCta {
-  position: absolute;
-  z-index: 2;
-  inset: 0;
+.contactActionGroup {
+  display: flex;
+  inline-size: fit-content;
+  block-size: fit-content;
+  margin-block-start: 5.104167cqw;
+  flex-direction: column;
+  gap: 0.601042cqw;
+  align-items: flex-start;
 }
 
-.contactAvailability {
-  position: absolute;
-  inset-block-start: 33.75cqw;
-  inset-inline-start: 15.3125cqw;
+.contactAvailabilityBox {
   display: flex;
+  inline-size: max-content;
   align-items: center;
   gap: 0.520833cqw;
 }
 
-.contactAvailability img {
+.contactAvailabilityBox img {
   display: block;
   inline-size: 0.625cqw;
   block-size: 0.625cqw;
 }
 
-.contactAvailability p {
+.contactAvailabilityBox p {
   margin: 0;
   color: rgb(22 21 15 / 70%);
   font-family: 'SF Pro Text', -apple-system, BlinkMacSystemFont, sans-serif;
@@ -1969,10 +2120,12 @@
   white-space: nowrap;
 }
 
+.contactHelloButtonBox {
+  inline-size: max-content;
+}
+
 .contactHelloButton {
-  position: absolute;
-  inset-block-start: 35.184375cqw;
-  inset-inline-start: 15.3125cqw;
+  position: relative;
   display: block;
   inline-size: 10.46875cqw;
   block-size: 3.4375cqw;
@@ -2004,20 +2157,11 @@
 
 .contactMethods {
   position: absolute;
-  z-index: 2;
-  inset-block-start: 42.8125cqw;
-  inset-inline-start: 15.3125cqw;
-  inline-size: 79.0625cqw;
+  box-sizing: border-box;
+  inset-block-start: 31.848958cqw;
+  inset-inline: 0;
   block-size: 4.6875cqw;
-}
-
-.contactMethodsRule {
-  position: absolute;
-  inset-block-start: 0;
-  inset-inline-start: 0;
-  display: block;
-  inline-size: 79.0625cqw;
-  block-size: 0.052083cqw;
+  border-block-start: 0.5px solid rgb(22 21 15 / 18%);
 }
 
 .contactMethod {
@@ -2278,7 +2422,8 @@
     inset-inline-start: 5%;
   }
 
-  .heroTitle {
+  .heroTitle,
+  .contactTitle {
     font-size: 18cqw;
     letter-spacing: -0.6cqw;
   }
