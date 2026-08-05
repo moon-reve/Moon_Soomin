@@ -280,8 +280,16 @@ export function createHoverV2Controller(
 
   function handlePointerMove(event: PointerEvent) {
     if (event.pointerType === 'touch') return;
+    pointerInside = true;
     lastPointerX = event.clientX;
     lastPointerY = event.clientY;
+    debugSnapshot.pointerInside = true;
+    debugSnapshot.pointerX = lastPointerX;
+    debugSnapshot.pointerY = lastPointerY;
+    if (enabled && state === 'idle') {
+      beginTracking(true);
+      return;
+    }
     if (state === 'tracking') updateTargetsFromPointer();
   }
 

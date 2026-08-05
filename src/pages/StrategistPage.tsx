@@ -85,8 +85,11 @@ import skillsPlayBoxGridSrc from '../assets/strategist-skills/play-box-grid.svg'
 import skillsPlayBoxSrc from '../assets/strategist-skills/play-box.svg';
 import circleAnnotationSrc from '../assets/strategist-hero/circle-annotation.svg';
 import copyAccentSrc from '../assets/strategist-hero/copy-accent.svg';
-import dotFieldSrc from '../assets/strategist-hero/dot-field.svg';
-import dotLinksSrc from '../assets/strategist-hero/dot-links.svg';
+import {
+  HERO_CIRCLE_BODY_PATH,
+  HERO_CIRCLE_END_PATH,
+  HERO_CIRCLE_START_PATH,
+} from '../assets/strategist-hero/circle-draw-path';
 import groundSrc from '../assets/strategist-hero/ground.svg';
 import heroKickerDotSrc from '../assets/strategist-hero/hero-kicker-dot.svg';
 import nuniBodySrc from '../assets/strategist-hero/nuni-body.svg';
@@ -100,6 +103,7 @@ import sectionDotActiveSrc from '../assets/strategist-hero/section-dot-active.sv
 import sectionDotSrc from '../assets/strategist-hero/section-dot.svg';
 import textureGridSrc from '../assets/strategist-hero/texture-grid.svg';
 import { useReducedMotion } from '../hooks/useReducedMotion';
+import { useSmoothScroll } from '../hooks/useSmoothScroll';
 import styles from './StrategistPage.module.scss';
 
 const sectionLabels = ['Hero', 'About', 'Journey', 'Projects', 'Skills', 'Contact'] as const;
@@ -155,13 +159,13 @@ const skillChipScale = 1332 / 1478;
 
 const nuniSectionWaypoints = [
   { id: 'hero', x: 73.0208, y: 10.7813, scale: 1 },
-  { id: 'about', x: 79.5, y: 13.5, scale: 1.12 },
+  { id: 'about', x: 3.65, y: 15.35, scale: 1.12 },
   { id: 'journey', x: 81, y: 7.5, scale: 1.08 },
-  { id: 'journey-discovery', x: 75.5, y: 8.5, scale: 1.08 },
+  { id: 'journey-discovery', x: 6, y: 39.8, scale: 1.08 },
   { id: 'journey-observation', x: 82, y: 8, scale: 1.08 },
-  { id: 'journey-movement', x: 75, y: 8.7, scale: 1.08 },
-  { id: 'journey-expansion', x: 82, y: 8, scale: 1.08 },
-  { id: 'journey-reality', x: 75.5, y: 8.5, scale: 1.08 },
+  { id: 'journey-movement', x: 40.5, y: 25.5, scale: 1.08 },
+  { id: 'journey-expansion', x: 75, y: 40, scale: 1.08 },
+  { id: 'journey-reality', x: 6, y: 8.5, scale: 1.08 },
   { id: 'projects', x: 81, y: 34.5, scale: 1.25 },
   { id: 'skills', x: 59.43, y: 24.79, scale: 1.42 },
   { id: 'contact', x: 71.63, y: 29.58, scale: 1.42 },
@@ -169,6 +173,201 @@ const nuniSectionWaypoints = [
 ] as const;
 
 type SectionLabel = (typeof sectionLabels)[number];
+
+const heroAmbientDotLayout = [
+  { x: 704, y: 464, r: 4.2, opacity: 0.34 },
+  { x: 1018, y: 352, r: 4.8, opacity: 0.42 },
+  { x: 1266, y: 492, r: 3.7, opacity: 0.3 },
+  { x: 1508, y: 306, r: 4.4, opacity: 0.38 },
+  { x: 1738, y: 548, r: 4, opacity: 0.34 },
+  { x: 824, y: 832, r: 3.5, opacity: 0.28 },
+  { x: 1192, y: 744, r: 4.3, opacity: 0.36 },
+  { x: 1606, y: 824, r: 3.8, opacity: 0.32 },
+] as const;
+
+const heroAmbientLinks = [[0, 1], [3, 4], [5, 6]] as const;
+
+function HeroAmbientDots() {
+  const svgRef = useRef<SVGSVGElement>(null);
+  const dotRefs = useRef<Array<SVGCircleElement | null>>([]);
+  const linkRefs = useRef<Array<SVGLineElement | null>>([]);
+  const prefersReducedMotion = useReducedMotion();
+
+  useEffect(() => {
+    const svg = svgRef.current;
+    if (!svg) return undefined;
+    let disposed = false;
+    const timelines = new Set<gsap.core.Timeline>();
+    const delayedCalls = new Set<gsap.core.Tween>();
+    const animatedElements = [...dotRefs.current, ...linkRefs.current].filter(Boolean);
+    const positions = heroAmbientDotLayout.map(({ x, y }) => ({ x, y }));
+
+    const randomPoint = (ignored: readonly number[] = []) => {
+      let point = { x: 0, y: 0 };
+      for (let attempt = 0; attempt < 24; attempt += 1) {
+        point = {
+          x: gsap.utils.random(660, 1780),
+          y: gsap.utils.random(135, 955),
+        };
+        const hasEnoughSpace = positions.every((position, index) => (
+          ignored.includes(index) || Math.hypot(point.x - position.x, point.y - position.y) > 135
+        ));
+        if (hasEnoughSpace) break;
+      }
+      return point;
+    };
+
+    const placePair = (from: number, to: number) => {
+      const first = randomPoint([from, to]);
+      let second = randomPoint([from, to]);
+      for (let attempt = 0; attempt < 18; attempt += 1) {
+        const angle = gsap.utils.random(0, Math.PI * 2);
+        const distance = gsap.utils.random(170, 390);
+        const candidate = {
+          x: first.x + Math.cos(angle) * distance,
+          y: first.y + Math.sin(angle) * distance,
+        };
+        if (candidate.x < 660 || candidate.x > 1780 || candidate.y < 135 || candidate.y > 955) continue;
+        const hasEnoughSpace = positions.every((position, index) => (
+          index === from || index === to
+          || Math.hypot(candidate.x - position.x, candidate.y - position.y) > 135
+        ));
+        if (hasEnoughSpace) {
+          second = candidate;
+          break;
+        }
+      }
+      positions[from] = first;
+      positions[to] = second;
+      return { first, second };
+    };
+
+    const startPairCycle = (groupIndex: number, delay: number) => {
+      const call = gsap.delayedCall(Math.max(0.05, delay), () => {
+        delayedCalls.delete(call);
+        if (disposed) return;
+        const [from, to] = heroAmbientLinks[groupIndex];
+        const firstDot = dotRefs.current[from];
+        const secondDot = dotRefs.current[to];
+        const line = linkRefs.current[groupIndex];
+        if (!firstDot || !secondDot || !line) return;
+
+        const { first, second } = placePair(from, to);
+        const distance = Math.hypot(second.x - first.x, second.y - first.y);
+        firstDot.setAttribute('cx', first.x.toFixed(2));
+        firstDot.setAttribute('cy', first.y.toFixed(2));
+        secondDot.setAttribute('cx', second.x.toFixed(2));
+        secondDot.setAttribute('cy', second.y.toFixed(2));
+        line.setAttribute('x1', first.x.toFixed(2));
+        line.setAttribute('y1', first.y.toFixed(2));
+        line.setAttribute('x2', second.x.toFixed(2));
+        line.setAttribute('y2', second.y.toFixed(2));
+
+        gsap.set([firstDot, secondDot], { opacity: 0 });
+        gsap.set(line, {
+          opacity: 0.16,
+          strokeDasharray: distance,
+          strokeDashoffset: distance,
+        });
+
+        const timeline = gsap.timeline({
+          onComplete: () => {
+            timelines.delete(timeline);
+            startPairCycle(groupIndex, gsap.utils.random(1.2, 2.8));
+          },
+        });
+        timeline
+          .to(firstDot, { opacity: heroAmbientDotLayout[from].opacity, duration: 1.25, ease: 'sine.inOut' }, 0)
+          .to(secondDot, { opacity: heroAmbientDotLayout[to].opacity, duration: 1.25, ease: 'sine.inOut' }, 0.25)
+          .to(line, { strokeDashoffset: 0, duration: 1.15, ease: 'power1.inOut' }, 1.6)
+          .to(line, { strokeDashoffset: -distance, duration: 0.9, ease: 'power1.inOut' }, 4.1)
+          .to([firstDot, secondDot], { opacity: 0, duration: 1.15, ease: 'sine.inOut' }, 5.15);
+        timelines.add(timeline);
+      });
+      delayedCalls.add(call);
+    };
+
+    const startSoloCycle = (dotIndex: number, delay: number) => {
+      const call = gsap.delayedCall(Math.max(0.05, delay), () => {
+        delayedCalls.delete(call);
+        if (disposed) return;
+        const dot = dotRefs.current[dotIndex];
+        if (!dot) return;
+        const point = randomPoint([dotIndex]);
+        positions[dotIndex] = point;
+        dot.setAttribute('cx', point.x.toFixed(2));
+        dot.setAttribute('cy', point.y.toFixed(2));
+        gsap.set(dot, { opacity: 0 });
+        const timeline = gsap.timeline({
+          onComplete: () => {
+            timelines.delete(timeline);
+            startSoloCycle(dotIndex, gsap.utils.random(1.5, 3.5));
+          },
+        });
+        timeline
+          .to(dot, { opacity: heroAmbientDotLayout[dotIndex].opacity, duration: 1.4, ease: 'sine.inOut' })
+          .to(dot, { opacity: 0, duration: 1.3, ease: 'sine.inOut' }, `+=${gsap.utils.random(2.4, 4.2)}`);
+        timelines.add(timeline);
+      });
+      delayedCalls.add(call);
+    };
+
+    if (prefersReducedMotion) {
+      heroAmbientDotLayout.forEach((dot, index) => {
+        gsap.set(dotRefs.current[index], { opacity: dot.opacity * 0.8 });
+      });
+      heroAmbientLinks.forEach(([from, to], index) => {
+        const line = linkRefs.current[index];
+        line?.setAttribute('x1', positions[from].x.toFixed(2));
+        line?.setAttribute('y1', positions[from].y.toFixed(2));
+        line?.setAttribute('x2', positions[to].x.toFixed(2));
+        line?.setAttribute('y2', positions[to].y.toFixed(2));
+        gsap.set(line, { opacity: 0.08 });
+      });
+    } else {
+      heroAmbientLinks.forEach((_, index) => startPairCycle(index, index * 2.1));
+      startSoloCycle(2, 1.1);
+      startSoloCycle(7, 3.4);
+    }
+
+    return () => {
+      disposed = true;
+      delayedCalls.forEach((call) => call.kill());
+      timelines.forEach((timeline) => timeline?.kill());
+      gsap.killTweensOf(animatedElements);
+    };
+  }, [prefersReducedMotion]);
+
+  return (
+    <svg
+      ref={svgRef}
+      className={styles.heroAmbientField}
+      viewBox="0 0 1920 1080"
+      preserveAspectRatio="none"
+      aria-hidden="true"
+    >
+      <g className={styles.heroAmbientLinks}>
+        {heroAmbientLinks.map(([from, to], index) => (
+          <line
+            key={`${from}-${to}`}
+            ref={(element) => { linkRefs.current[index] = element; }}
+          />
+        ))}
+      </g>
+      <g className={styles.heroAmbientDots}>
+        {heroAmbientDotLayout.map((dot, index) => (
+          <circle
+            key={`${dot.x}-${dot.y}`}
+            ref={(element) => { dotRefs.current[index] = element; }}
+            cx={dot.x}
+            cy={dot.y}
+            r={dot.r}
+          />
+        ))}
+      </g>
+    </svg>
+  );
+}
 
 const navigationSectionGroups: ReadonlyArray<{ label: SectionLabel; ids: readonly string[] }> = [
   { label: 'Hero', ids: ['hero'] },
@@ -193,7 +392,10 @@ const darkNavigationSectionIds = ['journey', 'journey-movement', 'closing'] as c
 
 function ScrollNuni() {
   const sceneRef = useRef<HTMLDivElement>(null);
+  const ambientMotionRef = useRef<HTMLDivElement>(null);
   const characterRef = useRef<HTMLDivElement>(null);
+  const bodyLookRef = useRef<HTMLDivElement>(null);
+  const eyeDirectionRef = useRef<HTMLSpanElement>(null);
   const eyesRef = useRef<HTMLSpanElement>(null);
   const shadowRef = useRef<HTMLSpanElement>(null);
   const prefersReducedMotion = useReducedMotion();
@@ -213,12 +415,263 @@ function ScrollNuni() {
       return undefined;
     }
 
-    playIdle(idleTargets);
+    playIdle(idleTargets, {
+      floatHeight: 6,
+      floatSpeed: 3.4,
+      bodyScaleXUp: 0.999,
+      bodyScaleYUp: 1.002,
+      bodyScaleXDown: 1.001,
+      bodyScaleYDown: 0.999,
+      shadowScaleMin: 0.96,
+      shadowScaleMax: 1.02,
+      shadowOpacityMin: 0.82,
+      shadowOpacityMax: 0.9,
+    });
     startAutoBlink(blinkTargets);
 
     return () => {
       resetIdle(idleTargets);
       resetAutoBlink(blinkTargets);
+    };
+  }, [prefersReducedMotion]);
+
+  useEffect(() => {
+    const scene = sceneRef.current;
+    const ambientMotion = ambientMotionRef.current;
+    const hero = document.getElementById('hero');
+    if (!scene || !ambientMotion || !hero || prefersReducedMotion) return undefined;
+
+    let active = false;
+    let followingPointer = false;
+    let pointerX: number | null = null;
+    let pointerY: number | null = null;
+    let stillTimer = 0;
+    let roamCall: gsap.core.Tween | null = null;
+
+    const heroIsActive = () => {
+      const rect = hero.getBoundingClientRect();
+      return rect.top < window.innerHeight * 0.55 && rect.bottom > window.innerHeight * 0.45;
+    };
+
+    const scheduleRoam = () => {
+      roamCall?.kill();
+      if (!active) return;
+      roamCall = gsap.to(ambientMotion, {
+        x: gsap.utils.random(-28, 30),
+        y: gsap.utils.random(-18, 20),
+        rotation: gsap.utils.random(-1.6, 1.6),
+        duration: gsap.utils.random(5.2, 7.4),
+        ease: 'sine.inOut',
+        overwrite: 'auto',
+        onComplete: scheduleRoam,
+      });
+    };
+
+    const clearStillTimer = () => {
+      if (!stillTimer) return;
+      window.clearTimeout(stillTimer);
+      stillTimer = 0;
+    };
+
+    const followStillPointer = () => {
+      stillTimer = 0;
+      if (!active || pointerX === null || pointerY === null) return;
+      followingPointer = true;
+      roamCall?.kill();
+
+      const rect = scene.getBoundingClientRect();
+      const heroRect = hero.getBoundingClientRect();
+      const centerX = rect.left + rect.width * 0.5;
+      const centerY = rect.top + rect.height * 0.48;
+      const rawX = pointerX - centerX - 46;
+      const rawY = pointerY - centerY;
+      const targetX = gsap.utils.clamp(36 - centerX, window.innerWidth - 36 - centerX, rawX);
+      const targetY = gsap.utils.clamp(
+        Math.max(84, heroRect.top + 36) - centerY,
+        Math.min(window.innerHeight - 36, heroRect.bottom - 36) - centerY,
+        rawY,
+      );
+      const distance = Math.hypot(targetX, targetY);
+
+      gsap.to(ambientMotion, {
+        x: targetX,
+        y: targetY,
+        rotation: gsap.utils.clamp(-2.4, 2.4, targetX * 0.008),
+        duration: gsap.utils.clamp(1.5, 2.7, distance / 95),
+        ease: 'power2.inOut',
+        overwrite: 'auto',
+      });
+    };
+
+    const scheduleStillFollow = () => {
+      clearStillTimer();
+      if (!active || pointerX === null || pointerY === null) return;
+      stillTimer = window.setTimeout(followStillPointer, 2000);
+    };
+
+    const syncHeroState = () => {
+      const nextActive = heroIsActive();
+      if (nextActive === active) return;
+      active = nextActive;
+      followingPointer = false;
+      if (active) {
+        scheduleRoam();
+        scheduleStillFollow();
+      } else {
+        clearStillTimer();
+        roamCall?.kill();
+        gsap.to(ambientMotion, {
+          x: 0,
+          y: 0,
+          rotation: 0,
+          duration: 0.8,
+          ease: 'power2.out',
+          overwrite: 'auto',
+        });
+      }
+    };
+
+    const handlePointerMove = (event: PointerEvent) => {
+      if (event.pointerType === 'touch') return;
+      pointerX = event.clientX;
+      pointerY = event.clientY;
+      if (!active) return;
+      if (followingPointer) {
+        followingPointer = false;
+        scheduleRoam();
+      }
+      scheduleStillFollow();
+    };
+
+    const handlePointerLeave = () => {
+      pointerX = null;
+      pointerY = null;
+      clearStillTimer();
+      if (!active || !followingPointer) return;
+      followingPointer = false;
+      scheduleRoam();
+    };
+
+    syncHeroState();
+    window.addEventListener('pointermove', handlePointerMove, { passive: true });
+    window.addEventListener('scroll', syncHeroState, { passive: true });
+    window.addEventListener('resize', syncHeroState);
+    document.documentElement.addEventListener('pointerleave', handlePointerLeave);
+
+    return () => {
+      clearStillTimer();
+      roamCall?.kill();
+      window.removeEventListener('pointermove', handlePointerMove);
+      window.removeEventListener('scroll', syncHeroState);
+      window.removeEventListener('resize', syncHeroState);
+      document.documentElement.removeEventListener('pointerleave', handlePointerLeave);
+      gsap.killTweensOf(ambientMotion);
+      gsap.set(ambientMotion, { clearProps: 'transform' });
+    };
+  }, [prefersReducedMotion]);
+
+  useEffect(() => {
+    const scene = sceneRef.current;
+    const bodyLook = bodyLookRef.current;
+    const eyeDirection = eyeDirectionRef.current;
+    if (!scene || !bodyLook || !eyeDirection) return undefined;
+
+    if (prefersReducedMotion) {
+      gsap.set([bodyLook, eyeDirection], { clearProps: 'transform' });
+      return undefined;
+    }
+
+    const moveEyeX = gsap.quickTo(eyeDirection, 'x', {
+      duration: 0.22,
+      ease: 'power2.out',
+    });
+    const moveEyeY = gsap.quickTo(eyeDirection, 'y', {
+      duration: 0.22,
+      ease: 'power2.out',
+    });
+    const moveBodyX = gsap.quickTo(bodyLook, 'x', {
+      duration: 0.4,
+      ease: 'power2.out',
+    });
+    const moveBodyY = gsap.quickTo(bodyLook, 'y', {
+      duration: 0.4,
+      ease: 'power2.out',
+    });
+    const rotateBody = gsap.quickTo(bodyLook, 'rotation', {
+      duration: 0.4,
+      ease: 'power2.out',
+    });
+    let pointerX: number | null = null;
+    let pointerY: number | null = null;
+    let frame = 0;
+
+    const updateEyeDirection = () => {
+      frame = 0;
+      if (pointerX === null || pointerY === null) return;
+
+      const sceneRect = scene.getBoundingClientRect();
+      const deltaX = pointerX - (sceneRect.left + (sceneRect.width * 0.5));
+      const deltaY = pointerY - (sceneRect.top + (sceneRect.height * 0.45));
+      const distance = Math.hypot(deltaX, deltaY);
+      if (distance < 1) {
+        moveEyeX(0);
+        moveEyeY(0);
+        moveBodyX(0);
+        moveBodyY(0);
+        rotateBody(0);
+        return;
+      }
+
+      const strength = Math.min(
+        1,
+        distance / Math.max(Math.min(window.innerWidth, window.innerHeight) * 0.18, 1),
+      );
+      moveEyeX((deltaX / distance) * 3.5 * strength);
+      moveEyeY((deltaY / distance) * 2.2 * strength);
+      moveBodyX((deltaX / distance) * 4 * strength);
+      moveBodyY((deltaY / distance) * 3 * strength);
+      rotateBody((deltaX / distance) * strength);
+    };
+
+    const requestEyeUpdate = () => {
+      if (frame) return;
+      frame = window.requestAnimationFrame(updateEyeDirection);
+    };
+    const handlePointerMove = (event: PointerEvent) => {
+      if (event.pointerType === 'touch') return;
+      pointerX = event.clientX;
+      pointerY = event.clientY;
+      requestEyeUpdate();
+    };
+    const resetEyeDirection = () => {
+      pointerX = null;
+      pointerY = null;
+      moveEyeX(0);
+      moveEyeY(0);
+      moveBodyX(0);
+      moveBodyY(0);
+      rotateBody(0);
+    };
+
+    window.addEventListener('pointermove', handlePointerMove, { passive: true });
+    window.addEventListener('scroll', requestEyeUpdate, { passive: true });
+    window.addEventListener('resize', requestEyeUpdate);
+    window.addEventListener('blur', resetEyeDirection);
+    document.documentElement.addEventListener('pointerleave', resetEyeDirection);
+
+    return () => {
+      window.removeEventListener('pointermove', handlePointerMove);
+      window.removeEventListener('scroll', requestEyeUpdate);
+      window.removeEventListener('resize', requestEyeUpdate);
+      window.removeEventListener('blur', resetEyeDirection);
+      document.documentElement.removeEventListener('pointerleave', resetEyeDirection);
+      if (frame) window.cancelAnimationFrame(frame);
+      moveEyeX.tween.kill();
+      moveEyeY.tween.kill();
+      moveBodyX.tween.kill();
+      moveBodyY.tween.kill();
+      rotateBody.tween.kill();
+      gsap.set([bodyLook, eyeDirection], { clearProps: 'transform' });
     };
   }, [prefersReducedMotion]);
 
@@ -233,7 +686,7 @@ function ScrollNuni() {
     let activeId = '';
     let frame = 0;
 
-    const moveToActiveSection = (immediate = false) => {
+    const moveToActiveSection = (immediate = false, force = false) => {
       frame = 0;
       const viewportAnchor = window.innerHeight * 0.5;
       let closest = sections[0];
@@ -249,18 +702,20 @@ function ScrollNuni() {
         }
       });
 
-      if (!closest || (!immediate && closest.waypoint.id === activeId)) return;
+      if (!closest || (!immediate && !force && closest.waypoint.id === activeId)) return;
       activeId = closest.waypoint.id;
       const { x, y, scale } = closest.waypoint;
+      const targetX = (x / 100) * window.innerWidth;
+      const targetY = (y / 100) * window.innerWidth;
 
       if (immediate || prefersReducedMotion) {
-        gsap.set(scene, { x: `${x}vw`, y: `${y}vw`, scale });
+        gsap.set(scene, { x: targetX, y: targetY, scale });
         return;
       }
 
       gsap.to(scene, {
-        x: `${x}vw`,
-        y: `${y}vw`,
+        x: targetX,
+        y: targetY,
         scale,
         duration: 1.15,
         ease: 'power3.out',
@@ -272,14 +727,18 @@ function ScrollNuni() {
       if (frame) return;
       frame = window.requestAnimationFrame(() => moveToActiveSection());
     };
+    const requestResizeUpdate = () => {
+      if (frame) window.cancelAnimationFrame(frame);
+      frame = window.requestAnimationFrame(() => moveToActiveSection(false, true));
+    };
 
     moveToActiveSection(true);
     window.addEventListener('scroll', requestUpdate, { passive: true });
-    window.addEventListener('resize', requestUpdate);
+    window.addEventListener('resize', requestResizeUpdate);
 
     return () => {
       window.removeEventListener('scroll', requestUpdate);
-      window.removeEventListener('resize', requestUpdate);
+      window.removeEventListener('resize', requestResizeUpdate);
       if (frame) window.cancelAnimationFrame(frame);
       gsap.killTweensOf(scene);
     };
@@ -287,29 +746,35 @@ function ScrollNuni() {
 
   return (
     <div ref={sceneRef} className={styles.heroNuni} aria-label="전략가 누니" role="img">
-      <span ref={shadowRef} className={styles.heroNuniShadow} aria-hidden="true">
-        <img src={nuniShadowSrc} alt="" draggable="false" />
-      </span>
-      <div ref={characterRef} className={styles.heroNuniCharacter}>
-        <span className={styles.heroNuniBody} aria-hidden="true">
-          <img src={nuniBodySrc} alt="" draggable="false" />
+      <div ref={ambientMotionRef} className={styles.heroNuniAmbientMotion}>
+        <span ref={shadowRef} className={styles.heroNuniShadow} aria-hidden="true">
+          <img src={nuniShadowSrc} alt="" draggable="false" />
         </span>
-        <span
-          className={styles.heroNuniShading}
-          style={{ '--hero-nuni-mask': `url("${nuniMaskSrc}")` } as CSSProperties}
-          aria-hidden="true"
-        >
-          <img src={nuniShadingSrc} alt="" draggable="false" />
-        </span>
-        <span className={styles.heroNuniCheeks} aria-hidden="true">
-          <img src={nuniCheeksSrc} alt="" draggable="false" />
-        </span>
-        <span className={styles.heroNuniMouth} aria-hidden="true">
-          <img src={nuniMouthSrc} alt="" draggable="false" />
-        </span>
-        <span ref={eyesRef} className={styles.heroNuniEyes} aria-hidden="true">
-          <img src={nuniEyesSrc} alt="" draggable="false" />
-        </span>
+        <div ref={characterRef} className={styles.heroNuniCharacter}>
+          <div ref={bodyLookRef} className={styles.heroNuniBodyLook}>
+          <span className={styles.heroNuniBody} aria-hidden="true">
+            <img src={nuniBodySrc} alt="" draggable="false" />
+          </span>
+          <span
+            className={styles.heroNuniShading}
+            style={{ '--hero-nuni-mask': `url("${nuniMaskSrc}")` } as CSSProperties}
+            aria-hidden="true"
+          >
+            <img src={nuniShadingSrc} alt="" draggable="false" />
+          </span>
+          <span className={styles.heroNuniCheeks} aria-hidden="true">
+            <img src={nuniCheeksSrc} alt="" draggable="false" />
+          </span>
+          <span className={styles.heroNuniMouth} aria-hidden="true">
+            <img src={nuniMouthSrc} alt="" draggable="false" />
+          </span>
+            <span ref={eyeDirectionRef} className={styles.heroNuniEyes} aria-hidden="true">
+              <span ref={eyesRef} className={styles.heroNuniBlink}>
+                <img src={nuniEyesSrc} alt="" draggable="false" />
+              </span>
+            </span>
+          </div>
+        </div>
       </div>
     </div>
   );
@@ -442,6 +907,71 @@ function TickerSequence({ hidden = false }: { hidden?: boolean }) {
   );
 }
 
+function AboutTicker() {
+  const trackRef = useRef<HTMLDivElement>(null);
+  const prefersReducedMotion = useReducedMotion();
+
+  useEffect(() => {
+    const track = trackRef.current;
+    if (!track) return undefined;
+    if (prefersReducedMotion) {
+      gsap.set(track, { xPercent: 0 });
+      return undefined;
+    }
+
+    const ticker = gsap.to(track, {
+      xPercent: -50,
+      duration: 55,
+      ease: 'none',
+      repeat: -1,
+    });
+    let lastScrollY = window.scrollY;
+    let scrollEndTimer = 0;
+
+    const restoreDefaultSpeed = () => {
+      scrollEndTimer = 0;
+      ticker.timeScale(1);
+    };
+
+    const applyBoostedSpeed = (boostedSpeed: number) => {
+      ticker.timeScale(boostedSpeed);
+      if (scrollEndTimer) window.clearTimeout(scrollEndTimer);
+      scrollEndTimer = window.setTimeout(restoreDefaultSpeed, 80);
+    };
+
+    const handleScroll = () => {
+      const distance = Math.abs(window.scrollY - lastScrollY);
+      lastScrollY = window.scrollY;
+      if (distance < 0.5) return;
+      applyBoostedSpeed(8);
+    };
+
+    const handleWheel = () => {
+      applyBoostedSpeed(8);
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    window.addEventListener('wheel', handleWheel, { passive: true });
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener('wheel', handleWheel);
+      if (scrollEndTimer) window.clearTimeout(scrollEndTimer);
+      ticker.kill();
+      gsap.set(track, { clearProps: 'transform' });
+    };
+  }, [prefersReducedMotion]);
+
+  return (
+    <div className={styles.skillsTicker} aria-label={`사용 도구: ${tickerLabels.join(', ')}`}>
+      <div ref={trackRef} className="about-ticker-track">
+        <TickerSequence />
+        <TickerSequence hidden />
+      </div>
+    </div>
+  );
+}
+
 function AboutSection() {
   return (
     <section id="about" className={styles.aboutSection} aria-labelledby="about-title">
@@ -449,26 +979,25 @@ function AboutSection() {
         <img className={styles.aboutGround} src={aboutGroundSrc} alt="" aria-hidden="true" />
         <img className={styles.aboutGrid} src={aboutTextureGridSrc} alt="" aria-hidden="true" />
 
-        <div className={styles.skillsTicker} aria-label={`사용 도구: ${tickerLabels.join(', ')}`}>
-          <div className={styles.tickerTrack}>
-            <TickerSequence />
-            <TickerSequence hidden />
-          </div>
-        </div>
+        <AboutTicker />
 
         <div className={styles.aboutLabel}>
           <span aria-hidden="true" />
           <p>ABOUT</p>
         </div>
 
-        <div className={styles.aboutTitle} id="about-title">
-          <p>I don’t just</p>
-          <div>
-            <p>design.</p>
-            <p>prototype.</p>
-            <p>build.</p>
-          </div>
-        </div>
+        <h2
+          className={styles.aboutTitle}
+          id="about-title"
+          aria-label="I don’t just design, prototype, and build."
+        >
+          <span className={styles.aboutTitleLead} aria-hidden="true">I don’t just</span>
+          <span className={styles.aboutTitleWords} aria-hidden="true">
+            <span>design.</span>
+            <span>prototype.</span>
+            <span>build.</span>
+          </span>
+        </h2>
         <img className={styles.aboutUnderline} src={aboutUnderlineSrc} alt="" aria-hidden="true" />
 
         <div className={styles.aboutBiography}>
@@ -511,17 +1040,18 @@ function JourneySection() {
           01
         </p>
 
-        <div className={styles.journeyChapter}>
-          <p className={styles.journeyEyebrow}>01 BEGINNING</p>
-          <p className={styles.journeyCategory}>( COFFEE )</p>
+        <div className="journey-layout">
+        <div className={`${styles.journeyChapter} journey-content`}>
+          <p className={`${styles.journeyEyebrow} journey-caption`}>01 BEGINNING</p>
+          <p className={`${styles.journeyCategory} journey-category`}>( COFFEE )</p>
 
-          <h2 className={styles.journeyHeadline} id="journey-title">
+          <h2 className={`${styles.journeyHeadline} journey-title`} id="journey-title">
             The first
             <br />
             step.
           </h2>
 
-          <p className={styles.journeyBody}>
+          <p className={`${styles.journeyBody} journey-body`}>
             커피를 배우고 싶다는 마음 하나로
             <br />
             처음 해외를 선택했습니다.
@@ -536,11 +1066,13 @@ function JourneySection() {
             <li>→ My first serious passion</li>
           </ul>
 
-          <p className={styles.journeyDuration}>Studied coffee for 2 years</p>
+          <p className={`${styles.journeyDuration} ${styles.journeyDurationInverse}`}>
+            Studied coffee for 2 years
+          </p>
         </div>
 
-        <figure className={styles.journeyPhotoFrame}>
-          <img className={styles.journeyPhoto} src={journeyPhotoSrc} alt="드립 커피 추출 장면" />
+        <figure className={`${styles.journeyPhotoFrame} journey-photo-frame`}>
+          <img className={`${styles.journeyPhoto} journey-photo`} src={journeyPhotoSrc} alt="드립 커피 추출 장면" />
           <img
             className={styles.journeyPhotoBorder}
             src={journeyWhitePhotoBorderSrc}
@@ -559,8 +1091,9 @@ function JourneySection() {
             alt=""
             aria-hidden="true"
           />
-          <figcaption className={styles.journeyCaptionInverse}>Hand drip</figcaption>
+          <figcaption className={`${styles.journeyCaptionInverse} journey-photo-caption`}>Hand drip</figcaption>
         </figure>
+        </div>
       </div>
     </section>
   );
@@ -579,17 +1112,18 @@ function JourneyDiscoverySection() {
 
         <p className={styles.journeyGhostNumber} aria-hidden="true">02</p>
 
-        <div className={`${styles.journeyChapter} ${styles.journeyChapterLight}`}>
-          <p className={styles.journeyEyebrow}>02 DISCOVERY</p>
-          <p className={styles.journeyCategory}>( JAPAN )</p>
+        <div className="journey-layout">
+        <div className={`${styles.journeyChapter} ${styles.journeyChapterLight} journey-content`}>
+          <p className={`${styles.journeyEyebrow} journey-caption`}>02 DISCOVERY</p>
+          <p className={`${styles.journeyCategory} journey-category`}>( JAPAN )</p>
 
-          <h2 className={styles.journeyHeadline} id="journey-discovery-title">
+          <h2 className={`${styles.journeyHeadline} journey-title`} id="journey-discovery-title">
             Beyond
             <br />
             borders.
           </h2>
 
-          <p className={styles.journeyBody}>
+          <p className={`${styles.journeyBody} journey-body`}>
             일본에서 생활하며 다양한 사람을 만났습니다.
             <br />
             화장품 판매와 온라인 MD를 경험하며
@@ -607,9 +1141,9 @@ function JourneyDiscoverySection() {
           <p className={styles.journeyDuration}>Lived in Japan for 6 years</p>
         </div>
 
-        <figure className={styles.journeyPhotoFrame}>
+        <figure className={`${styles.journeyPhotoFrame} journey-photo-frame`}>
           <img
-            className={styles.journeyPhoto}
+            className={`${styles.journeyPhoto} journey-photo`}
             src={discoveryPhotoSrc}
             alt="일본의 벚꽃이 핀 강변 야경"
           />
@@ -631,8 +1165,9 @@ function JourneyDiscoverySection() {
             alt=""
             aria-hidden="true"
           />
-          <figcaption>Yozakura</figcaption>
+          <figcaption className="journey-photo-caption">Yozakura</figcaption>
         </figure>
+        </div>
       </div>
     </section>
   );
@@ -651,17 +1186,18 @@ function JourneyObservationSection() {
 
         <p className={styles.journeyGhostNumber} aria-hidden="true">03</p>
 
-        <div className={`${styles.journeyChapter} ${styles.journeyChapterLight}`}>
-          <p className={styles.journeyEyebrow}>03 OBSERVATION</p>
-          <p className={styles.journeyCategory}>( Photography )</p>
+        <div className="journey-layout">
+        <div className={`${styles.journeyChapter} ${styles.journeyChapterLight} journey-content`}>
+          <p className={`${styles.journeyEyebrow} journey-caption`}>03 OBSERVATION</p>
+          <p className={`${styles.journeyCategory} journey-category`}>( Photography )</p>
 
-          <h2 className={styles.journeyHeadline} id="journey-observation-title">
+          <h2 className={`${styles.journeyHeadline} journey-title`} id="journey-observation-title">
             Every moment
             <br />
             matters.
           </h2>
 
-          <p className={styles.journeyBody}>
+          <p className={`${styles.journeyBody} journey-body`}>
             순간을 기록하는 것에서 시작해
             <br />
             사람과 공간을 바라보는 시선을 배웠습니다.
@@ -681,9 +1217,9 @@ function JourneyObservationSection() {
           </p>
         </div>
 
-        <figure className={styles.journeyPhotoFrame}>
+        <figure className={`${styles.journeyPhotoFrame} journey-photo-frame`}>
           <img
-            className={styles.journeyPhoto}
+            className={`${styles.journeyPhoto} journey-photo`}
             src={observationPhotoSrc}
             alt="카메라로 촬영 중인 모습"
           />
@@ -705,8 +1241,9 @@ function JourneyObservationSection() {
             alt=""
             aria-hidden="true"
           />
-          <figcaption>Portrait</figcaption>
+          <figcaption className="journey-photo-caption">Portrait</figcaption>
         </figure>
+        </div>
       </div>
     </section>
   );
@@ -730,17 +1267,18 @@ function JourneyMovementSection() {
           04
         </p>
 
-        <div className={styles.journeyChapter}>
-          <p className={styles.journeyEyebrow}>04 MOVEMENT</p>
-          <p className={styles.journeyCategory}>( MOTION )</p>
+        <div className="journey-layout">
+        <div className={`${styles.journeyChapter} journey-content`}>
+          <p className={`${styles.journeyEyebrow} journey-caption`}>04 MOVEMENT</p>
+          <p className={`${styles.journeyCategory} journey-category`}>( MOTION )</p>
 
-          <h2 className={styles.journeyHeadline} id="journey-movement-title">
+          <h2 className={`${styles.journeyHeadline} journey-title`} id="journey-movement-title">
             Stories
             <br />
             in motion.
           </h2>
 
-          <p className={styles.journeyBody}>
+          <p className={`${styles.journeyBody} journey-body`}>
             정적인 장면을 넘어
             <br />
             시간과 흐름을 담기 시작했습니다.
@@ -762,9 +1300,9 @@ function JourneyMovementSection() {
           </p>
         </div>
 
-        <figure className={styles.journeyPhotoFrame}>
+        <figure className={`${styles.journeyPhotoFrame} journey-photo-frame`}>
           <img
-            className={styles.journeyPhoto}
+            className={`${styles.journeyPhoto} journey-photo`}
             src={movementPhotoSrc}
             alt="인터뷰 영상 촬영 현장"
           />
@@ -786,8 +1324,9 @@ function JourneyMovementSection() {
             alt=""
             aria-hidden="true"
           />
-          <figcaption className={styles.journeyCaptionInverse}>Interview Video</figcaption>
+          <figcaption className={`${styles.journeyCaptionInverse} journey-photo-caption`}>Interview Video</figcaption>
         </figure>
+        </div>
       </div>
     </section>
   );
@@ -806,17 +1345,18 @@ function JourneyExpansionSection() {
 
         <p className={styles.journeyGhostNumber} aria-hidden="true">05</p>
 
-        <div className={`${styles.journeyChapter} ${styles.journeyChapterLight}`}>
-          <p className={styles.journeyEyebrow}>05 EXPANSION</p>
-          <p className={styles.journeyCategory}>( INDONESIA )</p>
+        <div className="journey-layout">
+        <div className={`${styles.journeyChapter} ${styles.journeyChapterLight} journey-content`}>
+          <p className={`${styles.journeyEyebrow} journey-caption`}>05 EXPANSION</p>
+          <p className={`${styles.journeyCategory} journey-category`}>( INDONESIA )</p>
 
-          <h2 className={styles.journeyHeadline} id="journey-expansion-title">
+          <h2 className={`${styles.journeyHeadline} journey-title`} id="journey-expansion-title">
             Changed
             <br />
             by the world.
           </h2>
 
-          <p className={styles.journeyBody}>
+          <p className={`${styles.journeyBody} journey-body`}>
             새로운 환경은 익숙했던 시선을 바꿔주었습니다.
             <br />
             다양한 문화와 사람을 경험하며
@@ -836,9 +1376,9 @@ function JourneyExpansionSection() {
           </p>
         </div>
 
-        <figure className={styles.journeyPhotoFrame}>
+        <figure className={`${styles.journeyPhotoFrame} journey-photo-frame`}>
           <img
-            className={styles.journeyPhoto}
+            className={`${styles.journeyPhoto} journey-photo`}
             src={expansionPhotoSrc}
             alt="인도네시아 바다 위로 지는 석양"
           />
@@ -860,8 +1400,9 @@ function JourneyExpansionSection() {
             alt=""
             aria-hidden="true"
           />
-          <figcaption>Pulau Macan</figcaption>
+          <figcaption className="journey-photo-caption">Pulau Macan</figcaption>
         </figure>
+        </div>
       </div>
     </section>
   );
@@ -880,17 +1421,18 @@ function JourneyRealitySection() {
 
         <p className={styles.journeyGhostNumber} aria-hidden="true">06</p>
 
-        <div className={`${styles.journeyChapter} ${styles.journeyChapterLight}`}>
-          <p className={styles.journeyEyebrow}>06 CONNECTION</p>
-          <p className={styles.journeyCategory}>( UI/UX )</p>
+        <div className="journey-layout">
+        <div className={`${styles.journeyChapter} ${styles.journeyChapterLight} journey-content`}>
+          <p className={`${styles.journeyEyebrow} journey-caption`}>06 CONNECTION</p>
+          <p className={`${styles.journeyCategory} journey-category`}>( UI/UX )</p>
 
-          <h2 className={styles.journeyHeadline} id="journey-reality-title">
+          <h2 className={`${styles.journeyHeadline} journey-title`} id="journey-reality-title">
             Ideas
             <br />
             into reality.
           </h2>
 
-          <p className={styles.journeyBody}>
+          <p className={`${styles.journeyBody} journey-body`}>
             커피에서 시작된 호기심은 사진과 영상,
             <br />
             그리고 다양한 경험으로 이어졌습니다.
@@ -910,9 +1452,9 @@ function JourneyRealitySection() {
           </p>
         </div>
 
-        <figure className={styles.journeyPhotoFrame}>
+        <figure className={`${styles.journeyPhotoFrame} journey-photo-frame`}>
           <img
-            className={styles.journeyPhoto}
+            className={`${styles.journeyPhoto} journey-photo`}
             src={realityPhotoSrc}
             alt="팀원들과 화면을 보며 디자인을 논의하는 모습"
           />
@@ -934,8 +1476,9 @@ function JourneyRealitySection() {
             alt=""
             aria-hidden="true"
           />
-          <figcaption>Team Palette</figcaption>
+          <figcaption className="journey-photo-caption">Team Palette</figcaption>
         </figure>
+        </div>
       </div>
     </section>
   );
@@ -1253,6 +1796,8 @@ function ClosingSection() {
 }
 
 export default function StrategistPage() {
+  useSmoothScroll();
+
   return (
     <main className={styles.strategistPage}>
       <ScrollNuni />
@@ -1262,39 +1807,146 @@ export default function StrategistPage() {
           <img className={styles.heroGround} src={groundSrc} alt="" aria-hidden="true" />
           <img className={styles.heroGrid} src={textureGridSrc} alt="" aria-hidden="true" />
 
-          <div className={styles.circleAnnotation} aria-hidden="true">
-            <img src={circleAnnotationSrc} alt="" draggable="false" />
+          <div className="hero-text-block">
+            <div className="hero-kicker">
+              <img
+                className="hero-kicker__dot"
+                src={heroKickerDotSrc}
+                alt=""
+                aria-hidden="true"
+              />
+              <p className="hero-kicker__text">PRODUCT THINKING · UI/UX · FRONT-END · AI</p>
+            </div>
+
+            <h1 className={styles.heroTitle} id="hero-title">
+              <span className={styles.heroTitleText}>
+                Ideas
+                <br />
+                into
+                <br />
+                Reality
+              </span>
+              <span className={styles.circleAnnotation} aria-hidden="true">
+                <svg
+                  className={styles.circleDrawSvg}
+                  viewBox="0 0 627.606 197.678"
+                  preserveAspectRatio="none"
+                >
+                  <defs>
+                    <mask
+                      id="hero-circle-start-mask"
+                      x="-40"
+                      y="-40"
+                      width="710"
+                      height="280"
+                      maskUnits="userSpaceOnUse"
+                    >
+                      <path
+                        className={`${styles.circleDrawPath} ${styles.circleDrawPathStart}`}
+                        pathLength="1"
+                        d={HERO_CIRCLE_START_PATH}
+                      />
+                    </mask>
+                    <mask
+                      id="hero-circle-body-mask"
+                      x="-40"
+                      y="-40"
+                      width="710"
+                      height="280"
+                      maskUnits="userSpaceOnUse"
+                    >
+                      <path
+                        className={`${styles.circleDrawPath} ${styles.circleDrawPathBody}`}
+                        pathLength="1"
+                        d={HERO_CIRCLE_BODY_PATH}
+                      />
+                    </mask>
+                    <mask
+                      id="hero-circle-end-mask"
+                      x="-40"
+                      y="-40"
+                      width="710"
+                      height="280"
+                      maskUnits="userSpaceOnUse"
+                    >
+                      <path
+                        className={`${styles.circleDrawPath} ${styles.circleDrawPathEnd}`}
+                        pathLength="1"
+                        d={HERO_CIRCLE_END_PATH}
+                      />
+                      <path
+                        className={styles.circleDrawPathGuard}
+                        d={HERO_CIRCLE_START_PATH}
+                      />
+                    </mask>
+                  </defs>
+                  <image
+                    href={circleAnnotationSrc}
+                    width="627.606"
+                    height="197.678"
+                    mask="url(#hero-circle-start-mask)"
+                    preserveAspectRatio="none"
+                  />
+                  <image
+                    href={circleAnnotationSrc}
+                    width="627.606"
+                    height="197.678"
+                    mask="url(#hero-circle-body-mask)"
+                    preserveAspectRatio="none"
+                  />
+                  <image
+                    href={circleAnnotationSrc}
+                    width="627.606"
+                    height="197.678"
+                    mask="url(#hero-circle-end-mask)"
+                    preserveAspectRatio="none"
+                  />
+                </svg>
+              </span>
+              <span className={styles.copyAccent} aria-hidden="true">
+                <svg
+                  className={styles.circleAccentDrawSvg}
+                  viewBox="0 0 153 101"
+                  preserveAspectRatio="none"
+                >
+                  <defs>
+                    <mask
+                      id="hero-circle-accent-draw-mask"
+                      x="0"
+                      y="0"
+                      width="153"
+                      height="101"
+                      maskUnits="userSpaceOnUse"
+                    >
+                      <path
+                        className={`${styles.circleDrawPath} ${styles.circleDrawPathBody}`}
+                        pathLength="1"
+                        d={HERO_CIRCLE_BODY_PATH}
+                        transform="translate(-478.064 -97.274)"
+                      />
+                    </mask>
+                  </defs>
+                  <image
+                    href={copyAccentSrc}
+                    width="153"
+                    height="101"
+                    mask="url(#hero-circle-accent-draw-mask)"
+                    preserveAspectRatio="none"
+                  />
+                </svg>
+              </span>
+            </h1>
+
+            <p className={styles.beliefCopy}>
+              좋은 경험은 작은 호기심에서 시작된다고 믿습니다.
+              <br />
+              질문에서 출발한 아이디어를 사람들에게 닿는 경험으로 연결하고,
+              <br />
+              그 과정 속에서 더 나은 답을 만들어갑니다.
+            </p>
           </div>
 
-          <div className={styles.heroKicker}>
-            <img src={heroKickerDotSrc} alt="" aria-hidden="true" />
-            <p>PRODUCT THINKING · UI/UX · FRONT-END · AI</p>
-          </div>
-
-          <div className={styles.heroTitle} id="hero-title">
-            <p>Ideas</p>
-            <p>into</p>
-            <p>Reality</p>
-          </div>
-
-          <div className={styles.copyAccent} aria-hidden="true">
-            <img src={copyAccentSrc} alt="" draggable="false" />
-          </div>
-
-          <p className={styles.beliefCopy}>
-            좋은 경험은 작은 호기심에서 시작된다고 믿습니다.
-            <br />
-            질문에서 출발한 아이디어를 사람들에게 닿는 경험으로 연결하고,
-            <br />
-            그 과정 속에서 더 나은 답을 만들어갑니다.
-          </p>
-
-          <div className={styles.heroDotLinks} aria-hidden="true">
-            <img src={dotLinksSrc} alt="" draggable="false" />
-          </div>
-          <div className={styles.heroDotField} aria-hidden="true">
-            <img src={dotFieldSrc} alt="" draggable="false" />
-          </div>
+          <HeroAmbientDots />
         </div>
       </section>
       <AboutSection />

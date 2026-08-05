@@ -26,7 +26,6 @@ function SelectionNuni() {
   const bodyLookRef = useRef<HTMLDivElement>(null);
   const eyesRef = useRef<HTMLSpanElement>(null);
   const shadowRef = useRef<HTMLSpanElement>(null);
-  const hoverAreaRef = useRef<HTMLDivElement>(null);
   const prefersReducedMotion = useReducedMotion();
 
   useEffect(() => {
@@ -34,8 +33,7 @@ function SelectionNuni() {
     const bodyLook = bodyLookRef.current;
     const eyes = eyesRef.current;
     const shadow = shadowRef.current;
-    const hoverArea = hoverAreaRef.current;
-    if (!floatLayer || !bodyLook || !eyes || !shadow || !hoverArea) return undefined;
+    if (!floatLayer || !bodyLook || !eyes || !shadow) return undefined;
 
     const idleTargets = { characterWrapper: floatLayer, shadow };
     const blinkTargets = { eyes, leftEye: eyes, rightEye: eyes };
@@ -48,15 +46,31 @@ function SelectionNuni() {
 
     playIdle(idleTargets);
     startAutoBlink(blinkTargets);
-    const hoverController = createHoverV2Controller({
-      hoverArea,
-      character: floatLayer,
-      bodyLook,
-      eyeDirection: [eyes],
-    });
+    const getViewportTrackingOptions = () => {
+      const characterRect = floatLayer.getBoundingClientRect();
+
+      return {
+        reactionRadiusXRatio: Math.max(window.innerWidth / Math.max(characterRect.width, 1), 1),
+        reactionRadiusYRatio: Math.max(window.innerHeight / Math.max(characterRect.height, 1), 1),
+        distanceMinFactor: 0.4,
+        distanceOuterLimit: 1.2,
+      };
+    };
+    const hoverController = createHoverV2Controller(
+      {
+        hoverArea: document.documentElement,
+        character: floatLayer,
+        bodyLook,
+        eyeDirection: [eyes],
+      },
+      getViewportTrackingOptions(),
+    );
+    const updateTrackingArea = () => hoverController.updateOptions(getViewportTrackingOptions());
     hoverController.enable();
+    window.addEventListener('resize', updateTrackingArea);
 
     return () => {
+      window.removeEventListener('resize', updateTrackingArea);
       hoverController.destroy();
       resetIdle(idleTargets);
       resetAutoBlink(blinkTargets);
@@ -94,8 +108,6 @@ function SelectionNuni() {
           </span>
         </div>
       </div>
-
-      <div ref={hoverAreaRef} className={styles.nuniHoverArea} aria-hidden="true" />
     </div>
   );
 }
