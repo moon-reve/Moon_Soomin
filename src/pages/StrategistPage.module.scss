@@ -781,6 +781,23 @@
   white-space: nowrap;
 }
 
+.journeyStack {
+  position: relative;
+  isolation: isolate;
+}
+
+.journeyStack .journeySection {
+  position: sticky;
+  inset-block-start: 0;
+}
+
+.journeyStack .journeySection:nth-child(1) { z-index: 1; }
+.journeyStack .journeySection:nth-child(2) { z-index: 2; }
+.journeyStack .journeySection:nth-child(3) { z-index: 3; }
+.journeyStack .journeySection:nth-child(4) { z-index: 4; }
+.journeyStack .journeySection:nth-child(5) { z-index: 5; }
+.journeyStack .journeySection:nth-child(6) { z-index: 6; }
+
 .journeySection {
   position: relative;
   display: grid;
@@ -1210,6 +1227,9 @@
   cursor: pointer;
   pointer-events: auto;
   transform-origin: center;
+  transition:
+    inset-block-start 0.72s cubic-bezier(0.22, 1, 0.36, 1),
+    inset-inline-start 0.72s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .projectsCard03 {
@@ -1250,7 +1270,12 @@
   position: relative;
   inline-size: 100%;
   block-size: 100%;
+  transition: transform 0.72s cubic-bezier(0.22, 1, 0.36, 1);
   transform-style: preserve-3d;
+}
+
+.projectCardFlipped .projectCardStage {
+  transform: rotateY(180deg);
 }
 
 .projectCardFace {
@@ -1440,6 +1465,10 @@
 .projectCardFlipLabel {
   inset-block-start: 86.1%;
   inset-inline-end: 9.33%;
+  padding: 0;
+  background: transparent;
+  border: 0;
+  cursor: pointer;
   font-family: 'JetBrains Mono', monospace;
   font-size: 0.677083cqw;
   font-weight: 400;
@@ -1447,13 +1476,53 @@
   text-align: right;
 }
 
-.routeBackBrand {
+.projectBackLayout {
   position: absolute;
-  inset-block-start: 2.708333cqw;
-  inset-inline-start: 2.03125cqw;
+  inset-block-start: 50%;
+  inset-inline-start: 0;
+  inline-size: 100%;
+  block-size: 19.84375cqw;
+  transform: translateY(-50%);
+}
+
+.projectBackBrandBox,
+.projectBackProblemBox,
+.projectBackApproachBox,
+.projectBackOpenBox {
+  position: absolute;
+  inset-inline: 0;
+  inline-size: 100%;
+}
+
+.projectBackBrandBox {
+  inset-block-start: 0;
+  display: flex;
+  align-items: center;
+  block-size: 5.572917cqw;
+}
+
+.projectBackProblemBox {
+  inset-block-start: 5.572917cqw;
+  block-size: 6.041666cqw;
+}
+
+.projectBackApproachBox {
+  inset-block-start: 11.614583cqw;
+  block-size: 6.145834cqw;
+}
+
+.projectBackOpenBox {
+  inset-block-start: 17.760417cqw;
+  block-size: 2.083333cqw;
+}
+
+.routeBackBrand {
+  position: relative;
   display: flex;
   align-items: center;
   gap: 0.9375cqw;
+  margin-inline-start: 2.03125cqw;
+  transform: translateY(-0.364583cqw);
 }
 
 .routeBackBrand span {
@@ -1482,26 +1551,25 @@
 }
 
 .marshallBackBrand {
-  position: absolute;
-  inset-block-start: 1.302083cqw;
-  inset-inline-start: 2.291667cqw;
+  position: relative;
   inline-size: 11.041667cqw;
-  margin: 0;
+  margin: 0 auto;
   color: #000;
   font-family: 'Amplify Personal Use Only', 'Brush Script MT', cursive;
   font-size: 4.21875cqw;
   line-height: normal;
   text-align: center;
+  transform: translateY(-0.364583cqw);
   white-space: nowrap;
 }
 
 .vinerBackBrand {
-  position: absolute;
-  inset-block-start: 1.822917cqw;
-  inset-inline-start: 2.395833cqw;
+  position: relative;
   display: block;
   inline-size: 10.9375cqw;
   block-size: 2.053089cqw;
+  margin-inline-start: 2.395833cqw;
+  transform: translateY(-0.364583cqw);
 }
 
 .projectBackProblemLabel,
@@ -1531,11 +1599,11 @@
 }
 
 .projectBackProblemLabel {
-  inset-block-start: 6.09375cqw;
+  inset-block-start: 0;
 }
 
 .projectBackApproachLabel {
-  inset-block-start: 11.875cqw;
+  inset-block-start: 0;
 }
 
 .projectBackProblemCopy,
@@ -1548,37 +1616,22 @@
 }
 
 .projectBackProblemCopy {
-  inset-block-start: 7.5cqw;
+  inset-block-start: 1.40625cqw;
 }
 
 .projectBackApproachCopy {
-  inset-block-start: 13.4375cqw;
+  inset-block-start: 1.5625cqw;
   letter-spacing: -0.00625cqw;
 }
 
 .projectBackOpen {
-  inset-block-start: 17.760417cqw;
+  inset-block-start: 0;
   inset-inline-start: 50%;
   font-size: 0.78125cqw;
   font-weight: 500;
   letter-spacing: 0.078125cqw;
+  text-decoration: none;
   transform: translateX(-50%);
-}
-
-.projectCardBackRoute .projectBackProblemLabel {
-  inset-block-start: 5.572917cqw;
-}
-
-.projectCardBackRoute .projectBackProblemCopy {
-  inset-block-start: 6.979167cqw;
-}
-
-.projectCardBackRoute .projectBackApproachLabel {
-  inset-block-start: 11.614583cqw;
-}
-
-.projectCardBackRoute .projectBackApproachCopy {
-  inset-block-start: 13.177083cqw;
 }
 
 .skillsSection {
@@ -1587,7 +1640,7 @@
   inline-size: 100%;
   block-size: min(56.25vw, 100svh);
   overflow: hidden;
-  background: #ddd0ed;
+  background: #16150f;
   place-items: start center;
 }
 
@@ -1597,7 +1650,7 @@
   block-size: min(56.25vw, 100svh);
   overflow: hidden;
   container-type: size;
-  background: #ddd0ed;
+  background: #16150f;
 }
 
 .skillsGround,
@@ -1619,32 +1672,43 @@
 .skillsGrid {
   z-index: 1;
   block-size: 56.328125cqw;
-  filter: brightness(0);
+  filter: brightness(0) invert(1);
 }
 
-.skillsTitle {
+.skillsContentBox {
   position: absolute;
   z-index: 2;
-  margin: 0;
-  color: #16150f;
-  font-family: 'Bricolage Grotesque', sans-serif;
-  white-space: nowrap;
+  inset: 0;
+  inline-size: 100%;
+  block-size: 100%;
+}
+
+.skillsHeaderRow {
+  position: absolute;
+  z-index: 1;
+  inset-block-start: 9.320625cqw;
+  inset-inline-start: 15.260417cqw;
+  display: flex;
+  inline-size: 69.375cqw;
+  block-size: 4.5cqw;
+  align-items: flex-end;
+  justify-content: space-between;
 }
 
 .skillsTitle {
-  inset-block-start: 9.320625cqw;
-  inset-inline-start: 15.260417cqw;
+  margin: 0;
+  color: #fff;
+  font-family: 'Bricolage Grotesque', sans-serif;
   font-size: 5cqw;
   font-weight: 800;
   font-variation-settings: 'opsz' 96, 'wdth' 100;
+  line-height: 90%;
+  white-space: nowrap;
 }
 
 .skillsInstruction {
-  position: absolute;
-  z-index: 2;
-  inset-block-start: 13.697917cqw;
-  inset-inline-start: 54.166667cqw;
   display: flex;
+  flex: none;
   align-items: center;
   gap: 0.260417cqw;
 }
@@ -1653,11 +1717,12 @@
   display: block;
   inline-size: 0.46875cqw;
   block-size: 0.46875cqw;
+  filter: brightness(0) invert(1);
 }
 
 .skillsInstruction p {
   margin: 0;
-  color: rgb(22 21 15 / 60%);
+  color: rgb(255 255 255 / 60%);
   font-family: 'JetBrains Mono', monospace;
   font-size: 0.729167cqw;
   font-weight: 400;
@@ -1674,7 +1739,17 @@
   inline-size: 69.375cqw;
   block-size: 27.411cqw;
   overflow: hidden;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+.skillsPlayBoxSurface {
+  position: absolute;
+  z-index: 0;
+  inset: 0;
+  overflow: hidden;
   border-radius: 1.3125cqw;
+  pointer-events: none;
 }
 
 .skillsPlayBoxBase,
@@ -1708,23 +1783,33 @@
   margin: 0;
   padding: 0;
   list-style: none;
-  pointer-events: none;
+  pointer-events: auto;
 }
 
 .skillsChip {
   position: absolute;
+  inset-block-start: 0;
+  inset-inline-start: 0;
+  z-index: 1;
+  box-sizing: border-box;
   block-size: 2.11224cqw;
+  overflow: hidden;
+  border-radius: 999px;
+  cursor: grab;
+  opacity: 0;
+  touch-action: none;
   transform-origin: center;
+  will-change: transform, opacity;
 }
 
-.skillsChip img {
-  position: absolute;
-  inset: 0;
-  display: block;
-  inline-size: 100%;
-  block-size: 100%;
-  max-inline-size: none;
-  user-select: none;
+.skillsChipDragging {
+  z-index: 8;
+  cursor: grabbing;
+}
+
+.skillsChipCarryOverlay {
+  z-index: 65;
+  pointer-events: none;
 }
 
 .skillsChip span {
@@ -1740,12 +1825,30 @@
   font-style: italic;
   font-weight: 400;
   line-height: normal;
+  pointer-events: none;
   text-align: center;
+  -webkit-user-select: none;
+  user-select: none;
   white-space: nowrap;
 }
 
-.skillsChip .skillsChipInverse {
+.skillsChipAi {
+  background: #16150f;
+  border: 1px solid rgb(255 254 234 / 55%);
+}
+
+.skillsChipAi span {
   color: #fffeea;
+}
+
+.skillsChipProgram {
+  background: #ddd0ed;
+  border: 1px solid rgb(22 21 15 / 35%);
+}
+
+.skillsChipCode {
+  background: #fffeea;
+  border: 1px solid rgb(22 21 15 / 35%);
 }
 
 .contactSection {

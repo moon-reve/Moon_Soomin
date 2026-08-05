@@ -1,5 +1,15 @@
 import { useEffect, useRef, useState, type CSSProperties } from 'react';
 import { gsap } from 'gsap';
+import {
+  Bodies,
+  Body,
+  Composite,
+  Engine,
+  Events,
+  Mouse,
+  MouseConstraint,
+  type IBodyDefinition,
+} from 'matter-js';
 import { playIdle, resetAutoBlink, resetIdle, startAutoBlink } from '../animations';
 import aboutGroundSrc from '../assets/strategist-about/ground.svg';
 import aboutStarSrc from '../assets/strategist-about/star.svg';
@@ -62,23 +72,6 @@ import vinerCoverSrc from '../assets/strategist-project-cards/viner-cover.png';
 import vinerCoverBorderSrc from '../assets/strategist-project-cards/viner-cover-border.svg';
 import projectsGroundSrc from '../assets/strategist-projects-intro/ground.svg';
 import projectsTextureGridSrc from '../assets/strategist-projects-intro/texture-grid.svg';
-import skillsChip01Src from '../assets/strategist-skills/chip-01.svg';
-import skillsChip02Src from '../assets/strategist-skills/chip-02.svg';
-import skillsChip03Src from '../assets/strategist-skills/chip-03.svg';
-import skillsChip04Src from '../assets/strategist-skills/chip-04.svg';
-import skillsChip05Src from '../assets/strategist-skills/chip-05.svg';
-import skillsChip06Src from '../assets/strategist-skills/chip-06.svg';
-import skillsChip07Src from '../assets/strategist-skills/chip-07.svg';
-import skillsChip08Src from '../assets/strategist-skills/chip-08.svg';
-import skillsChip09Src from '../assets/strategist-skills/chip-09.svg';
-import skillsChip10Src from '../assets/strategist-skills/chip-10.svg';
-import skillsChip11Src from '../assets/strategist-skills/chip-11.svg';
-import skillsChip12Src from '../assets/strategist-skills/chip-12.svg';
-import skillsChip13Src from '../assets/strategist-skills/chip-13.svg';
-import skillsChip14Src from '../assets/strategist-skills/chip-14.svg';
-import skillsChip15Src from '../assets/strategist-skills/chip-15.svg';
-import skillsChip16Src from '../assets/strategist-skills/chip-16.svg';
-import skillsChip17Src from '../assets/strategist-skills/chip-17.svg';
 import skillsGroundSrc from '../assets/strategist-skills/ground.svg';
 import skillsInstructionDotSrc from '../assets/strategist-skills/instruction-dot.svg';
 import skillsPlayBoxGridSrc from '../assets/strategist-skills/play-box-grid.svg';
@@ -132,27 +125,25 @@ const tickerLabels = [
 ] as const;
 
 const skillChips = [
-  { label: 'Javascript', asset: skillsChip01Src, x: 19.97, y: 64.01, width: 121.5, rotation: -25.6, inverse: true },
-  { label: 'CSS', asset: skillsChip02Src, x: 53.78, y: 65.58, width: 93, rotation: -19.3 },
-  { label: 'Premiere Pro', asset: skillsChip03Src, x: 74.075, y: 66.15, width: 136.2, rotation: -22.7, inverse: true },
-  { label: 'Figma', asset: skillsChip02Src, x: 80.135, y: 67.805, width: 93, rotation: 7.4 },
-  { label: 'Illustrator', asset: skillsChip04Src, x: 26.13, y: 68.24, width: 117.6, rotation: -24 },
-  { label: 'Vercel', asset: skillsChip02Src, x: 42.285, y: 68.97, width: 93, rotation: 14.2 },
-  { label: 'Lightroom', asset: skillsChip05Src, x: 67.01, y: 69.115, width: 115.7, rotation: -13.8, inverse: true },
-  { label: 'Github', asset: skillsChip06Src, x: 47.05, y: 69.285, width: 93, rotation: 15.9 },
-  { label: 'Gemini', asset: skillsChip07Src, x: 61.185, y: 69.35, width: 94, rotation: 1.1, inverse: true },
-  { label: 'Styled-components', asset: skillsChip08Src, x: 35.18, y: 69.91, width: 179.9, rotation: -14.1 },
-  { label: 'Stitch', asset: skillsChip06Src, x: 20.15, y: 70.005, width: 93, rotation: -8.7 },
-  { label: 'Midjourney', asset: skillsChip09Src, x: 52.965, y: 70.78, width: 121.5, rotation: -8.4 },
-  { label: 'Tailwind CSS', asset: skillsChip10Src, x: 77.58, y: 73.34, width: 144, rotation: 17.9 },
-  { label: 'ChatGPT', asset: skillsChip11Src, x: 61.175, y: 73.98, width: 110.3, rotation: 14.8 },
-  { label: 'HTML', asset: skillsChip06Src, x: 42.24, y: 74.115, width: 93, rotation: 15.6 },
-  { label: 'Typescript', asset: skillsChip12Src, x: 27.765, y: 74.185, width: 120.2, rotation: -10.8 },
-  { label: 'GSAP', asset: skillsChip13Src, x: 47.11, y: 74.3, width: 93, rotation: 12.5, inverse: true },
-  { label: 'Claude', asset: skillsChip14Src, x: 66.625, y: 74.34, width: 94.9, rotation: 11.5 },
-  { label: 'Photoshop', asset: skillsChip15Src, x: 20.695, y: 74.485, width: 120.4, rotation: 7.1 },
-  { label: 'React', asset: skillsChip16Src, x: 54.25, y: 74.89, width: 93, rotation: -2.9 },
-  { label: 'After Effects', asset: skillsChip17Src, x: 35.065, y: 75.065, width: 134.6, rotation: 0.1 },
+  { label: 'Javascript', category: 'code', width: 121.5, rotation: -25.6 },
+  { label: 'Premiere Pro', category: 'program', width: 136.2, rotation: -22.7 },
+  { label: 'Figma', category: 'program', width: 93, rotation: 7.4 },
+  { label: 'Illustrator', category: 'program', width: 117.6, rotation: -24 },
+  { label: 'Vercel', category: 'code', width: 93, rotation: 14.2 },
+  { label: 'Lightroom', category: 'program', width: 115.7, rotation: -13.8 },
+  { label: 'Github', category: 'code', width: 93, rotation: 15.9 },
+  { label: 'Gemini', category: 'ai', width: 94, rotation: 1.1 },
+  { label: 'Stitch', category: 'ai', width: 93, rotation: -8.7 },
+  { label: 'Midjourney', category: 'ai', width: 121.5, rotation: -8.4 },
+  { label: 'Tailwind CSS', category: 'code', width: 144, rotation: 17.9 },
+  { label: 'ChatGPT', category: 'ai', width: 110.3, rotation: 14.8 },
+  { label: 'HTML', category: 'code', width: 93, rotation: 15.6 },
+  { label: 'Typescript', category: 'code', width: 120.2, rotation: -10.8 },
+  { label: 'GSAP', category: 'code', width: 93, rotation: 12.5 },
+  { label: 'Claude', category: 'ai', width: 94.9, rotation: 11.5 },
+  { label: 'Photoshop', category: 'program', width: 120.4, rotation: 7.1 },
+  { label: 'React', category: 'code', width: 93, rotation: -2.9 },
+  { label: 'After Effects', category: 'program', width: 134.6, rotation: 0.1 },
 ] as const;
 
 const skillChipScale = 1332 / 1478;
@@ -166,7 +157,7 @@ const nuniSectionWaypoints = [
   { id: 'journey-movement', x: 40.5, y: 25.5, scale: 1.08 },
   { id: 'journey-expansion', x: 75, y: 40, scale: 1.08 },
   { id: 'journey-reality', x: 6, y: 8.5, scale: 1.08 },
-  { id: 'projects', x: 81, y: 34.5, scale: 1.25 },
+  { id: 'projects', x: 40, y: 27, scale: 1.08 },
   { id: 'skills', x: 59.43, y: 24.79, scale: 1.42 },
   { id: 'contact', x: 71.63, y: 29.58, scale: 1.42 },
   { id: 'closing', x: 84, y: 5.5, scale: 0.9 },
@@ -388,7 +379,9 @@ const navigationSectionGroups: ReadonlyArray<{ label: SectionLabel; ids: readonl
   { label: 'Contact', ids: ['contact', 'closing'] },
 ];
 
-const darkNavigationSectionIds = ['journey', 'journey-movement', 'closing'] as const;
+const darkNavigationSectionIds = ['journey', 'journey-movement', 'skills', 'closing'] as const;
+const projectDeckOpenEvent = 'projects:open-deck';
+const projectDeckCloseEvent = 'projects:close-deck';
 
 function ScrollNuni() {
   const sceneRef = useRef<HTMLDivElement>(null);
@@ -677,24 +670,153 @@ function ScrollNuni() {
 
   useEffect(() => {
     const scene = sceneRef.current;
-    if (!scene) return undefined;
+    const ambientMotion = ambientMotionRef.current;
+    if (!scene || !ambientMotion) return undefined;
 
     const sections = nuniSectionWaypoints
       .map((waypoint) => ({ waypoint, element: document.getElementById(waypoint.id) }))
       .filter((entry): entry is { waypoint: (typeof nuniSectionWaypoints)[number]; element: HTMLElement } => Boolean(entry.element));
+    const journeyStack = document.querySelector<HTMLElement>(`.${styles.journeyStack}`);
+    const journeyWaypoints = sections.filter(({ element }) => element.parentElement === journeyStack);
+    const projectsWaypoint = sections.find(({ waypoint }) => waypoint.id === 'projects')?.waypoint;
+    const projectTapWaypoint = { id: 'projects-tap', x: 53.5, y: 23.5, scale: 1.08 } as const;
+    const projectCard = document.querySelector<HTMLElement>(`.${styles.projectsCard01}`);
+    const easeJourneyExit = gsap.parseEase('power2.inOut');
 
     let activeId = '';
     let frame = 0;
+    let projectTapTriggered = false;
+    let projectTapTimeline: gsap.core.Timeline | null = null;
+
+    const playProjectArrival = () => {
+      if (projectTapTriggered || !projectsWaypoint) return;
+      projectTapTriggered = true;
+      projectTapTimeline?.kill();
+
+      const tapPosition = {
+        x: projectTapWaypoint.x / 100 * window.innerWidth,
+        y: projectTapWaypoint.y / 100 * window.innerWidth,
+        scale: projectTapWaypoint.scale,
+      };
+      const finalPosition = {
+        x: projectsWaypoint.x / 100 * window.innerWidth,
+        y: projectsWaypoint.y / 100 * window.innerWidth,
+        scale: projectsWaypoint.scale,
+      };
+
+      if (prefersReducedMotion || !projectCard) {
+        gsap.set(scene, finalPosition);
+        return;
+      }
+
+      const impactDistance = gsap.utils.clamp(24, 38, window.innerWidth * 0.018);
+      projectTapTimeline = gsap.timeline()
+        .to(scene, { ...tapPosition, duration: 0.22, ease: 'power2.out', overwrite: 'auto' }, 0)
+        .to(ambientMotion, {
+          x: impactDistance,
+          rotation: 5,
+          scaleX: 1.08,
+          scaleY: 0.94,
+          duration: 0.12,
+          ease: 'power3.in',
+          overwrite: 'auto',
+        }, 0.22)
+        .to(projectCard, {
+          x: 18,
+          rotation: 2.5,
+          duration: 0.08,
+          ease: 'power3.out',
+          overwrite: 'auto',
+        }, 0.34)
+        .call(() => window.dispatchEvent(new Event(projectDeckOpenEvent)), [], 0.34)
+        .to(ambientMotion, {
+          x: 0,
+          rotation: 0,
+          scaleX: 1,
+          scaleY: 1,
+          duration: 0.32,
+          ease: 'back.out(2.4)',
+        }, 0.34)
+        .to(projectCard, {
+          x: 0,
+          rotation: 0,
+          duration: 0.36,
+          ease: 'elastic.out(1, 0.45)',
+        }, 0.42)
+        .to(scene, { ...finalPosition, duration: 0.8, ease: 'power3.inOut', overwrite: 'auto' }, 0.66);
+    };
 
     const moveToActiveSection = (immediate = false, force = false) => {
       frame = 0;
+      if (scene.dataset.skillsRescue === 'true') return;
+      if (journeyStack && journeyWaypoints.length > 1) {
+        const stackRect = journeyStack.getBoundingClientRect();
+        const sectionHeight = journeyWaypoints[0].element.offsetHeight;
+        const stackIsActive = sectionHeight > 0
+          && stackRect.top <= 0
+          && stackRect.bottom > 0;
+
+        if (stackIsActive) {
+          let from;
+          let to;
+          let amount;
+
+          if (stackRect.bottom < sectionHeight && projectsWaypoint) {
+            const exitProgress = gsap.utils.clamp(0, 1, 1 - (stackRect.bottom / sectionHeight));
+            if (exitProgress < 0.75) {
+              if (projectTapTriggered) {
+                if (exitProgress >= 0.68) {
+                  activeId = projectsWaypoint.id;
+                  return;
+                }
+                projectTapTriggered = false;
+                projectTapTimeline?.kill();
+                gsap.set(ambientMotion, { x: 0 });
+                if (projectCard) gsap.set(projectCard, { x: 0 });
+                window.dispatchEvent(new Event(projectDeckCloseEvent));
+              }
+              from = journeyWaypoints.at(-1)?.waypoint ?? journeyWaypoints[0].waypoint;
+              to = projectTapWaypoint;
+              amount = easeJourneyExit(gsap.utils.clamp(0, 1, exitProgress / 0.75));
+            } else {
+              activeId = projectsWaypoint.id;
+              playProjectArrival();
+              return;
+            }
+          } else {
+            const progress = gsap.utils.clamp(
+              0,
+              journeyWaypoints.length - 1,
+              -stackRect.top / sectionHeight,
+            );
+            const fromIndex = Math.floor(progress);
+            const toIndex = Math.min(fromIndex + 1, journeyWaypoints.length - 1);
+            from = journeyWaypoints[fromIndex].waypoint;
+            to = journeyWaypoints[toIndex].waypoint;
+            amount = progress - fromIndex;
+          }
+
+          activeId = amount < 0.5 ? from.id : to.id;
+          gsap.killTweensOf(scene);
+          gsap.set(scene, {
+            x: gsap.utils.interpolate(from.x, to.x, amount) / 100 * window.innerWidth,
+            y: gsap.utils.interpolate(from.y, to.y, amount) / 100 * window.innerWidth,
+            scale: gsap.utils.interpolate(from.scale, to.scale, amount),
+          });
+          return;
+        }
+      }
+
       const viewportAnchor = window.innerHeight * 0.5;
       let closest = sections[0];
       let closestDistance = Number.POSITIVE_INFINITY;
 
       sections.forEach((entry) => {
         const rect = entry.element.getBoundingClientRect();
-        const sectionAnchor = rect.top + (rect.height * 0.5);
+        const stack = entry.element.parentElement;
+        const sectionAnchor = stack?.classList.contains(styles.journeyStack)
+          ? stack.getBoundingClientRect().top + entry.element.offsetTop + (rect.height * 0.5)
+          : rect.top + (rect.height * 0.5);
         const distance = Math.abs(sectionAnchor - viewportAnchor);
         if (distance < closestDistance) {
           closest = entry;
@@ -740,7 +862,9 @@ function ScrollNuni() {
       window.removeEventListener('scroll', requestUpdate);
       window.removeEventListener('resize', requestResizeUpdate);
       if (frame) window.cancelAnimationFrame(frame);
+      projectTapTimeline?.kill();
       gsap.killTweensOf(scene);
+      if (projectCard) gsap.set(projectCard, { clearProps: 'transform' });
     };
   }, [prefersReducedMotion]);
 
@@ -834,7 +958,11 @@ function SectionNavigation() {
 
       groupedSections.forEach((entry) => {
         const rect = entry.element.getBoundingClientRect();
-        const distance = Math.abs(rect.top + (rect.height * 0.5) - viewportAnchor);
+        const stack = entry.element.parentElement;
+        const sectionAnchor = stack?.classList.contains(styles.journeyStack)
+          ? stack.getBoundingClientRect().top + entry.element.offsetTop + (rect.height * 0.5)
+          : rect.top + (rect.height * 0.5);
+        const distance = Math.abs(sectionAnchor - viewportAnchor);
         if (distance < closestDistance) {
           closest = entry;
           closestDistance = distance;
@@ -844,13 +972,28 @@ function SectionNavigation() {
       if (closest) setActive((current) => (current === closest.label ? current : closest.label));
 
       const navigationRect = navigation.getBoundingClientRect();
-      const intersection = darkSections
-        .map((section) => section.getBoundingClientRect())
-        .map((rect) => ({
-          top: Math.max(rect.top, navigationRect.top),
-          bottom: Math.min(rect.bottom, navigationRect.bottom),
-        }))
-        .find(({ top, bottom }) => bottom > top);
+      const sectionRects = groupedSections.map(({ element }) => ({
+        element,
+        rect: element.getBoundingClientRect(),
+      }));
+      const boundaries = [navigationRect.top, navigationRect.bottom];
+      sectionRects.forEach(({ rect }) => {
+        if (rect.top > navigationRect.top && rect.top < navigationRect.bottom) boundaries.push(rect.top);
+        if (rect.bottom > navigationRect.top && rect.bottom < navigationRect.bottom) boundaries.push(rect.bottom);
+      });
+      boundaries.sort((a, b) => a - b);
+
+      const darkIntervals = boundaries.slice(0, -1).flatMap((top, index) => {
+        const bottom = boundaries[index + 1];
+        const midpoint = top + ((bottom - top) * 0.5);
+        const topmostSection = sectionRects
+          .filter(({ rect }) => rect.top <= midpoint && rect.bottom >= midpoint)
+          .at(-1)?.element;
+        return topmostSection && darkSections.includes(topmostSection) ? [{ top, bottom }] : [];
+      });
+      const intersection = darkIntervals.length
+        ? { top: darkIntervals[0].top, bottom: darkIntervals.at(-1)?.bottom ?? darkIntervals[0].bottom }
+        : undefined;
 
       if (!intersection) {
         inverseLayer.style.clipPath = 'inset(100% 0 0 0)';
@@ -1485,11 +1628,30 @@ function JourneyRealitySection() {
 }
 
 type ProjectCardName = 'route' | 'marshall' | 'viner';
+type ProjectCardSlotName = 'front' | 'left' | 'right';
 
 const projectCardLabels: Record<ProjectCardName, string> = {
   route: 'ROUTE',
   marshall: 'Marshall',
   viner: 'Viner',
+};
+
+const projectCardUrls: Record<ProjectCardName, string> = {
+  route: 'https://route-react-three.vercel.app/',
+  marshall: 'https://marshall-rebrand.vercel.app/',
+  viner: 'https://wine-app-eight-wine.vercel.app/',
+};
+
+const initialProjectCardSlots: Record<ProjectCardName, ProjectCardSlotName> = {
+  route: 'front',
+  marshall: 'right',
+  viner: 'left',
+};
+
+const projectCardSlotClasses: Record<ProjectCardSlotName, string> = {
+  front: styles.projectsCard01,
+  right: styles.projectsCard02,
+  left: styles.projectsCard03,
 };
 
 function ProjectCardCover({ project }: { project: ProjectCardName }) {
@@ -1534,9 +1696,20 @@ function ProjectCardCover({ project }: { project: ProjectCardName }) {
   );
 }
 
-function ProjectCardFront({ project }: { project: ProjectCardName }) {
+function ProjectCardFront({
+  project,
+  isFlipped,
+  onFlip,
+}: {
+  project: ProjectCardName;
+  isFlipped: boolean;
+  onFlip: () => void;
+}) {
   return (
-    <div className={`${styles.projectCardFace} ${styles.projectCardFrontFace}`}>
+    <div
+      className={`${styles.projectCardFace} ${styles.projectCardFrontFace}`}
+      aria-hidden={isFlipped}
+    >
       <img className={styles.projectCardShadow} src={cardFrontShadowSrc} alt="" aria-hidden="true" />
       <img className={styles.projectCardShell} src={cardFrontShellSrc} alt="" aria-hidden="true" />
       <ProjectCardCover project={project} />
@@ -1544,84 +1717,151 @@ function ProjectCardFront({ project }: { project: ProjectCardName }) {
       <p className={`${styles.projectCardTitle} ${styles[`projectCardTitle${project}`]}`}>
         {projectCardLabels[project]}
       </p>
-      <p className={styles.projectCardFlipLabel}>Flip →</p>
+      <button
+        className={styles.projectCardFlipLabel}
+        type="button"
+        tabIndex={isFlipped ? -1 : 0}
+        onClick={(event) => {
+          event.stopPropagation();
+          onFlip();
+        }}
+      >
+        Flip →
+      </button>
     </div>
   );
 }
 
-function ProjectCardBack({ project }: { project: ProjectCardName }) {
+function ProjectCardBack({ project, isFlipped }: { project: ProjectCardName; isFlipped: boolean }) {
   const isRoute = project === 'route';
 
   return (
     <div
       className={`${styles.projectCardFace} ${styles.projectCardBackFace} ${isRoute ? styles.projectCardBackRoute : ''}`}
-      aria-hidden="true"
+      aria-hidden={!isFlipped}
     >
-      {project === 'route' && (
-        <div className={styles.routeBackBrand}>
-          <span><img src={routeBackLogoSrc} alt="" /></span>
-          <p>Route</p>
+      <div className={`${styles.projectBackLayout} project-back-layout`}>
+        <div className={`${styles.projectBackBrandBox} project-back-brand-box`}>
+          {project === 'route' && (
+            <div className={styles.routeBackBrand}>
+              <span><img src={routeBackLogoSrc} alt="" /></span>
+              <p>Route</p>
+            </div>
+          )}
+          {project === 'marshall' && <p className={styles.marshallBackBrand}>Marshall</p>}
+          {project === 'viner' && <img className={styles.vinerBackBrand} src={vinerBackLogoSrc} alt="" />}
         </div>
-      )}
-      {project === 'marshall' && <p className={styles.marshallBackBrand}>Marshall</p>}
-      {project === 'viner' && <img className={styles.vinerBackBrand} src={vinerBackLogoSrc} alt="" />}
 
-      <p className={styles.projectBackProblemLabel}>Problem</p>
-      <p className={styles.projectBackProblemCopy}>
-        {project === 'route' ? (
-          <>
-            취업 준비생은
-            <br />'무엇을 해야 할지'보다
-            <br />'어떻게 계속할지'가 더 어렵습니다.
-          </>
-        ) : project === 'marshall' ? (
-          <>
-            정보는 전달하지만,
-            <br />브랜드를 기억하게 만드는
-            <br />경험은 부족했습니다.
-          </>
-        ) : (
-          <>
-            와인 정보는 많지만,
-            <br />초보자가 쉽게 시작할 수 있는
-            <br />서비스는 부족했습니다.
-          </>
-        )}
-      </p>
+        <div className={`${styles.projectBackProblemBox} project-back-problem-box`}>
+          <p className={styles.projectBackProblemLabel}>Problem</p>
+          <p className={styles.projectBackProblemCopy}>
+            {project === 'route' ? (
+              <>
+                취업 준비생은
+                <br />'무엇을 해야 할지'보다
+                <br />'어떻게 계속할지'가 더 어렵습니다.
+              </>
+            ) : project === 'marshall' ? (
+              <>
+                정보는 전달하지만,
+                <br />브랜드를 기억하게 만드는
+                <br />경험은 부족했습니다.
+              </>
+            ) : (
+              <>
+                와인 정보는 많지만,
+                <br />초보자가 쉽게 시작할 수 있는
+                <br />서비스는 부족했습니다.
+              </>
+            )}
+          </p>
+        </div>
 
-      <p className={styles.projectBackApproachLabel}>Approach</p>
-      <p className={styles.projectBackApproachCopy}>
-        {project === 'route' ? (
-          <>
-            사용자가
-            <br />매일 앞으로 나아갈 수 있도록
-            <br />과정을 중심으로 설계했습니다.
-          </>
-        ) : project === 'marshall' ? (
-          <>
-            브랜드를 보는 것이 아닌,
-            <br />직접 경험하는
-            <br />웹사이트를 목표로 했습니다.
-          </>
-        ) : (
-          <>
-            와인을 어렵게 배우기보다,
-            <br />기록하고 공유하며
-            <br />자연스럽게 즐기도록 설계했습니다.
-          </>
-        )}
-      </p>
-      <p className={styles.projectBackOpen}>Open Project</p>
+        <div className={`${styles.projectBackApproachBox} project-back-approach-box`}>
+          <p className={styles.projectBackApproachLabel}>Approach</p>
+          <p className={styles.projectBackApproachCopy}>
+            {project === 'route' ? (
+              <>
+                사용자가
+                <br />매일 앞으로 나아갈 수 있도록
+                <br />과정을 중심으로 설계했습니다.
+              </>
+            ) : project === 'marshall' ? (
+              <>
+                브랜드를 보는 것이 아닌,
+                <br />직접 경험하는
+                <br />웹사이트를 목표로 했습니다.
+              </>
+            ) : (
+              <>
+                와인을 어렵게 배우기보다,
+                <br />기록하고 공유하며
+                <br />자연스럽게 즐기도록 설계했습니다.
+              </>
+            )}
+          </p>
+        </div>
+
+        <div className={`${styles.projectBackOpenBox} project-back-open-box`}>
+          <a
+            className={styles.projectBackOpen}
+            href={projectCardUrls[project]}
+            target="_blank"
+            rel="noreferrer"
+            onClick={(event) => event.stopPropagation()}
+          >
+            Open Project
+          </a>
+        </div>
+      </div>
     </div>
   );
 }
 
-function ProjectCard({ project, className }: { project: ProjectCardName; className: string }) {
+function ProjectCard({
+  project,
+  className,
+  isFront,
+  isFlipped,
+  onSelect,
+  onFlip,
+}: {
+  project: ProjectCardName;
+  className: string;
+  isFront: boolean;
+  isFlipped: boolean;
+  onSelect: () => void;
+  onFlip: () => void;
+}) {
+  const activateCard = () => {
+    if (!isFront) {
+      onSelect();
+      return;
+    }
+    if (isFlipped) onFlip();
+  };
+
   return (
-    <article className={`${styles.projectCardSlot} ${className}`} aria-label={`${projectCardLabels[project]} 프로젝트 카드`}>
+    <article
+      className={`${styles.projectCardSlot} ${className} ${isFlipped ? styles.projectCardFlipped : ''}`}
+      aria-label={`${projectCardLabels[project]} 프로젝트 카드`}
+      aria-pressed={isFront}
+      role="button"
+      tabIndex={0}
+      onClick={(event) => {
+        event.stopPropagation();
+        activateCard();
+      }}
+      onKeyDown={(event) => {
+        if (event.key !== 'Enter' && event.key !== ' ') return;
+        event.preventDefault();
+        event.stopPropagation();
+        activateCard();
+      }}
+    >
       <div className={styles.projectCardStage}>
-        <ProjectCardFront project={project} />
-        <ProjectCardBack project={project} />
+        <ProjectCardFront project={project} isFlipped={isFlipped} onFlip={onFlip} />
+        <ProjectCardBack project={project} isFlipped={isFlipped} />
       </div>
     </article>
   );
@@ -1629,6 +1869,38 @@ function ProjectCard({ project, className }: { project: ProjectCardName; classNa
 
 function ProjectsIntroSection() {
   const [isDeckExpanded, setIsDeckExpanded] = useState(false);
+  const [cardSlots, setCardSlots] = useState(initialProjectCardSlots);
+  const [flippedProject, setFlippedProject] = useState<ProjectCardName | null>(null);
+
+  const bringProjectForward = (project: ProjectCardName) => {
+    setCardSlots((currentSlots) => {
+      if (currentSlots[project] === 'front') return currentSlots;
+      const currentFront = (Object.keys(currentSlots) as ProjectCardName[])
+        .find((card) => currentSlots[card] === 'front');
+      if (!currentFront) return currentSlots;
+      return {
+        ...currentSlots,
+        [project]: 'front',
+        [currentFront]: currentSlots[project],
+      };
+    });
+    setFlippedProject(null);
+  };
+
+  useEffect(() => {
+    const openDeck = () => setIsDeckExpanded(true);
+    const closeDeck = () => {
+      setIsDeckExpanded(false);
+      setCardSlots(initialProjectCardSlots);
+      setFlippedProject(null);
+    };
+    window.addEventListener(projectDeckOpenEvent, openDeck);
+    window.addEventListener(projectDeckCloseEvent, closeDeck);
+    return () => {
+      window.removeEventListener(projectDeckOpenEvent, openDeck);
+      window.removeEventListener(projectDeckCloseEvent, closeDeck);
+    };
+  }, []);
 
   return (
     <section
@@ -1671,9 +1943,17 @@ function ProjectsIntroSection() {
             }
           }}
         >
-          <ProjectCard project="viner" className={styles.projectsCard03} />
-          <ProjectCard project="marshall" className={styles.projectsCard02} />
-          <ProjectCard project="route" className={styles.projectsCard01} />
+          {(['viner', 'marshall', 'route'] as const).map((project) => (
+            <ProjectCard
+              key={project}
+              project={project}
+              className={projectCardSlotClasses[cardSlots[project]]}
+              isFront={cardSlots[project] === 'front'}
+              isFlipped={flippedProject === project}
+              onSelect={() => bringProjectForward(project)}
+              onFlip={() => setFlippedProject((current) => (current === project ? null : project))}
+            />
+          ))}
         </div>
       </div>
     </section>
@@ -1681,40 +1961,683 @@ function ProjectsIntroSection() {
 }
 
 function SkillsSection() {
+  const sectionRef = useRef<HTMLElement>(null);
+  const playBoxRef = useRef<HTMLDivElement>(null);
+  const chipRefs = useRef<Array<HTMLLIElement | null>>([]);
+  const prefersReducedMotion = useReducedMotion();
+
+  useEffect(() => {
+    const section = sectionRef.current;
+    const playBox = playBoxRef.current;
+    const chips = chipRefs.current.filter((chip): chip is HTMLLIElement => Boolean(chip));
+    if (!section || !playBox || chips.length === 0) return undefined;
+
+    chips.forEach((chip) => { chip.style.opacity = '0'; });
+
+    let physicsStarted = false;
+    let animationFrame = 0;
+    let positionCheckFrame = 0;
+    let resizeObserver: ResizeObserver | null = null;
+    let engine: Engine | null = null;
+    let physicsMouse: Mouse | null = null;
+    let nuniCatchTimeline: gsap.core.Timeline | null = null;
+    let nuniCatchCooldownUntil = 0;
+    let skillPointerGeneration = 0;
+    let skillPointerIsDown = false;
+    const chipDropTimers: number[] = [];
+    const chipCarryOverlays = new Set<HTMLLIElement>();
+
+    const handleSkillPointerDown = () => {
+      skillPointerGeneration += 1;
+      skillPointerIsDown = true;
+    };
+    const handleSkillPointerRelease = () => {
+      skillPointerIsDown = false;
+      if (physicsMouse) physicsMouse.button = -1;
+    };
+
+    playBox.addEventListener('pointerdown', handleSkillPointerDown);
+    window.addEventListener('pointerup', handleSkillPointerRelease);
+    window.addEventListener('pointercancel', handleSkillPointerRelease);
+
+    const startChipPhysics = () => {
+      if (physicsStarted) return;
+      physicsStarted = true;
+
+      engine = Engine.create({ enableSleeping: false });
+      engine.gravity.y = 1.05;
+      engine.gravity.scale = 0.001;
+
+      type ChipBody = {
+        element: HTMLLIElement;
+        body: Body;
+        width: number;
+        height: number;
+        active: boolean;
+        carried: boolean;
+        catchEligibleUntil: number;
+        catchBlockedUntilNextDrag: boolean;
+        blockedAtPointerGeneration: number;
+        carryOverlay: HTMLLIElement | null;
+        carryFollowsNuni: boolean;
+      };
+
+      const chipBodies: ChipBody[] = [];
+      let walls: Body[] = [];
+
+      const makeWalls = () => {
+        if (!engine) return;
+        walls.forEach((wall) => Composite.remove(engine!.world, wall));
+        const width = playBox.clientWidth;
+        const height = playBox.clientHeight;
+        const sectionRect = section.getBoundingClientRect();
+        const playBoxRect = playBox.getBoundingClientRect();
+        const upperLimit = -Math.max(0, playBoxRect.top - sectionRect.top);
+        const verticalRange = height - upperLimit;
+        const verticalCenter = upperLimit + verticalRange / 2;
+        const thickness = 100;
+        const wallOptions: IBodyDefinition = {
+          isStatic: true,
+          restitution: 0.24,
+          friction: 0.46,
+          label: 'skills-play-box-boundary',
+        };
+        walls = [
+          Bodies.rectangle(
+            -thickness / 2,
+            verticalCenter,
+            thickness,
+            verticalRange + thickness * 2,
+            wallOptions,
+          ),
+          Bodies.rectangle(
+            width + thickness / 2,
+            verticalCenter,
+            thickness,
+            verticalRange + thickness * 2,
+            wallOptions,
+          ),
+          Bodies.rectangle(
+            width / 2,
+            upperLimit - thickness / 2,
+            width + thickness * 2,
+            thickness,
+            wallOptions,
+          ),
+          Bodies.rectangle(width / 2, height + thickness / 2, width + thickness * 2, thickness, wallOptions),
+        ];
+        Composite.add(engine.world, walls);
+      };
+
+      makeWalls();
+      const boxWidth = playBox.clientWidth;
+      const sidePadding = Math.max(12, boxWidth * 0.018);
+      const dropOrder = chips.map((_, index) => index);
+      for (let index = dropOrder.length - 1; index > 0; index -= 1) {
+        const randomIndex = Math.floor(Math.random() * (index + 1));
+        [dropOrder[index], dropOrder[randomIndex]] = [dropOrder[randomIndex], dropOrder[index]];
+      }
+      const laneCount = Math.min(7, chips.length);
+      const laneWidth = (boxWidth - sidePadding * 2) / laneCount;
+      let accumulatedDelay = 0;
+
+      dropOrder.forEach((chipIndex, sequenceIndex) => {
+        const element = chips[chipIndex];
+        const width = element.offsetWidth;
+        const height = element.offsetHeight;
+        const laneIndex = sequenceIndex % laneCount;
+        const laneCenter = sidePadding + laneWidth * (laneIndex + 0.5);
+        const laneJitter = (Math.random() - 0.5) * laneWidth * 0.48;
+        const spawnX = Math.max(
+          width / 2 + 3,
+          Math.min(boxWidth - width / 2 - 3, laneCenter + laneJitter),
+        );
+        const spawnY = -(height / 2) - 8 - Math.random() * Math.max(24, playBox.clientHeight * 0.08);
+
+        const body = Bodies.rectangle(
+          spawnX,
+          spawnY,
+          width + 2,
+          height + 2,
+          {
+            label: `skill-chip-${chipIndex}`,
+            restitution: 0.24,
+            friction: 0.4,
+            frictionStatic: 0.6,
+            frictionAir: 0.009,
+            density: 0.0016,
+            sleepThreshold: 80,
+            chamfer: { radius: Math.max(8, height * 0.48) },
+          },
+        );
+        Body.setAngle(body, skillChips[chipIndex].rotation * Math.PI / 180);
+        const chipBody: ChipBody = {
+          element,
+          body,
+          width,
+          height,
+          active: false,
+          carried: false,
+          catchEligibleUntil: 0,
+          catchBlockedUntilNextDrag: false,
+          blockedAtPointerGeneration: -1,
+          carryOverlay: null,
+          carryFollowsNuni: false,
+        };
+        chipBodies.push(chipBody);
+
+        if (sequenceIndex > 0) {
+          accumulatedDelay += prefersReducedMotion ? 0 : 65 + Math.random() * 75;
+        }
+        const timer = window.setTimeout(() => {
+          if (!engine) return;
+          chipBody.active = true;
+          Composite.add(engine.world, body);
+          Body.setVelocity(body, {
+            x: (Math.random() - 0.5) * 1.4,
+            y: 0.4 + Math.random() * 0.8,
+          });
+          Body.setAngularVelocity(body, (Math.random() - 0.5) * 0.045);
+          element.style.opacity = '1';
+        }, accumulatedDelay);
+        chipDropTimers.push(timer);
+      });
+
+      physicsMouse = Mouse.create(playBox);
+      physicsMouse.pixelRatio = 1;
+      playBox.removeEventListener('wheel', physicsMouse.mousewheel);
+      playBox.removeEventListener('mousewheel', physicsMouse.mousewheel);
+      playBox.removeEventListener('DOMMouseScroll', physicsMouse.mousewheel);
+
+      const mouseConstraint = MouseConstraint.create(engine, {
+        mouse: physicsMouse,
+        constraint: {
+          stiffness: 0.15,
+          damping: 0.22,
+          angularStiffness: 0,
+          render: { visible: false },
+        },
+      });
+      Composite.add(engine.world, mouseConstraint);
+      Events.on(mouseConstraint, 'startdrag', (event) => {
+        const activeChip = chipBodies.find(({ body }) => body === event.body);
+        if (activeChip) {
+          const isNewUserDrag = skillPointerIsDown
+            && skillPointerGeneration > activeChip.blockedAtPointerGeneration;
+          if (activeChip.catchBlockedUntilNextDrag && !isNewUserDrag) {
+            physicsMouse!.button = -1;
+            return;
+          }
+          if (isNewUserDrag) activeChip.catchBlockedUntilNextDrag = false;
+          activeChip.catchEligibleUntil = 0;
+          activeChip.element.classList.add(styles.skillsChipDragging);
+        }
+      });
+      Events.on(mouseConstraint, 'enddrag', (event) => {
+        const activeChip = chipBodies.find(({ body }) => body === event.body);
+        if (activeChip) {
+          activeChip.catchEligibleUntil = activeChip.catchBlockedUntilNextDrag
+            ? 0
+            : performance.now() + 2200;
+          activeChip.element.classList.remove(styles.skillsChipDragging);
+        }
+      });
+
+      let carriedChip: ChipBody | null = null;
+      let catchAttempt: {
+        chipBody: ChipBody;
+        nuni: HTMLElement;
+        nuniMotion: HTMLElement;
+        nuniEyes: HTMLElement;
+        startX: number;
+        startY: number;
+        startScale: number;
+        startedAt: number;
+        canceling: boolean;
+        released: boolean;
+      } | null = null;
+
+      const finishNuniCatch = (attempt: NonNullable<typeof catchAttempt>) => {
+        delete attempt.nuni.dataset.skillsRescue;
+        nuniCatchCooldownUntil = performance.now() + 1000;
+        gsap.set(attempt.nuniEyes, { clearProps: 'transform' });
+        gsap.set(attempt.nuniMotion, {
+          x: 0,
+          y: 0,
+          rotation: 0,
+          scaleX: 1,
+          scaleY: 1,
+        });
+        catchAttempt = null;
+        carriedChip = null;
+      };
+
+      const releaseCarriedChip = (
+        chipBody: ChipBody,
+        attempt: NonNullable<typeof catchAttempt>,
+      ) => {
+        if (!engine || !chipBody.carryOverlay) return;
+        const playBoxRect = playBox.getBoundingClientRect();
+        const overlayRect = chipBody.carryOverlay.getBoundingClientRect();
+        Body.setPosition(chipBody.body, {
+          x: gsap.utils.clamp(
+            chipBody.width / 2 + 3,
+            playBox.clientWidth - chipBody.width / 2 - 3,
+            overlayRect.left + overlayRect.width / 2 - playBoxRect.left,
+          ),
+          y: gsap.utils.clamp(
+            chipBody.height / 2 + 3,
+            playBox.clientHeight - chipBody.height / 2 - 3,
+            overlayRect.top + overlayRect.height / 2 - playBoxRect.top,
+          ),
+        });
+        Body.setAngle(chipBody.body, -2 * Math.PI / 180);
+        Body.setVelocity(chipBody.body, { x: 0.35, y: 1.6 });
+        Body.setAngularVelocity(chipBody.body, 0.018);
+        attempt.released = true;
+        chipBody.carried = false;
+        chipBody.active = true;
+        chipBody.catchEligibleUntil = 0;
+        chipBody.catchBlockedUntilNextDrag = true;
+        chipBody.blockedAtPointerGeneration = skillPointerGeneration;
+        chipBody.carryFollowsNuni = false;
+        Composite.add(engine.world, chipBody.body);
+        chipBody.element.style.transform = `translate3d(${chipBody.body.position.x - chipBody.width / 2}px, ${chipBody.body.position.y - chipBody.height / 2}px, 0) rotate(${chipBody.body.angle}rad)`;
+        chipBody.element.style.opacity = '1';
+        chipBody.carryOverlay.remove();
+        chipCarryOverlays.delete(chipBody.carryOverlay);
+        chipBody.carryOverlay = null;
+
+        const nuniRect = attempt.nuni.getBoundingClientRect();
+        const dropCenterX = overlayRect.left + overlayRect.width / 2;
+        const stepDirection = dropCenterX < playBoxRect.left + playBoxRect.width / 2 ? 1 : -1;
+        const stepAsideX = gsap.utils.clamp(
+          playBoxRect.left,
+          playBoxRect.right - nuniRect.width,
+          Number(gsap.getProperty(attempt.nuni, 'x'))
+            + stepDirection * Math.max(48, window.innerWidth * 0.035),
+        );
+
+        nuniCatchTimeline = gsap.timeline({
+          onComplete: () => finishNuniCatch(attempt),
+        })
+          .to(attempt.nuniMotion, {
+            x: 0,
+            rotation: 0,
+            scaleX: 1,
+            scaleY: 1,
+            y: 0,
+            duration: 0.28,
+            ease: 'back.out(2)',
+          }, 0)
+          .to(attempt.nuni, {
+            x: stepAsideX,
+            duration: 0.3,
+            ease: 'power2.out',
+            overwrite: 'auto',
+          }, 0)
+          .to(attempt.nuni, {
+            x: attempt.startX,
+            y: attempt.startY,
+            scale: attempt.startScale,
+            duration: 0.68,
+            ease: 'power3.inOut',
+            overwrite: 'auto',
+          }, 0.72);
+      };
+
+      const dropChipFromNuni = (
+        chipBody: ChipBody,
+        attempt: NonNullable<typeof catchAttempt>,
+      ) => {
+        const overlay = chipBody.carryOverlay;
+        if (!overlay) return;
+        chipBody.carryFollowsNuni = false;
+        const overlayRect = overlay.getBoundingClientRect();
+        gsap.set(overlay, {
+          x: overlayRect.left,
+          y: overlayRect.top,
+          rotation: -2,
+        });
+        gsap.to(overlay, {
+          x: overlayRect.left + Math.max(10, chipBody.width * 0.12),
+          y: overlayRect.top + Math.max(18, chipBody.height * 0.65),
+          rotation: 10,
+          duration: 0.28,
+          ease: 'power1.in',
+          overwrite: 'auto',
+          onComplete: () => releaseCarriedChip(chipBody, attempt),
+        });
+      };
+
+      const placeChipOnNuni = (attempt: NonNullable<typeof catchAttempt>) => {
+        if (!engine) return;
+        const { chipBody, nuni, nuniMotion } = attempt;
+        const playBoxRect = playBox.getBoundingClientRect();
+        const chipLeft = playBoxRect.left + chipBody.body.position.x - chipBody.width / 2;
+        const chipTop = playBoxRect.top + chipBody.body.position.y - chipBody.height / 2;
+        const nuniRect = nuni.getBoundingClientRect();
+        const overlay = chipBody.element.cloneNode(true) as HTMLLIElement;
+
+        Composite.remove(engine.world, chipBody.body);
+        chipBody.active = false;
+        chipBody.carried = true;
+        chipBody.carryFollowsNuni = false;
+        chipBody.carryOverlay = overlay;
+        chipCarryOverlays.add(overlay);
+        chipBody.element.style.opacity = '0';
+
+        overlay.classList.remove(styles.skillsChipDragging);
+        overlay.classList.add(styles.skillsChipCarryOverlay);
+        Object.assign(overlay.style, {
+          position: 'fixed',
+          inset: 'auto',
+          top: '0px',
+          left: '0px',
+          width: `${chipBody.width}px`,
+          height: `${chipBody.height}px`,
+          opacity: '1',
+          transform: `translate3d(${chipLeft}px, ${chipTop}px, 0) rotate(${chipBody.body.angle}rad)`,
+        });
+        document.body.appendChild(overlay);
+
+        const headX = nuniRect.left + nuniRect.width / 2 - chipBody.width / 2;
+        const headY = nuniRect.top - chipBody.height + Math.max(2, nuniRect.height * 0.035);
+        gsap.to(overlay, {
+          x: headX,
+          y: headY,
+          rotation: -2,
+          duration: 0.16,
+          ease: 'power2.out',
+          overwrite: 'auto',
+          onComplete: () => { chipBody.carryFollowsNuni = true; },
+        });
+
+        const lowerY = Math.max(
+          attempt.startY,
+          playBoxRect.bottom - nuniRect.height - Math.max(12, window.innerWidth * 0.01),
+        );
+        nuniCatchTimeline?.kill();
+        nuniCatchTimeline = gsap.timeline()
+          .to(nuniMotion, {
+            scaleX: 1.08,
+            scaleY: 0.92,
+            y: 4,
+            duration: 0.12,
+            ease: 'power3.in',
+            overwrite: 'auto',
+          }, 0)
+          .to(nuniMotion, {
+            scaleX: 1,
+            scaleY: 1,
+            y: 0,
+            duration: 0.3,
+            ease: 'back.out(2.1)',
+          }, 0.12)
+          .to(nuni, {
+            y: lowerY,
+            duration: 0.78,
+            ease: 'power2.inOut',
+            overwrite: 'auto',
+          }, 0.34)
+          .to(nuniMotion, {
+            rotation: 7,
+            x: 5,
+            duration: 0.22,
+            ease: 'power2.inOut',
+          }, 1.18)
+          .call(() => dropChipFromNuni(chipBody, attempt), [], 1.4);
+      };
+
+      const cancelCatchAttempt = (attempt: NonNullable<typeof catchAttempt>) => {
+        if (attempt.canceling) return;
+        attempt.canceling = true;
+        nuniCatchTimeline?.kill();
+        gsap.to(attempt.nuni, {
+          x: attempt.startX,
+          y: attempt.startY,
+          scale: attempt.startScale,
+          duration: 0.55,
+          ease: 'power3.out',
+          overwrite: 'auto',
+          onComplete: () => finishNuniCatch(attempt),
+        });
+      };
+
+      const catchHighChip = (chipBody: ChipBody) => {
+        if (!engine || carriedChip || performance.now() < nuniCatchCooldownUntil) return;
+        const nuni = document.querySelector<HTMLElement>(`.${styles.heroNuni}`);
+        const nuniMotion = document.querySelector<HTMLElement>(`.${styles.heroNuniAmbientMotion}`);
+        const nuniEyes = document.querySelector<HTMLElement>(`.${styles.heroNuniEyes}`);
+        if (!nuni || !nuniMotion || !nuniEyes) return;
+
+        chipBody.catchEligibleUntil = 0;
+        const playBoxRect = playBox.getBoundingClientRect();
+        const currentNuniRect = nuni.getBoundingClientRect();
+        const startX = Number(gsap.getProperty(nuni, 'x')) || currentNuniRect.left;
+        const startY = Number(gsap.getProperty(nuni, 'y')) || currentNuniRect.top;
+        const startScale = Number(gsap.getProperty(nuni, 'scaleX')) || 1;
+        const projectedChipX = playBoxRect.left
+          + chipBody.body.position.x
+          + chipBody.body.velocity.x * 14;
+        const eyeOffset = gsap.utils.clamp(-3.5, 3.5, (projectedChipX - (currentNuniRect.left + currentNuniRect.width / 2)) * 0.04);
+
+        carriedChip = chipBody;
+        catchAttempt = {
+          chipBody,
+          nuni,
+          nuniMotion,
+          nuniEyes,
+          startX,
+          startY,
+          startScale,
+          startedAt: performance.now(),
+          canceling: false,
+          released: false,
+        };
+        nuni.dataset.skillsRescue = 'true';
+        nuniCatchTimeline?.kill();
+        nuniCatchTimeline = gsap.timeline()
+          .to(nuniEyes, { x: eyeOffset, y: -2.2, duration: 0.18, ease: 'power2.out' }, 0)
+          .to(nuni, {
+            y: startY - Math.max(8, window.innerWidth * 0.008),
+            scale: startScale,
+            duration: 0.58,
+            ease: 'power3.inOut',
+            overwrite: 'auto',
+          }, 0.04);
+      };
+
+      let previousTime = performance.now();
+      const updatePhysics = (time: number) => {
+        if (!engine) return;
+        const delta = Math.min(32, Math.max(8, time - previousTime));
+        previousTime = time;
+        Engine.update(engine, delta * 0.75);
+        chipBodies.forEach((chipBody) => {
+          const {
+            element,
+            body,
+            width,
+            height,
+            active,
+            carried,
+          } = chipBody;
+          if (carried) {
+            if (!chipBody.carryOverlay || !chipBody.carryFollowsNuni || !catchAttempt) return;
+            const nuniRect = catchAttempt.nuni.getBoundingClientRect();
+            const x = nuniRect.left + nuniRect.width / 2 - width / 2;
+            const y = nuniRect.top - height + Math.max(2, nuniRect.height * 0.035);
+            chipBody.carryOverlay.style.transform = `translate3d(${x}px, ${y}px, 0) rotate(-2deg)`;
+            return;
+          }
+          if (!active) return;
+          const x = body.position.x - width / 2;
+          const y = body.position.y - height / 2;
+          element.style.transform = `translate3d(${x}px, ${y}px, 0) rotate(${body.angle}rad)`;
+
+          if (
+            catchAttempt?.chipBody === chipBody
+            && !catchAttempt.canceling
+            && !catchAttempt.released
+          ) {
+            const playBoxRect = playBox.getBoundingClientRect();
+            const chipCenterX = playBoxRect.left + body.position.x;
+            const scaledNuniWidth = catchAttempt.nuni.offsetWidth * catchAttempt.startScale;
+            const desiredNuniX = gsap.utils.clamp(
+              playBoxRect.left,
+              playBoxRect.right - scaledNuniWidth,
+              chipCenterX - scaledNuniWidth / 2,
+            );
+            const currentNuniX = Number(gsap.getProperty(catchAttempt.nuni, 'x')) || catchAttempt.startX;
+            const followAmount = Math.min(0.24, delta * 0.014);
+            gsap.set(catchAttempt.nuni, {
+              x: currentNuniX + (desiredNuniX - currentNuniX) * followAmount,
+            });
+
+            const nuniRect = catchAttempt.nuni.getBoundingClientRect();
+            const chipBottom = playBoxRect.top + body.position.y + height / 2;
+            const horizontalDistance = Math.abs(chipCenterX - (nuniRect.left + nuniRect.width / 2));
+            const horizontallyAligned = horizontalDistance <= (nuniRect.width + width) * 0.48;
+            const touchesHead = chipBottom >= nuniRect.top - Math.max(8, height * 0.25)
+              && chipBottom <= nuniRect.top + Math.max(30, height * 1.2);
+
+            if (body.velocity.y >= 0 && horizontallyAligned && touchesHead) {
+              placeChipOnNuni(catchAttempt);
+              return;
+            }
+
+            if (
+              time - catchAttempt.startedAt > 4000
+              || (body.velocity.y > 0 && chipBottom > nuniRect.bottom)
+            ) {
+              cancelCatchAttempt(catchAttempt);
+            }
+            return;
+          }
+
+          if (
+            !carriedChip
+            && !chipBody.catchBlockedUntilNextDrag
+            && time <= chipBody.catchEligibleUntil
+            && time >= nuniCatchCooldownUntil
+          ) {
+            const nuni = document.querySelector<HTMLElement>(`.${styles.heroNuni}`);
+            if (!nuni) return;
+            const chipViewportY = playBox.getBoundingClientRect().top + body.position.y;
+            if (chipViewportY < nuni.getBoundingClientRect().top) catchHighChip(chipBody);
+          }
+        });
+        animationFrame = window.requestAnimationFrame(updatePhysics);
+      };
+      animationFrame = window.requestAnimationFrame(updatePhysics);
+
+      resizeObserver = new ResizeObserver(() => {
+        if (!engine) return;
+        makeWalls();
+        const width = playBox.clientWidth;
+        const height = playBox.clientHeight;
+        chipBodies.forEach((chipBody) => {
+          if (!chipBody.active) return;
+          const nextWidth = chipBody.element.offsetWidth;
+          const nextHeight = chipBody.element.offsetHeight;
+          if (chipBody.width > 0 && chipBody.height > 0) {
+            Body.scale(chipBody.body, nextWidth / chipBody.width, nextHeight / chipBody.height);
+          }
+          chipBody.width = nextWidth;
+          chipBody.height = nextHeight;
+          Body.setPosition(chipBody.body, {
+            x: Math.max(nextWidth / 2 + 2, Math.min(width - nextWidth / 2 - 2, chipBody.body.position.x)),
+            y: Math.min(height - nextHeight / 2 - 2, chipBody.body.position.y),
+          });
+          Body.setSleeping(chipBody.body, false);
+        });
+      });
+      resizeObserver.observe(playBox);
+    };
+
+    const checkSectionPosition = () => {
+      positionCheckFrame = 0;
+      const rect = section.getBoundingClientRect();
+      const viewportMidpoint = window.innerHeight * 0.5;
+      if (rect.top <= viewportMidpoint && rect.bottom >= viewportMidpoint) startChipPhysics();
+    };
+
+    const requestCheck = () => {
+      if (positionCheckFrame || physicsStarted) return;
+      positionCheckFrame = window.requestAnimationFrame(checkSectionPosition);
+    };
+
+    checkSectionPosition();
+    window.addEventListener('scroll', requestCheck, { passive: true });
+    window.addEventListener('resize', requestCheck);
+
+    return () => {
+      window.removeEventListener('scroll', requestCheck);
+      window.removeEventListener('resize', requestCheck);
+      playBox.removeEventListener('pointerdown', handleSkillPointerDown);
+      window.removeEventListener('pointerup', handleSkillPointerRelease);
+      window.removeEventListener('pointercancel', handleSkillPointerRelease);
+      if (positionCheckFrame) window.cancelAnimationFrame(positionCheckFrame);
+      if (animationFrame) window.cancelAnimationFrame(animationFrame);
+      chipDropTimers.forEach((timer) => window.clearTimeout(timer));
+      chipCarryOverlays.forEach((overlay) => overlay.remove());
+      chipCarryOverlays.clear();
+      nuniCatchTimeline?.kill();
+      resizeObserver?.disconnect();
+      const nuni = document.querySelector<HTMLElement>(`.${styles.heroNuni}`);
+      if (nuni) delete nuni.dataset.skillsRescue;
+      if (physicsMouse) Mouse.clearSourceEvents(physicsMouse);
+      if (engine) {
+        Composite.clear(engine.world, false, true);
+        Engine.clear(engine);
+      }
+    };
+  }, [prefersReducedMotion]);
+
   return (
-    <section id="skills" className={styles.skillsSection} aria-labelledby="skills-title">
+    <section ref={sectionRef} id="skills" className={styles.skillsSection} aria-labelledby="skills-title">
       <div className={styles.skillsCanvas}>
         <img className={styles.skillsGround} src={skillsGroundSrc} alt="" aria-hidden="true" />
         <img className={styles.skillsGrid} src={journeyTextureGridSrc} alt="" aria-hidden="true" />
 
-        <h2 className={styles.skillsTitle} id="skills-title">Skills</h2>
-        <div className={styles.skillsInstruction}>
-          <img src={skillsInstructionDotSrc} alt="" aria-hidden="true" />
-          <p>Throw the skills you've found</p>
-        </div>
+        <div className={`${styles.skillsContentBox} skills-content-box`}>
+          <div className={`${styles.skillsHeaderRow} skills-header-row`}>
+            <h2 className={styles.skillsTitle} id="skills-title">Skills</h2>
+            <div className={styles.skillsInstruction}>
+              <img src={skillsInstructionDotSrc} alt="" aria-hidden="true" />
+              <p>Throw the skills you've found</p>
+            </div>
+          </div>
 
-        <div className={styles.skillsPlayBox} aria-hidden="true">
-          <img className={styles.skillsPlayBoxBase} src={skillsPlayBoxSrc} alt="" />
-          <img className={styles.skillsPlayBoxGrid} src={skillsPlayBoxGridSrc} alt="" />
-        </div>
+          <div ref={playBoxRef} className={styles.skillsPlayBox}>
+            <div className={styles.skillsPlayBoxSurface} aria-hidden="true">
+              <img className={styles.skillsPlayBoxBase} src={skillsPlayBoxSrc} alt="" />
+              <img className={styles.skillsPlayBoxGrid} src={skillsPlayBoxGridSrc} alt="" />
+            </div>
 
-        <ul className={styles.skillsChips} aria-label="사용 기술">
-          {skillChips.map((chip) => (
-            <li
-              key={chip.label}
-              className={styles.skillsChip}
-              style={{
-                insetInlineStart: `${chip.x}%`,
-                insetBlockStart: `${chip.y}%`,
-                inlineSize: `${(chip.width * skillChipScale) / 19.2}cqw`,
-                transform: `translate(-50%, -50%) rotate(${chip.rotation}deg)`,
-              }}
-            >
-              <img src={chip.asset} alt="" aria-hidden="true" />
-              <span className={chip.inverse ? styles.skillsChipInverse : undefined}>{chip.label}</span>
-            </li>
-          ))}
-        </ul>
+            <ul className={styles.skillsChips} aria-label="사용 기술">
+              {skillChips.map((chip, index) => (
+                <li
+                  key={chip.label}
+                  ref={(element) => { chipRefs.current[index] = element; }}
+                  className={`${styles.skillsChip} ${
+                    chip.category === 'ai'
+                      ? styles.skillsChipAi
+                      : chip.category === 'program'
+                        ? styles.skillsChipProgram
+                        : styles.skillsChipCode
+                  }`}
+                  style={{
+                    inlineSize: `${(chip.width * skillChipScale) / 19.2}cqw`,
+                  }}
+                >
+                  <span>{chip.label}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
       </div>
     </section>
   );
@@ -1950,12 +2873,14 @@ export default function StrategistPage() {
         </div>
       </section>
       <AboutSection />
-      <JourneySection />
-      <JourneyDiscoverySection />
-      <JourneyObservationSection />
-      <JourneyMovementSection />
-      <JourneyExpansionSection />
-      <JourneyRealitySection />
+      <div className={styles.journeyStack}>
+        <JourneySection />
+        <JourneyDiscoverySection />
+        <JourneyObservationSection />
+        <JourneyMovementSection />
+        <JourneyExpansionSection />
+        <JourneyRealitySection />
+      </div>
       <ProjectsIntroSection />
       <SkillsSection />
       <ContactSection />

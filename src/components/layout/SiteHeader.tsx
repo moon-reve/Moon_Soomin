@@ -9,19 +9,20 @@ export default function SiteHeader() {
   useEffect(() => {
     const header = headerRef.current;
     if (!header) return undefined;
-    const darkSections = ['journey', 'journey-movement', 'closing']
-      .map((id) => document.getElementById(id))
-      .filter((section): section is HTMLElement => Boolean(section));
+    const darkSectionIds = new Set(['journey', 'journey-movement', 'skills', 'closing']);
     let frame = 0;
 
     const updateHeaderColor = () => {
       frame = 0;
       const headerRect = header.getBoundingClientRect();
       const headerAnchor = headerRect.top + (headerRect.height * 0.5);
-      const isOnDarkSection = darkSections.some((section) => {
-        const rect = section.getBoundingClientRect();
-        return rect.top <= headerAnchor && rect.bottom >= headerAnchor;
-      });
+      const visibleSection = Array.from(document.querySelectorAll<HTMLElement>('main section[id]'))
+        .filter((section) => {
+          const rect = section.getBoundingClientRect();
+          return rect.top <= headerAnchor && rect.bottom >= headerAnchor;
+        })
+        .at(-1);
+      const isOnDarkSection = visibleSection ? darkSectionIds.has(visibleSection.id) : false;
       header.classList.toggle('site-header--on-dark', isOnDarkSection);
     };
 
