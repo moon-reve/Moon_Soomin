@@ -1,41 +1,8 @@
 @font-face {
-  font-family: 'Bricolage Grotesque';
-  src: url('../assets/fonts/bricolage-grotesque-variable.woff2') format('woff2');
-  font-style: normal;
-  font-weight: 200 800;
-  font-stretch: 100%;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: 'JetBrains Mono';
-  src: url('../assets/fonts/jetbrains-mono-400.ttf') format('truetype');
+  font-family: 'Amplify Personal Use Only';
+  src: url('../assets/fonts/Amplify_PersonalUseOnly.ttf') format('truetype');
   font-style: normal;
   font-weight: 400;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: 'Fugaz One';
-  src: url('../assets/fonts/fugaz-one-400.ttf') format('truetype');
-  font-style: normal;
-  font-weight: 400;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: 'Pretendard';
-  src: url('../assets/fonts/pretendard-400.woff2') format('woff2');
-  font-style: normal;
-  font-weight: 400;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: 'Pretendard';
-  src: url('../assets/fonts/pretendard-700.woff2') format('woff2');
-  font-style: normal;
-  font-weight: 700 900;
   font-display: swap;
 }
 
@@ -2014,6 +1981,7 @@
 .projectBackApproachLabel {
   inset-inline-start: 1.458333cqw;
   font-size: 0.677083cqw;
+  font-weight: 600;
   letter-spacing: 0.067708cqw;
 }
 
@@ -2028,7 +1996,7 @@
 .projectBackProblemCopy,
 .projectBackApproachCopy {
   inset-inline-start: 1.927083cqw;
-  font-family: 'SF Pro Text', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-family: 'Pretendard', sans-serif;
   font-size: 0.625cqw;
   font-weight: 400;
   letter-spacing: -0.008047cqw;
