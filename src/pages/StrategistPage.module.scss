@@ -261,6 +261,292 @@
   will-change: transform;
 }
 
+.nuniChatTrigger {
+  position: absolute;
+  inset: 0;
+  display: block;
+  inline-size: 100%;
+  block-size: 100%;
+  padding: 0;
+  cursor: pointer;
+  background: transparent;
+  border: 0;
+  border-radius: 50%;
+  outline: none;
+  pointer-events: auto;
+}
+
+.nuniChatTrigger:focus-visible {
+  outline: 2px solid #16150f;
+  outline-offset: 6px;
+}
+
+.heroNuni[data-chat-open='true'] {
+  z-index: 81;
+}
+
+.nuniChatBackdrop {
+  position: fixed;
+  z-index: 80;
+  inset: 0;
+  background: rgb(22 21 15 / 78%);
+  animation: nuni-chat-overlay-in 0.24s ease-out both;
+}
+
+@keyframes nuni-chat-overlay-in {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+.nuniChatDialog {
+  position: fixed;
+  z-index: 82;
+  inset-block-start: 50%;
+  inset-inline-start: 50%;
+  inline-size: min(908px, calc(100vw - 32px), calc((100svh - 32px) * 1.427673));
+  aspect-ratio: 908 / 636;
+  outline: none;
+  transform: translate(-50%, -50%);
+}
+
+.nuniChatShadow,
+.nuniChatSurface,
+.nuniChatDivider {
+  position: absolute;
+  display: block;
+  pointer-events: none;
+  user-select: none;
+}
+
+.nuniChatShadow {
+  z-index: 0;
+  inset-block-start: 22.58%;
+  inset-inline-start: 0.88%;
+  inline-size: 99.12%;
+  block-size: 77.42%;
+}
+
+.nuniChatSurface {
+  z-index: 1;
+  inset-block-start: 19.74%;
+  inset-inline-start: 0;
+  inline-size: 99.12%;
+  block-size: 77.43%;
+}
+
+.nuniChatHeader {
+  position: absolute;
+  z-index: 3;
+  inset-block-start: 23.46%;
+  inset-inline-start: 3.63%;
+  display: flex;
+  inline-size: 91.96%;
+  block-size: 3.15%;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.nuniChatHeader > div {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+}
+
+.nuniChatHeader > div > img {
+  display: block;
+  inline-size: 10px;
+  block-size: 10px;
+}
+
+.nuniChatHeader p {
+  margin: 0;
+  color: rgb(22 21 15 / 75%);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13px;
+  font-weight: 400;
+  letter-spacing: 0.65px;
+  line-height: normal;
+  white-space: nowrap;
+}
+
+.nuniChatHeader > button {
+  display: block;
+  inline-size: 24px;
+  block-size: 24px;
+  padding: 0;
+  cursor: pointer;
+  background: transparent;
+  border: 0;
+}
+
+.nuniChatHeader > button img {
+  display: block;
+  inline-size: 13.6px;
+  block-size: 13.6px;
+  margin: auto;
+}
+
+.nuniChatDivider {
+  z-index: 2;
+  inset-inline-start: 0;
+  inline-size: 99.12%;
+  block-size: 1px;
+}
+
+.nuniChatHeaderDivider {
+  inset-block-start: 29.82%;
+}
+
+.nuniChatQuestionDivider {
+  inset-block-start: 74.51%;
+}
+
+.nuniChatConversation {
+  position: absolute;
+  z-index: 3;
+  inset-block-start: 34.82%;
+  inset-block-end: 25.49%;
+  inset-inline-start: 3.52%;
+  display: flex;
+  box-sizing: border-box;
+  inline-size: 91.96%;
+  flex-direction: column;
+  gap: 14px;
+  padding-block-end: 24px;
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scroll-padding-block-end: 24px;
+  scrollbar-color: rgb(22 21 15 / 24%) transparent;
+  scrollbar-width: thin;
+}
+
+.nuniChatGreeting {
+  display: inline-flex;
+  box-sizing: border-box;
+  inline-size: fit-content;
+  block-size: fit-content;
+  align-items: center;
+  padding: 25px 30px;
+  background: rgb(22 21 15 / 6%);
+  border: 1px solid rgb(22 21 15 / 14%);
+  border-radius: 16px;
+}
+
+.nuniChatGreeting p {
+  margin: 0;
+  color: #16150f;
+  font-family: 'Pretendard', sans-serif;
+  font-size: 17px;
+  font-weight: 400;
+  line-height: normal;
+  white-space: nowrap;
+}
+
+.nuniChatExchange {
+  display: contents;
+}
+
+.nuniChatSelectedQuestion {
+  align-self: flex-end;
+  max-inline-size: 72%;
+  margin: 0;
+  padding: 12px 18px;
+  color: #16150f;
+  font-family: 'Pretendard', sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.5;
+  background: #d4c3e8;
+  border: 1px solid rgb(22 21 15 / 35%);
+  border-radius: 16px 16px 4px;
+}
+
+.nuniChatAnswer {
+  box-sizing: border-box;
+  align-self: flex-start;
+  max-inline-size: 78%;
+  padding: 16px 20px;
+  color: #16150f;
+  font-family: 'Pretendard', sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.65;
+  background: rgb(22 21 15 / 6%);
+  border: 1px solid rgb(22 21 15 / 14%);
+  border-radius: 16px 16px 16px 4px;
+}
+
+.nuniChatAnswer > p {
+  margin: 0;
+}
+
+.nuniChatAnswerActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-block-start: 14px;
+}
+
+.nuniChatAnswerActions a,
+.nuniChatAnswerActions button {
+  display: inline-flex;
+  min-block-size: 34px;
+  align-items: center;
+  padding: 8px 14px;
+  color: #fffeea;
+  font: inherit;
+  line-height: 1;
+  text-decoration: none;
+  cursor: pointer;
+  background: #16150f;
+  border: 1px solid #16150f;
+  border-radius: 30px;
+}
+
+.nuniChatAnswerActions button:disabled {
+  color: rgb(22 21 15 / 45%);
+  cursor: not-allowed;
+  background: transparent;
+  border-color: rgb(22 21 15 / 24%);
+}
+
+.nuniChatQuestions {
+  position: absolute;
+  z-index: 3;
+  inset-block-start: 78.46%;
+  inset-inline-start: 3.52%;
+  display: flex;
+  inline-size: 92.95%;
+  flex-wrap: wrap;
+  gap: 12px 11px;
+}
+
+.nuniChatQuestions button {
+  min-block-size: 35px;
+  padding: 9px 30px;
+  color: #16150f;
+  font-family: 'Pretendard', sans-serif;
+  font-size: 12px;
+  font-weight: 400;
+  line-height: normal;
+  white-space: nowrap;
+  cursor: pointer;
+  background: #fffeea;
+  border: 1px solid rgb(22 21 15 / 32%);
+  border-radius: 40px;
+}
+
+.nuniChatQuestions .nuniChatQuestionActive {
+  background: #d4c3e8;
+  border-color: rgb(22 21 15 / 55%);
+}
+
 .heroNuniAmbientMotion {
   position: absolute;
   inset: 0;
@@ -2454,6 +2740,10 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .nuniChatBackdrop {
+    animation: none;
+  }
+
   .aboutTitleWords > span {
     opacity: 0;
     transform: none;

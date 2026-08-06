@@ -91,14 +91,61 @@ import nuniMaskSrc from '../assets/strategist-hero/nuni-mask.svg';
 import nuniMouthSrc from '../assets/strategist-hero/nuni-mouth.svg';
 import nuniShadingSrc from '../assets/strategist-hero/nuni-shading.svg';
 import nuniShadowSrc from '../assets/strategist-hero/nuni-shadow.svg';
+import nuniChatCloseSrc from '../assets/nuni-chat/close.svg';
+import nuniChatDividerSrc from '../assets/nuni-chat/divider.svg';
+import nuniChatShadowSrc from '../assets/nuni-chat/modal-shadow.svg';
+import nuniChatStatusDotSrc from '../assets/nuni-chat/status-dot.svg';
+import nuniChatSurfaceSrc from '../assets/nuni-chat/modal-surface.svg';
 import sectionDotActiveSrc from '../assets/strategist-hero/section-dot-active.svg';
 import sectionDotSrc from '../assets/strategist-hero/section-dot.svg';
 import textureGridSrc from '../assets/strategist-hero/texture-grid.svg';
 import { useReducedMotion } from '../hooks/useReducedMotion';
-import { useSmoothScroll } from '../hooks/useSmoothScroll';
+import { scrollToPageTarget, setSmoothScrollLocked, useSmoothScroll } from '../hooks/useSmoothScroll';
 import styles from './StrategistPage.module.scss';
 
 const sectionLabels = ['Hero', 'About', 'Journey', 'Projects', 'Skills', 'Contact'] as const;
+const nuniChatQuestions = [
+  '왜 UI/UX를 선택했나요?',
+  '이전 경험이 어떻게 도움이 되었나요?',
+  '가장 기억에 남는 프로젝트는?',
+  '일본에서 뭘 배웠나요?',
+  'AI는 어떻게 활용했나요?',
+  '협업 스타일이 궁금해요.',
+  '앞으로의 목표는?',
+  '이력서 볼 수 있나요?',
+  '연락하고 싶어요.',
+] as const;
+type NuniChatQuestion = (typeof nuniChatQuestions)[number];
+
+const nuniChatAnswers: Record<NuniChatQuestion, string> = {
+  '왜 UI/UX를 선택했나요?':
+    '저는 UI/UX를 사용자의 행동을 설계하는 일이라고 생각합니다. 사용자가 어떤 행동을 할지 예상하고, 그 행동이 자연스럽게 이어질 수 있도록 경험을 만드는 과정이 가장 재미있었습니다. 그래서 UI/UX 디자이너를 선택했습니다.',
+  '이전 경험이 어떻게 도움이 되었나요?':
+    '제가 해왔던 일들은 모두 사람과의 소통이 중요한 직무였습니다. 고객, 촬영 대상, 구매자의 행동을 관찰하며 사람을 이해하는 습관을 자연스럽게 익혔습니다. 그래서 지금도 프로젝트를 시작하면 화면보다 먼저 사용자가 어떤 경험을 하고, 어떻게 행동할지를 고민합니다.',
+  '가장 기억에 남는 프로젝트는?':
+    '가장 기억에 남는 프로젝트는 Marshall입니다. 진행 중이던 프로젝트가 2주 만에 전면 변경되고, 팀원 구성까지 계속 바뀌면서 다른 팀보다 훨씬 짧은 기간 안에 새 프로젝트를 완성해야 했습니다. 어수선한 상황 속에서 팀원들을 다독이고 역할과 일정을 다시 정리하며 빠르게 프로젝트를 이끌었습니다. 쉽지 않은 과정이었지만 끝까지 완성해 냈다는 성취감이 가장 크게 남은 프로젝트입니다.',
+  '일본에서 뭘 배웠나요?':
+    '일본에 간 이유와 실제 경험은 달랐습니다. 커피를 배우는 대신 화장품 판매와 온라인 MD를 경험하며 다양한 사람들과 협업했고, 고객의 행동과 반응을 세심하게 관찰하는 법을 배웠습니다. 사람들은 같은 상황에서도 서로 다른 선택을 한다는 것을 가까이에서 경험했고, 그 선택 뒤에는 항상 이유가 있다는 것을 자연스럽게 배우게 되었습니다.',
+  'AI는 어떻게 활용했나요?':
+    'ChatGPT, Claude, Gemini를 활용해 리서치와 UX 아이디어를 발전시키고, 정보 구조와 콘텐츠를 검토했습니다. AI는 결과를 대신 만들어주는 도구가 아니라, 다양한 관점을 함께 고민하고 끊임없이 검토하며 더 나은 답을 찾도록 도와주는 협업 파트너이자 사고를 확장하는 비서처럼 활용하고 있습니다.',
+  '협업 스타일이 궁금해요.':
+    '팀원으로 참여할 때는 맡은 일을 책임감 있게 수행하는 것을 가장 중요하게 생각합니다. 불분명한 부분은 먼저 확인하고 충분히 소통하며, 작은 오해가 프로젝트 전체에 영향을 주지 않도록 노력합니다. 팀장일 때는 팀원들의 의견을 먼저 경청하고 독단적으로 결정하지 않으려 합니다. 다만 방향을 정해야 하는 순간에는 모두가 공감할 수 있는 기준을 만든 뒤 빠르게 결정하고 프로젝트를 이끌어갑니다.',
+  '앞으로의 목표는?':
+    '기획한 아이디어를 실제 사용자가 경험할 수 있는 서비스로 구현하는 디자이너가 되고 싶습니다. 변화하는 기술을 적극적으로 받아들이고 AI와 새로운 도구를 활용하며, 사용자의 행동을 이해해 더 자연스럽고 직관적인 경험을 설계하는 디자이너로 성장하는 것이 목표입니다.',
+  '이력서 볼 수 있나요?': '물론입니다. 아래 버튼을 통해 이력서를 확인하실 수 있습니다.',
+  '연락하고 싶어요.': '감사합니다. 아래에서 편한 방법으로 연락해 주세요.',
+};
+const nuniChatTargetSectionIds: Partial<Record<NuniChatQuestion, string>> = {
+  '왜 UI/UX를 선택했나요?': 'hero',
+  '이전 경험이 어떻게 도움이 되었나요?': 'journey',
+  '가장 기억에 남는 프로젝트는?': 'projects',
+  '일본에서 뭘 배웠나요?': 'journey-discovery',
+  'AI는 어떻게 활용했나요?': 'skills',
+  '협업 스타일이 궁금해요.': 'journey-reality',
+  '앞으로의 목표는?': 'about',
+  '이력서 볼 수 있나요?': 'contact',
+  '연락하고 싶어요.': 'contact',
+};
 const tickerLabels = [
   'Figma',
   'Photoshop',
@@ -390,7 +437,105 @@ function ScrollNuni() {
   const eyeDirectionRef = useRef<HTMLSpanElement>(null);
   const eyesRef = useRef<HTMLSpanElement>(null);
   const shadowRef = useRef<HTMLSpanElement>(null);
+  const chatDialogRef = useRef<HTMLDivElement>(null);
+  const chatConversationRef = useRef<HTMLDivElement>(null);
+  const chatReturnTransformRef = useRef<{ x: number; y: number; scale: number } | null>(null);
   const prefersReducedMotion = useReducedMotion();
+  const [isChatOpen, setIsChatOpen] = useState(false);
+  const [chatQuestionHistory, setChatQuestionHistory] = useState<NuniChatQuestion[]>([]);
+  const latestChatQuestion = chatQuestionHistory.at(-1) ?? null;
+
+  useEffect(() => {
+    const conversation = chatConversationRef.current;
+    if (chatQuestionHistory.length === 0 || !conversation) return undefined;
+
+    const scrollFrame = window.requestAnimationFrame(() => {
+      conversation.scrollTo({ top: conversation.scrollHeight, behavior: 'smooth' });
+    });
+    return () => window.cancelAnimationFrame(scrollFrame);
+  }, [chatQuestionHistory]);
+
+  useEffect(() => {
+    const scene = sceneRef.current;
+    if (!scene) return undefined;
+
+    if (!isChatOpen) {
+      const returnTransform = chatReturnTransformRef.current;
+      delete scene.dataset.chatOpen;
+      if (!returnTransform) return undefined;
+      chatReturnTransformRef.current = null;
+      gsap.to(scene, {
+        ...returnTransform,
+        duration: prefersReducedMotion ? 0 : 0.72,
+        ease: 'power3.inOut',
+        overwrite: 'auto',
+      });
+      return undefined;
+    }
+
+    const dialog = chatDialogRef.current;
+    if (!dialog) return undefined;
+    scene.dataset.chatOpen = 'true';
+    const previousBodyOverflow = document.body.style.overflow;
+    const previousDocumentOverflow = document.documentElement.style.overflow;
+    setSmoothScrollLocked(true);
+    document.body.style.overflow = 'hidden';
+    document.documentElement.style.overflow = 'hidden';
+
+    const moveNuniToDialog = () => {
+      const dialogRect = dialog.getBoundingClientRect();
+      const targetWidth = dialogRect.width * 0.1763;
+      const targetScale = targetWidth / Math.max(scene.offsetWidth, 1);
+      gsap.to(scene, {
+        x: dialogRect.left + dialogRect.width * 0.1214,
+        y: dialogRect.top,
+        scale: targetScale,
+        duration: prefersReducedMotion ? 0 : 0.72,
+        ease: 'power3.inOut',
+        overwrite: 'auto',
+      });
+    };
+
+    const moveFrame = window.requestAnimationFrame(moveNuniToDialog);
+    const closeChatWithEscape = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        setIsChatOpen(false);
+      }
+    };
+    window.addEventListener('keydown', closeChatWithEscape);
+    window.addEventListener('resize', moveNuniToDialog);
+    return () => {
+      window.cancelAnimationFrame(moveFrame);
+      window.removeEventListener('keydown', closeChatWithEscape);
+      window.removeEventListener('resize', moveNuniToDialog);
+      setSmoothScrollLocked(false);
+      document.body.style.overflow = previousBodyOverflow;
+      document.documentElement.style.overflow = previousDocumentOverflow;
+    };
+  }, [isChatOpen, prefersReducedMotion]);
+
+  const toggleNuniChat = () => {
+    const scene = sceneRef.current;
+    if (!isChatOpen && scene) {
+      chatReturnTransformRef.current = {
+        x: Number(gsap.getProperty(scene, 'x')) || scene.getBoundingClientRect().left,
+        y: Number(gsap.getProperty(scene, 'y')) || scene.getBoundingClientRect().top,
+        scale: Number(gsap.getProperty(scene, 'scaleX')) || 1,
+      };
+      gsap.killTweensOf(scene);
+    }
+    setIsChatOpen((isOpen) => !isOpen);
+  };
+
+  const selectChatQuestion = (question: NuniChatQuestion) => {
+    setChatQuestionHistory((history) => [...history, question]);
+
+    const targetSectionId = nuniChatTargetSectionIds[question];
+    if (!targetSectionId) return;
+
+    const targetSection = document.getElementById(targetSectionId);
+    if (targetSection) scrollToPageTarget(targetSection, prefersReducedMotion);
+  };
 
   useEffect(() => {
     const character = characterRef.current;
@@ -747,7 +892,7 @@ function ScrollNuni() {
 
     const moveToActiveSection = (immediate = false, force = false) => {
       frame = 0;
-      if (scene.dataset.skillsRescue === 'true') return;
+      if (scene.dataset.skillsRescue === 'true' || scene.dataset.chatOpen === 'true') return;
       if (journeyStack && journeyWaypoints.length > 1) {
         const stackRect = journeyStack.getBoundingClientRect();
         const sectionHeight = journeyWaypoints[0].element.offsetHeight;
@@ -868,38 +1013,151 @@ function ScrollNuni() {
   }, [prefersReducedMotion]);
 
   return (
-    <div ref={sceneRef} className={styles.heroNuni} aria-label="전략가 누니" role="img">
-      <div ref={ambientMotionRef} className={styles.heroNuniAmbientMotion}>
-        <span ref={shadowRef} className={styles.heroNuniShadow} aria-hidden="true">
-          <img src={nuniShadowSrc} alt="" draggable="false" />
-        </span>
-        <div ref={characterRef} className={styles.heroNuniCharacter}>
-          <div ref={bodyLookRef} className={styles.heroNuniBodyLook}>
-          <span className={styles.heroNuniBody} aria-hidden="true">
-            <img src={nuniBodySrc} alt="" draggable="false" />
-          </span>
-          <span
-            className={styles.heroNuniShading}
-            style={{ '--hero-nuni-mask': `url("${nuniMaskSrc}")` } as CSSProperties}
-            aria-hidden="true"
-          >
-            <img src={nuniShadingSrc} alt="" draggable="false" />
-          </span>
-          <span className={styles.heroNuniCheeks} aria-hidden="true">
-            <img src={nuniCheeksSrc} alt="" draggable="false" />
-          </span>
-          <span className={styles.heroNuniMouth} aria-hidden="true">
-            <img src={nuniMouthSrc} alt="" draggable="false" />
-          </span>
-            <span ref={eyeDirectionRef} className={styles.heroNuniEyes} aria-hidden="true">
-              <span ref={eyesRef} className={styles.heroNuniBlink}>
-                <img src={nuniEyesSrc} alt="" draggable="false" />
-              </span>
+    <>
+      <div ref={sceneRef} className={styles.heroNuni}>
+        <button
+          className={styles.nuniChatTrigger}
+          type="button"
+          aria-label={isChatOpen ? '누니 챗봇 닫기' : '누니 챗봇 열기'}
+          aria-expanded={isChatOpen}
+          aria-controls="nuni-chat-panel"
+          onClick={toggleNuniChat}
+        >
+          <div ref={ambientMotionRef} className={styles.heroNuniAmbientMotion}>
+            <span ref={shadowRef} className={styles.heroNuniShadow} aria-hidden="true">
+              <img src={nuniShadowSrc} alt="" draggable="false" />
             </span>
+            <div ref={characterRef} className={styles.heroNuniCharacter}>
+              <div ref={bodyLookRef} className={styles.heroNuniBodyLook}>
+                <span className={styles.heroNuniBody} aria-hidden="true">
+                  <img src={nuniBodySrc} alt="" draggable="false" />
+                </span>
+                <span
+                  className={styles.heroNuniShading}
+                  style={{ '--hero-nuni-mask': `url("${nuniMaskSrc}")` } as CSSProperties}
+                  aria-hidden="true"
+                >
+                  <img src={nuniShadingSrc} alt="" draggable="false" />
+                </span>
+                <span className={styles.heroNuniCheeks} aria-hidden="true">
+                  <img src={nuniCheeksSrc} alt="" draggable="false" />
+                </span>
+                <span className={styles.heroNuniMouth} aria-hidden="true">
+                  <img src={nuniMouthSrc} alt="" draggable="false" />
+                </span>
+                <span ref={eyeDirectionRef} className={styles.heroNuniEyes} aria-hidden="true">
+                  <span ref={eyesRef} className={styles.heroNuniBlink}>
+                    <img src={nuniEyesSrc} alt="" draggable="false" />
+                  </span>
+                </span>
+              </div>
+            </div>
           </div>
-        </div>
+        </button>
       </div>
-    </div>
+
+      {isChatOpen && (
+        <>
+          <div
+            className={styles.nuniChatBackdrop}
+            onMouseDown={() => {
+              setChatQuestionHistory([]);
+              setIsChatOpen(false);
+            }}
+          />
+          <section
+            ref={chatDialogRef}
+            className={styles.nuniChatDialog}
+            id="nuni-chat-panel"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="nuni-chat-title"
+            data-lenis-prevent
+          >
+            <img className={styles.nuniChatShadow} src={nuniChatShadowSrc} alt="" aria-hidden="true" />
+            <img className={styles.nuniChatSurface} src={nuniChatSurfaceSrc} alt="" aria-hidden="true" />
+
+            <header className={styles.nuniChatHeader}>
+              <div>
+                <img src={nuniChatStatusDotSrc} alt="" aria-hidden="true" />
+                <p id="nuni-chat-title">MOON SOOMIN — LIVE SESSION</p>
+              </div>
+              <button
+                type="button"
+                aria-label="챗봇 닫기"
+                onClick={() => setIsChatOpen(false)}
+              >
+                <img src={nuniChatCloseSrc} alt="" aria-hidden="true" />
+              </button>
+            </header>
+
+            <img
+              className={`${styles.nuniChatDivider} ${styles.nuniChatHeaderDivider}`}
+              src={nuniChatDividerSrc}
+              alt=""
+              aria-hidden="true"
+            />
+
+            <div ref={chatConversationRef} className={styles.nuniChatConversation} aria-live="polite">
+              <div className={styles.nuniChatGreeting}>
+                <p>
+                  안녕하세요, 누니예요. 문수민에 대해 궁금한 걸 골라주세요.
+                  <br />
+                  제가 아는 만큼 답해드릴게요.
+                </p>
+              </div>
+
+              {chatQuestionHistory.map((question, index) => (
+                <div className={styles.nuniChatExchange} key={`${question}-${index}`}>
+                  <p className={styles.nuniChatSelectedQuestion}>{question}</p>
+                  <div className={styles.nuniChatAnswer}>
+                    <p>{nuniChatAnswers[question]}</p>
+
+                    {question === '이력서 볼 수 있나요?' && (
+                      <div className={styles.nuniChatAnswerActions}>
+                        <button type="button" disabled title="이력서 PDF 파일 연결 예정">
+                          Resume PDF 다운로드 &amp; 열기
+                        </button>
+                      </div>
+                    )}
+
+                    {question === '연락하고 싶어요.' && (
+                      <div className={styles.nuniChatAnswerActions}>
+                        <a href="mailto:ssachra@gmail.com">✉️ Email</a>
+                        <button type="button" disabled title="이력서 PDF 파일 연결 예정">
+                          📄 Resume
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <img
+              className={`${styles.nuniChatDivider} ${styles.nuniChatQuestionDivider}`}
+              src={nuniChatDividerSrc}
+              alt=""
+              aria-hidden="true"
+            />
+
+            <div className={styles.nuniChatQuestions}>
+              {nuniChatQuestions.map((question) => (
+                <button
+                  key={question}
+                  className={latestChatQuestion === question ? styles.nuniChatQuestionActive : undefined}
+                  type="button"
+                  aria-pressed={latestChatQuestion === question}
+                  onClick={() => selectChatQuestion(question)}
+                >
+                  {question}
+                </button>
+              ))}
+            </div>
+          </section>
+        </>
+      )}
+    </>
   );
 }
 
