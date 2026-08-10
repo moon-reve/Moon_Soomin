@@ -11,6 +11,7 @@ import {
   type IBodyDefinition,
 } from 'matter-js';
 import { playIdle, resetAutoBlink, resetIdle, startAutoBlink } from '../animations';
+import { NuniSpeechBubble } from '../components/nuni/NuniSpeechBubble';
 import aboutGroundSrc from '../assets/strategist-about/ground.svg';
 import aboutStarSrc from '../assets/strategist-about/star.svg';
 import aboutTextureGridSrc from '../assets/strategist-about/texture-grid.svg';
@@ -97,6 +98,39 @@ import nuniChatSurfaceSrc from '../assets/nuni-chat/modal-surface.svg';
 import sectionDotActiveSrc from '../assets/strategist-hero/section-dot-active.svg';
 import sectionDotSrc from '../assets/strategist-hero/section-dot.svg';
 import textureGridSrc from '../assets/strategist-hero/texture-grid.svg';
+import { aboutMessageGroups, aboutMessageGroupWeights } from '../data/aboutMessages';
+import {
+  contactMainMessage,
+  contactMessageGroups,
+  contactMessageGroupWeights,
+} from '../data/contactMessages';
+import {
+  heroGreeting,
+  heroMessageGroups,
+  heroMessageGroupWeights,
+} from '../data/heroMessages';
+import {
+  journeyCommonMessages,
+  journeyMessages,
+  journeySectionKeyById,
+  journeySectionOrder,
+  type JourneyKey,
+} from '../data/journeyMessages';
+import {
+  getProjectPriorityMessages,
+  initialProjectInteractionState,
+  projectMessageGroups,
+  projectMessageGroupWeights,
+  type ProjectInteractionState,
+} from '../data/projectMessages';
+import {
+  getSkillMessageDisplayDuration,
+  getSkillPriorityMessages,
+  skillGeneralMessages,
+  skillSpeechMessages,
+  type SkillSpeechLabel,
+} from '../data/skillMessages';
+import { useNuniSpeech, type NuniSpeechSectionConfig } from '../hooks/useNuniSpeech';
 import { useReducedMotion } from '../hooks/useReducedMotion';
 import { scrollToPageTarget, setSmoothScrollLocked, useSmoothScroll } from '../hooks/useSmoothScroll';
 import styles from './StrategistPage.module.scss';
@@ -168,7 +202,12 @@ const tickerLabels = [
   'Midjourney',
 ] as const;
 
-const skillChips = [
+const skillChips: readonly {
+  label: SkillSpeechLabel;
+  category: 'code' | 'program' | 'ai';
+  width: number;
+  rotation: number;
+}[] = [
   { label: 'Javascript', category: 'code', width: 121.5, rotation: -25.6 },
   { label: 'Premiere Pro', category: 'program', width: 136.2, rotation: -22.7 },
   { label: 'Figma', category: 'program', width: 93, rotation: 7.4 },
@@ -188,7 +227,7 @@ const skillChips = [
   { label: 'Photoshop', category: 'program', width: 120.4, rotation: 7.1 },
   { label: 'React', category: 'code', width: 93, rotation: -2.9 },
   { label: 'After Effects', category: 'program', width: 134.6, rotation: 0.1 },
-] as const;
+];
 
 const skillChipScale = 1332 / 1478;
 
@@ -426,6 +465,123 @@ const navigationSectionGroups: ReadonlyArray<{ label: SectionLabel; ids: readonl
 const darkNavigationSectionIds = ['journey', 'journey-movement', 'skills', 'closing'] as const;
 const projectDeckOpenEvent = 'projects:open-deck';
 const projectDeckCloseEvent = 'projects:close-deck';
+const journeySpeechCardChangeEvent = 'nuni:journey-card-change';
+const projectInteractionChangeEvent = 'nuni:project-interaction-change';
+const skillInteractionChangeEvent = 'nuni:skill-interaction-change';
+const skillCatchEvent = 'nuni:skill-catch';
+
+const publishProjectInteraction = (state: Partial<ProjectInteractionState>) => {
+  window.dispatchEvent(new CustomEvent(projectInteractionChangeEvent, { detail: state }));
+};
+
+const resolveActiveJourneyKey = (): JourneyKey | null => {
+  const journeyStack = document.querySelector<HTMLElement>(`.${styles.journeyStack}`);
+  const firstJourneySection = document.getElementById('journey');
+  if (!journeyStack || !firstJourneySection) return null;
+
+  const stackRect = journeyStack.getBoundingClientRect();
+  const sectionHeight = firstJourneySection.offsetHeight;
+  if (sectionHeight <= 0 || stackRect.top >= window.innerHeight || stackRect.bottom <= 0) return null;
+  if (stackRect.top > 0) return journeySectionKeyById[journeySectionOrder[0]];
+
+  const progress = Math.max(
+    0,
+    Math.min(journeySectionOrder.length - 1, -stackRect.top / sectionHeight),
+  );
+  return journeySectionKeyById[journeySectionOrder[Math.round(progress)]] ?? null;
+};
+
+const nuniSpeechSections = [
+  {
+    sectionId: 'hero',
+    messageGroups: heroMessageGroups,
+    groupWeights: heroMessageGroupWeights,
+    initialDelay: [4000, 7000],
+    displayDuration: [3000, 5000],
+    repeatDelay: [4000, 7000],
+    recentMessageLimit: 2,
+    greeting: {
+      message: heroGreeting,
+      delay: 1000,
+      duration: 4500,
+      sessionKey: 'nuni-hero-greeting-shown',
+    },
+  },
+  {
+    sectionId: 'about',
+    messageGroups: aboutMessageGroups,
+    groupWeights: aboutMessageGroupWeights,
+    initialDelay: [2000, 4000],
+    displayDuration: [3000, 5000],
+    repeatDelay: [7000, 11000],
+    recentMessageLimit: 1,
+  },
+  {
+    sectionId: 'journey',
+    contextualMessages: {
+      eventName: journeySpeechCardChangeEvent,
+      resolveContextKey: resolveActiveJourneyKey,
+      commonMessages: journeyCommonMessages,
+      specificMessages: journeyMessages,
+      specificProbability: 0.7,
+    },
+    initialDelay: [2000, 4000],
+    displayDuration: [3000, 5000],
+    repeatDelay: [6000, 10000],
+    recentMessageLimit: 2,
+  },
+  {
+    sectionId: 'projects',
+    messageGroups: projectMessageGroups,
+    groupWeights: projectMessageGroupWeights,
+    interactionMessages: {
+      eventName: projectInteractionChangeEvent,
+      initialState: initialProjectInteractionState,
+      getPriorityMessages: getProjectPriorityMessages,
+      blockGeneralUntilComplete: true,
+    },
+    initialDelay: [2500, 4000],
+    displayDuration: [3000, 5000],
+    repeatDelay: [7000, 11000],
+    recentMessageLimit: 2,
+  },
+  {
+    sectionId: 'skills',
+    messageGroups: { general: skillGeneralMessages },
+    groupWeights: { general: 1 },
+    interactionMessages: {
+      eventName: skillInteractionChangeEvent,
+      initialState: { hasThrownSkill: false },
+      getPriorityMessages: getSkillPriorityMessages,
+    },
+    reactionMessages: {
+      eventName: skillCatchEvent,
+      messages: skillSpeechMessages,
+      delay: [300, 600],
+      getDisplayDuration: getSkillMessageDisplayDuration,
+    },
+    initialDelay: [3000, 5000],
+    displayDuration: [3500, 4500],
+    repeatDelay: [10000, 15000],
+    recentMessageLimit: 1,
+  },
+  {
+    sectionId: 'contact',
+    messageGroups: contactMessageGroups,
+    groupWeights: contactMessageGroupWeights,
+    initialDelay: [8000, 12000],
+    displayDuration: [4000, 5000],
+    repeatDelay: [8000, 12000],
+    recentMessageLimit: 2,
+    maxRandomMessagesPerVisit: 2,
+    greeting: {
+      message: contactMainMessage,
+      delay: 2500,
+      duration: 4500,
+      sessionKey: 'nuni-contact-ending-shown',
+    },
+  },
+] as const satisfies readonly NuniSpeechSectionConfig[];
 
 function ScrollNuni() {
   const sceneRef = useRef<HTMLDivElement>(null);
@@ -441,6 +597,10 @@ function ScrollNuni() {
   const prefersReducedMotion = useReducedMotion();
   const [isChatOpen, setIsChatOpen] = useState(false);
   const [chatQuestionHistory, setChatQuestionHistory] = useState<NuniChatQuestion[]>([]);
+  const { message: speechMessage, isVisible: isSpeechVisible } = useNuniSpeech(
+    nuniSpeechSections,
+    isChatOpen,
+  );
   const latestChatQuestion = chatQuestionHistory.at(-1) ?? null;
 
   useEffect(() => {
@@ -826,9 +986,19 @@ function ScrollNuni() {
     const easeJourneyExit = gsap.parseEase('power2.inOut');
 
     let activeId = '';
+    let activeJourneyKey: JourneyKey | null = resolveActiveJourneyKey();
     let frame = 0;
     let projectTapTriggered = false;
     let projectTapTimeline: gsap.core.Timeline | null = null;
+
+    const syncActiveJourneyKey = (sectionId: string) => {
+      const nextJourneyKey = journeySectionKeyById[sectionId] ?? null;
+      if (nextJourneyKey === activeJourneyKey) return;
+      activeJourneyKey = nextJourneyKey;
+      window.dispatchEvent(new CustomEvent(journeySpeechCardChangeEvent, {
+        detail: activeJourneyKey,
+      }));
+    };
 
     const playProjectArrival = () => {
       if (projectTapTriggered || !projectsWaypoint) return;
@@ -909,6 +1079,7 @@ function ScrollNuni() {
               if (projectTapTriggered) {
                 if (exitProgress >= 0.68) {
                   activeId = projectsWaypoint.id;
+                  syncActiveJourneyKey(activeId);
                   return;
                 }
                 projectTapTriggered = false;
@@ -922,6 +1093,7 @@ function ScrollNuni() {
               amount = easeJourneyExit(gsap.utils.clamp(0, 1, exitProgress / 0.75));
             } else {
               activeId = projectsWaypoint.id;
+              syncActiveJourneyKey(activeId);
               playProjectArrival();
               return;
             }
@@ -939,6 +1111,7 @@ function ScrollNuni() {
           }
 
           activeId = amount < 0.5 ? from.id : to.id;
+          syncActiveJourneyKey(activeId);
           gsap.killTweensOf(scene);
           gsap.set(scene, {
             x: gsap.utils.interpolate(from.x, to.x, amount) / 100 * window.innerWidth,
@@ -968,6 +1141,7 @@ function ScrollNuni() {
 
       if (!closest || (!immediate && !force && closest.waypoint.id === activeId)) return;
       activeId = closest.waypoint.id;
+      syncActiveJourneyKey(activeId);
       const { x, y, scale } = closest.waypoint;
       const targetX = (x / 100) * window.innerWidth;
       const targetY = (y / 100) * window.innerWidth;
@@ -1053,6 +1227,11 @@ function ScrollNuni() {
           </div>
         </button>
       </div>
+      <NuniSpeechBubble
+        anchorRef={sceneRef}
+        message={speechMessage}
+        isVisible={isSpeechVisible}
+      />
 
       {isChatOpen && (
         <>
@@ -2037,13 +2216,21 @@ function ProjectCardFront({
           onFlip();
         }}
       >
-        Flip →
+        FLIP →
       </button>
     </div>
   );
 }
 
-function ProjectCardBack({ project, isFlipped }: { project: ProjectCardName; isFlipped: boolean }) {
+function ProjectCardBack({
+  project,
+  isFlipped,
+  onOpenPage,
+}: {
+  project: ProjectCardName;
+  isFlipped: boolean;
+  onOpenPage: () => void;
+}) {
   const isRoute = project === 'route';
 
   return (
@@ -2119,9 +2306,12 @@ function ProjectCardBack({ project, isFlipped }: { project: ProjectCardName; isF
             href={projectCardUrls[project]}
             target="_blank"
             rel="noreferrer"
-            onClick={(event) => event.stopPropagation()}
+            onClick={(event) => {
+              event.stopPropagation();
+              onOpenPage();
+            }}
           >
-            Open Project
+            OPEN PAGE
           </a>
         </div>
       </div>
@@ -2136,6 +2326,7 @@ function ProjectCard({
   isFlipped,
   onSelect,
   onFlip,
+  onOpenPage,
 }: {
   project: ProjectCardName;
   className: string;
@@ -2143,6 +2334,7 @@ function ProjectCard({
   isFlipped: boolean;
   onSelect: () => void;
   onFlip: () => void;
+  onOpenPage: () => void;
 }) {
   const activateCard = () => {
     if (!isFront) {
@@ -2176,7 +2368,7 @@ function ProjectCard({
     >
       <div className={styles.projectCardStage}>
         <ProjectCardFront project={project} isFlipped={isFlipped} onFlip={onFlip} />
-        <ProjectCardBack project={project} isFlipped={isFlipped} />
+        <ProjectCardBack project={project} isFlipped={isFlipped} onOpenPage={onOpenPage} />
       </div>
     </article>
   );
@@ -2192,6 +2384,7 @@ function ProjectsIntroSection() {
   const prefersReducedMotion = useReducedMotion();
 
   const bringProjectForward = (project: ProjectCardName) => {
+    publishProjectInteraction({ hasClickedProject: true });
     if (project === selectedProject) return;
     setIsReturningToIntro(false);
     setPreviousProject(prefersReducedMotion ? null : selectedProject);
@@ -2470,7 +2663,15 @@ function ProjectsIntroSection() {
               isFront={cardSlots[project] === 'front'}
               isFlipped={flippedProject === project}
               onSelect={() => bringProjectForward(project)}
-              onFlip={() => setFlippedProject((current) => (current === project ? null : project))}
+              onFlip={() => {
+                publishProjectInteraction({ hasClickedProject: true, hasUsedFlip: true });
+                setFlippedProject((current) => (current === project ? null : project));
+              }}
+              onOpenPage={() => publishProjectInteraction({
+                hasClickedProject: true,
+                hasUsedFlip: true,
+                hasOpenedPage: true,
+              })}
             />
           ))}
         </div>
@@ -2534,6 +2735,7 @@ function SkillsSection() {
       engine.gravity.scale = 0.001;
 
       type ChipBody = {
+        label: SkillSpeechLabel;
         element: HTMLLIElement;
         body: Body;
         width: number;
@@ -2637,6 +2839,7 @@ function SkillsSection() {
         );
         Body.setAngle(body, skillChips[chipIndex].rotation * Math.PI / 180);
         const chipBody: ChipBody = {
+          label: skillChips[chipIndex].label,
           element,
           body,
           width,
@@ -2702,6 +2905,9 @@ function SkillsSection() {
       Events.on(mouseConstraint, 'enddrag', (event) => {
         const activeChip = chipBodies.find(({ body }) => body === event.body);
         if (activeChip) {
+          window.dispatchEvent(new CustomEvent(skillInteractionChangeEvent, {
+            detail: { hasThrownSkill: true },
+          }));
           activeChip.catchEligibleUntil = activeChip.catchBlockedUntilNextDrag
             ? 0
             : performance.now() + 2200;
@@ -2876,7 +3082,10 @@ function SkillsSection() {
           duration: 0.16,
           ease: 'power2.out',
           overwrite: 'auto',
-          onComplete: () => { chipBody.carryFollowsNuni = true; },
+          onComplete: () => {
+            chipBody.carryFollowsNuni = true;
+            window.dispatchEvent(new CustomEvent(skillCatchEvent, { detail: chipBody.label }));
+          },
         });
 
         const lowerY = Math.max(

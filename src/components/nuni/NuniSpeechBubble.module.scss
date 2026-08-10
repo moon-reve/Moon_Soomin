@@ -1,0 +1,95 @@
+.anchor {
+  position: fixed;
+  z-index: 69;
+  top: 0;
+  left: 0;
+  inline-size: max-content;
+  max-inline-size: calc(100vw - 32px);
+  pointer-events: none;
+  transform: translate(-50%, calc(-100% - 24px));
+}
+
+.anchor[data-placement='below'] {
+  transform: translate(-50%, 24px);
+}
+
+.bubble {
+  position: relative;
+  box-sizing: border-box;
+  inline-size: max-content;
+  max-inline-size: min(280px, calc(100vw - 32px));
+  padding: 14px 18px;
+  color: #16150f;
+  font-family: 'Pretendard', sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.55;
+  background: rgb(255 255 255 / 94%);
+  border: 1px solid rgb(22 21 15 / 14%);
+  border-radius: 16px;
+  box-shadow: 0 8px 24px rgb(22 21 15 / 10%);
+  opacity: 0;
+  transform: translateY(-3px);
+  transform-origin: 50% 100%;
+  transition:
+    opacity 0.32s ease-in-out,
+    transform 0.32s ease-in-out;
+  white-space: pre-line;
+}
+
+.bubble p {
+  margin: 0;
+}
+
+.anchor[data-animation-state='visible'] .bubble {
+  animation: nuni-speech-in 0.42s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+.tail {
+  position: absolute;
+  inset-block-end: -7px;
+  inset-inline-start: var(--nuni-speech-tail-x, 50%);
+  inline-size: 13px;
+  block-size: 13px;
+  background: rgb(255 255 255 / 94%);
+  border-block-end: 1px solid rgb(22 21 15 / 14%);
+  border-inline-end: 1px solid rgb(22 21 15 / 14%);
+  transform: translateX(-50%) rotate(45deg);
+}
+
+.anchor[data-placement='below'] .tail {
+  inset-block-start: -7px;
+  inset-block-end: auto;
+  border-block-start: 1px solid rgb(22 21 15 / 14%);
+  border-block-end: 0;
+  border-inline-start: 1px solid rgb(22 21 15 / 14%);
+  border-inline-end: 0;
+}
+
+@keyframes nuni-speech-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 760px) {
+  .bubble {
+    max-inline-size: 230px;
+    padding: 12px 14px;
+    border-radius: 14px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .anchor[data-animation-state='visible'] .bubble,
+  .anchor[data-animation-state='hidden'] .bubble {
+    animation-duration: 0.01ms;
+    transition-duration: 0.01ms;
+  }
+}
