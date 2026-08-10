@@ -23,7 +23,6 @@ import contactStatusDotSrc from '../assets/strategist-contact/status-dot.svg';
 import closingGroundSrc from '../assets/strategist-closing/ground.svg';
 import journeyGroundSrc from '../assets/strategist-journey-01/ground.svg';
 import journeyPhotoSrc from '../assets/strategist-journey-01/photo.webp';
-import journeyTextureGridSrc from '../assets/strategist-journey-01/texture-grid.svg';
 import discoveryCropMarksSrc from '../assets/strategist-journey-02/crop-marks.svg';
 import discoveryPhotoSrc from '../assets/strategist-journey-02/japan-cafe.webp';
 import discoveryPhotoBorderSrc from '../assets/strategist-journey-02/photo-border.svg';
@@ -62,7 +61,6 @@ import vinerCoverBorderSrc from '../assets/strategist-project-cards/viner-cover-
 import projectsGroundSrc from '../assets/strategist-projects-intro/ground.svg';
 import skillsGroundSrc from '../assets/strategist-skills/ground.svg';
 import skillsInstructionDotSrc from '../assets/strategist-skills/instruction-dot.svg';
-import skillsPlayBoxGridSrc from '../assets/strategist-skills/play-box-grid.svg';
 import circleAnnotationSrc from '../assets/strategist-hero/circle-annotation.svg';
 import copyAccentSrc from '../assets/strategist-hero/copy-accent.svg';
 import {
@@ -118,6 +116,7 @@ import {
   type SkillSpeechLabel,
 } from '../data/skillMessages';
 import { useNuniSpeech, type NuniSpeechSectionConfig } from '../hooks/useNuniSpeech';
+import { useGuide } from '../hooks/useGuide';
 import { useReducedMotion } from '../hooks/useReducedMotion';
 import { scrollToPageTarget, setSmoothScrollLocked, useSmoothScroll } from '../hooks/useSmoothScroll';
 import styles from './StrategistPage.module.scss';
@@ -3352,7 +3351,7 @@ function SkillsSection() {
           <div ref={playBoxRef} className={styles.skillsPlayBox}>
             <div className={styles.skillsPlayBoxSurface} aria-hidden="true">
               <span className={styles.skillsPlayBoxBase} aria-hidden="true" />
-              <img className={styles.skillsPlayBoxGrid} src={skillsPlayBoxGridSrc} alt="" />
+              <span className={styles.skillsPlayBoxGrid} aria-hidden="true" />
             </div>
 
             <ul className={styles.skillsChips} aria-label="사용 기술">
@@ -3440,7 +3439,7 @@ function ClosingSection() {
     <section id="closing" className={styles.closingSection} aria-label="Moon Soomin closing">
       <div className={styles.closingCanvas}>
         <img className={styles.closingGround} src={closingGroundSrc} alt="" aria-hidden="true" />
-        <img className={styles.closingGrid} src={journeyTextureGridSrc} alt="" aria-hidden="true" />
+        <div className={styles.closingGrid} aria-hidden="true" />
         <p className={styles.closingBrand}>REVE</p>
         <p className={styles.closingDisciplines}>PRODUCT THINKING · UI/UX · FRONT-END · AI</p>
         <p className={styles.closingWordmark} aria-label="moon soomin">moon soomin*</p>
@@ -3452,9 +3451,10 @@ function ClosingSection() {
 
 export default function StrategistPage() {
   useSmoothScroll();
+  const { selectedGuide } = useGuide();
 
   return (
-    <main className={styles.strategistPage} data-guide-theme="strategist">
+    <main className={styles.strategistPage} data-guide-theme={selectedGuide}>
       <ScrollNuni />
       <SectionNavigation />
       <section id="hero" className={styles.heroSection} aria-labelledby="hero-title">

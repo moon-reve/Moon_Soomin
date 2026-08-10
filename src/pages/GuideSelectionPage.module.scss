@@ -5,6 +5,7 @@
   color: #16150f;
   background: var(--guide-color-primary);
   container-type: inline-size;
+  transition: background-color 420ms ease;
 }
 
 .section {
@@ -34,7 +35,9 @@
   background-position: center;
   background-repeat: no-repeat;
   background-size: var(--guide-texture-size);
+  opacity: var(--guide-texture-opacity);
   pointer-events: none;
+  animation: guide-texture-in 360ms ease both;
 }
 
 .header {
@@ -266,6 +269,7 @@
   inset-inline-start: 50%;
   text-align: center;
   transform: translateX(-50%);
+  animation: guide-copy-in 300ms ease both;
 }
 
 .guideCopy h2 {
@@ -291,12 +295,13 @@
   position: absolute;
   z-index: 6;
   inset-block-start: 76.2037%;
-  inset-inline-start: 28.59375%;
+  inset-inline-start: 26.75%;
   display: flex;
-  inline-size: 42.8646%;
+  inline-size: 46.5%;
   block-size: 7.2222%;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-start;
+  column-gap: 0.2604cqw;
   padding-inline: 0.6771cqw;
   background: rgb(255 255 255 / 50%);
   border: 0.0484cqw solid rgb(22 21 15 / 13%);
@@ -322,22 +327,40 @@
 .guideOption,
 .activeGuide {
   display: grid;
-  block-size: 3.7037%;
-  min-block-size: 2.0833cqw;
+  inline-size: 8.5417cqw;
+  block-size: 2.5cqw;
   place-items: center;
 }
 
 .guideOption {
-  padding-inline: 0.5208cqw !important;
-  cursor: default;
+  cursor: pointer;
+}
+
+.guideOption:hover {
+  opacity: 0.58;
 }
 
 .activeGuide {
-  inline-size: 8.5417cqw;
-  block-size: 2.5cqw;
   color: #fffeea !important;
   background: #16150f !important;
   border-radius: 4.53125cqw !important;
+}
+
+@keyframes guide-texture-in {
+  from { opacity: 0; }
+  to { opacity: var(--guide-texture-opacity); }
+}
+
+@keyframes guide-copy-in {
+  from {
+    opacity: 0;
+    transform: translate(-50%, 5px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
 }
 
 .beginButton {
@@ -345,8 +368,10 @@
   inline-size: 9.21875cqw;
   block-size: 2.7083cqw;
   align-items: center;
-  justify-content: space-between;
-  padding-inline: 1.5625cqw !important;
+  justify-content: center;
+  gap: 0.78125cqw;
+  margin-inline-start: 0.625cqw;
+  padding-inline: 0 !important;
   color: #fffeea !important;
   background: #16150f !important;
   border-radius: 3.3333cqw !important;
@@ -489,6 +514,7 @@
     font-size: 2.3cqw;
   }
 
+  .guideOption,
   .activeGuide {
     inline-size: 17cqw;
     block-size: 8cqw;
@@ -506,7 +532,11 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .beginButton {
+  .page,
+  .beginButton,
+  .textureGrid,
+  .guideCopy {
+    animation: none;
     transition: none;
   }
 }

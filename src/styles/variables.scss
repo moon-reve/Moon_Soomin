@@ -14,6 +14,8 @@
   --guide-explorer-primary: #b9d1eb;
   --guide-texture-image: none;
   --guide-texture-size: 100% 100%;
+  --guide-texture-opacity: 1;
+  --guide-texture-muted-opacity: 0.3;
 }
 
 [data-guide-theme='strategist'] {
@@ -30,6 +32,10 @@
   --guide-texture-journey-expansion: url('../assets/strategist-journey-05/texture-grid.svg');
   --guide-texture-journey-reality: url('../assets/strategist-journey-06/texture-grid.svg');
   --guide-texture-projects: url('../assets/strategist-projects-intro/texture-grid.svg');
+  --guide-texture-skills-box: url('../assets/strategist-skills/play-box-grid.svg');
+  --guide-texture-closing-size: 100cqw 56.25cqw;
+  --guide-texture-opacity: 1;
+  --guide-texture-muted-opacity: 0.3;
 }
 
 [data-guide-theme='curator'] {
@@ -38,6 +44,8 @@
   --guide-color-soft: color-mix(in srgb, var(--guide-curator-primary) 72%, #fff);
   --guide-texture-image: url('../assets/guide-textures/curator-paper.svg');
   --guide-texture-size: 112.387cqw 61.189cqw;
+  --guide-texture-opacity: 0.7;
+  --guide-texture-muted-opacity: 0.21;
 }
 
 [data-guide-theme='builder'] {
@@ -46,6 +54,8 @@
   --guide-color-soft: color-mix(in srgb, var(--guide-builder-primary) 72%, #fff);
   --guide-texture-image: url('../assets/guide-textures/builder-dot.svg');
   --guide-texture-size: 101.74cqw 57.729cqw;
+  --guide-texture-opacity: 0.28;
+  --guide-texture-muted-opacity: 0.084;
 }
 
 [data-guide-theme='explorer'] {
@@ -54,4 +64,6 @@
   --guide-color-soft: color-mix(in srgb, var(--guide-explorer-primary) 72%, #fff);
   --guide-texture-image: url('../assets/guide-textures/explorer-contour.svg');
   --guide-texture-size: 117.188cqw 68.976cqw;
+  --guide-texture-opacity: 0.2;
+  --guide-texture-muted-opacity: 0.06;
 }

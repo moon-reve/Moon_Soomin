@@ -15,17 +15,12 @@ import nuniCheeksSrc from '../assets/guide-selection/nuni-cheeks.svg';
 import nuniMouthSrc from '../assets/guide-selection/nuni-mouth.svg';
 import nuniEyesSrc from '../assets/guide-selection/nuni-eyes.svg';
 import contactShadowSrc from '../assets/guide-selection/contact-shadow.svg';
+import { guides } from '../data/guides';
+import { useGuide } from '../hooks/useGuide';
 import { useReducedMotion } from '../hooks/useReducedMotion';
 import styles from './GuideSelectionPage.module.scss';
 
-const guideOptions = [
-  { label: 'Curator', theme: 'curator' },
-  { label: 'Strategist', theme: 'strategist' },
-  { label: 'Builder', theme: 'builder' },
-  { label: 'Explorer', theme: 'explorer' },
-] as const;
-
-function SelectionNuni() {
+function SelectionNuni({ guideName }: { guideName: string }) {
   const floatLayerRef = useRef<HTMLDivElement>(null);
   const bodyLookRef = useRef<HTMLDivElement>(null);
   const eyesRef = useRef<HTMLSpanElement>(null);
@@ -82,7 +77,7 @@ function SelectionNuni() {
   }, [prefersReducedMotion]);
 
   return (
-    <div className={styles.nuniScene} aria-label="전략가 누니" role="img">
+    <div className={styles.nuniScene} aria-label={`${guideName} 누니`} role="img">
       <img className={styles.lightPool} src={lightPoolSrc} alt="" draggable="false" />
 
       <div className={styles.nuniCharacterScale}>
@@ -119,33 +114,36 @@ function SelectionNuni() {
 }
 
 export default function GuideSelectionPage() {
+  const { selectedGuide, selectGuide } = useGuide();
+  const selectedGuideData = guides.find(({ id }) => id === selectedGuide) ?? guides[1];
+
   return (
-    <main className={styles.page} data-guide-theme="strategist">
+    <main className={styles.page} data-guide-theme={selectedGuide}>
       <section className={styles.section} aria-labelledby="guide-selection-title">
         <div className={styles.canvas}>
-          <div className={styles.textureGrid} aria-hidden="true" />
+          <div key={`texture-${selectedGuide}`} className={styles.textureGrid} aria-hidden="true" />
 
           <div className={styles.intro}>
             <p className={styles.eyebrow}>( CHOOSE YOUR GUIDE )</p>
             <h1 id="guide-selection-title">Before We begin</h1>
           </div>
 
-          <SelectionNuni />
+          <SelectionNuni guideName={selectedGuideData.name} />
 
-          <div className={styles.guideCopy}>
-            <h2>전략가</h2>
-            <p>무엇부터 할지 순서를 잡아 줍니다.</p>
+          <div key={`copy-${selectedGuide}`} className={styles.guideCopy} aria-live="polite">
+            <h2>{selectedGuideData.name}</h2>
+            <p>{selectedGuideData.description}</p>
           </div>
 
           <nav className={styles.rail} aria-label="가이드 선택">
-            {guideOptions.map(({ label, theme }) => (
+            {guides.map(({ id, label }) => (
               <button
                 key={label}
-                className={label === 'Strategist' ? styles.activeGuide : styles.guideOption}
-                data-guide-theme={theme}
+                className={id === selectedGuide ? styles.activeGuide : styles.guideOption}
+                data-guide-theme={id}
                 type="button"
-                aria-pressed={label === 'Strategist'}
-                disabled={label !== 'Strategist'}
+                aria-pressed={id === selectedGuide}
+                onClick={() => selectGuide(id)}
               >
                 {label}
               </button>

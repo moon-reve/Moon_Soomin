@@ -52,6 +52,7 @@
   background-position: center;
   background-repeat: no-repeat;
   background-size: var(--guide-texture-size);
+  opacity: var(--guide-texture-opacity);
 }
 
 :global(.hero-text-block) {
@@ -805,7 +806,7 @@
   background-position: center;
   background-repeat: no-repeat;
   background-size: var(--guide-texture-size);
-  opacity: 0.3;
+  opacity: var(--guide-texture-muted-opacity);
 }
 
 .skillsTicker {
@@ -1131,6 +1132,7 @@
   background-position: center;
   background-repeat: no-repeat;
   background-size: var(--guide-texture-size);
+  opacity: var(--guide-texture-opacity);
 }
 
 .journeyGrid[data-texture-section='discovery'] {
@@ -1143,6 +1145,13 @@
 
 .journeyGrid[data-texture-section='movement'] {
   background-image: var(--guide-texture-journey-movement, var(--guide-texture-image));
+}
+
+.journeyGrid:is(
+  [data-texture-section='journey'],
+  [data-texture-section='movement']
+) {
+  filter: brightness(0) invert(1);
 }
 
 .journeyGrid[data-texture-section='expansion'] {
@@ -1439,6 +1448,7 @@
   background-position: center;
   background-repeat: no-repeat;
   background-size: var(--guide-texture-size);
+  opacity: var(--guide-texture-opacity);
 }
 
 .projectsIntroChapter {
@@ -2134,6 +2144,7 @@
   background-position: center;
   background-repeat: no-repeat;
   background-size: var(--guide-texture-size);
+  opacity: var(--guide-texture-opacity);
   filter: brightness(0) invert(1);
 }
 
@@ -2238,6 +2249,11 @@
   inset-inline-start: -10.326458cqw;
   inline-size: 90.121875cqw;
   block-size: 50.69349cqw;
+  background-image: var(--guide-texture-skills-box, var(--guide-texture-image));
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: var(--guide-texture-size);
+  opacity: var(--guide-texture-opacity);
 }
 
 .skillsChips {
@@ -2361,6 +2377,7 @@
   background-position: center;
   background-repeat: no-repeat;
   background-size: var(--guide-texture-size);
+  opacity: var(--guide-texture-opacity);
   filter: brightness(0);
 }
 
@@ -2598,9 +2615,13 @@
 
 .closingGrid {
   z-index: 1;
-  inline-size: auto;
-  block-size: auto;
-  max-inline-size: none;
+  block-size: 100%;
+  background-image: var(--guide-texture-journey, var(--guide-texture-image));
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: var(--guide-texture-closing-size, var(--guide-texture-size));
+  opacity: var(--guide-texture-opacity);
+  filter: brightness(0) invert(1);
 }
 
 .closingBrand,

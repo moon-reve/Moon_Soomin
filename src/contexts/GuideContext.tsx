@@ -1,3 +1,9 @@
 import { createContext } from 'react';
+import type { GuideId } from '../data/guides';
 
-export const GuideContext = createContext<unknown>(undefined);
+export interface GuideContextValue {
+  selectedGuide: GuideId;
+  selectGuide: (guide: GuideId) => void;
+}
+
+export const GuideContext = createContext<GuideContextValue | undefined>(undefined);

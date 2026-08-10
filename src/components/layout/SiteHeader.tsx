@@ -1,9 +1,11 @@
 import { useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
+import { useGuide } from '../../hooks/useGuide';
 import styles from '../../pages/StrategistPage.module.scss';
 
 export default function SiteHeader() {
   const headerRef = useRef<HTMLElement>(null);
+  const { selectedGuide } = useGuide();
 
   useEffect(() => {
     const header = headerRef.current;
@@ -45,7 +47,7 @@ export default function SiteHeader() {
     <header
       ref={headerRef}
       className={`${styles.mainHeader} site-header`}
-      data-guide-theme="strategist"
+      data-guide-theme={selectedGuide}
     >
       <a className={styles.mainWordmark} href="#hero">Moon Soomin *</a>
       <nav className={styles.mainNavigation} aria-label="주요 메뉴">
