@@ -249,9 +249,44 @@
   pointer-events: auto;
 }
 
+.nuniChatTrigger::after {
+  position: absolute;
+  z-index: 10;
+  inset-block-start: -20px;
+  inset-inline-start: 50%;
+  padding: 4px 8px;
+  color: #fffeea;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  line-height: 1;
+  content: 'CLICK';
+  background: #16150f;
+  border-radius: 999px;
+  opacity: 0;
+  pointer-events: none;
+  transform: translate(-50%, 4px);
+  transition:
+    opacity 180ms ease,
+    transform 180ms ease;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .nuniChatTrigger:hover::after,
+  .nuniChatTrigger:focus-visible::after {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+}
+
 .nuniChatTrigger:focus-visible {
   outline: 2px solid #16150f;
   outline-offset: 6px;
+}
+
+.heroNuni[data-chat-open='true'] .nuniChatTrigger::after {
+  display: none;
 }
 
 .heroNuni[data-chat-open='true'] {
@@ -2832,6 +2867,10 @@
 @media (prefers-reduced-motion: reduce) {
   .nuniChatBackdrop {
     animation: none;
+  }
+
+  .nuniChatTrigger::after {
+    transition: none;
   }
 
   .aboutTitleWords > span {
