@@ -3,7 +3,7 @@
   min-block-size: 100svh;
   overflow-x: clip;
   color: #16150f;
-  background: #ddd0ed;
+  background: var(--guide-color-primary);
   container-type: inline-size;
 }
 
@@ -30,6 +30,10 @@
   display: block;
   inline-size: 100%;
   block-size: 100%;
+  background-image: var(--guide-texture-selection, var(--guide-texture-image));
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: var(--guide-texture-size);
   pointer-events: none;
 }
 
@@ -73,10 +77,14 @@
   line-height: 1.3333;
 }
 
-.sessionStatus img {
+.sessionStatusDot {
   display: block;
   inline-size: 0.625cqw;
   block-size: 0.625cqw;
+  flex: none;
+  background: var(--guide-color-primary);
+  border: 0.052083cqw solid rgb(22 21 15 / 45%);
+  border-radius: 50%;
 }
 
 .intro {
@@ -432,7 +440,7 @@
     font-size: 1.7cqw;
   }
 
-  .sessionStatus img {
+  .sessionStatusDot {
     inline-size: 1.8cqw;
     block-size: 1.8cqw;
   }

@@ -15,11 +15,15 @@ import nuniCheeksSrc from '../assets/guide-selection/nuni-cheeks.svg';
 import nuniMouthSrc from '../assets/guide-selection/nuni-mouth.svg';
 import nuniEyesSrc from '../assets/guide-selection/nuni-eyes.svg';
 import contactShadowSrc from '../assets/guide-selection/contact-shadow.svg';
-import textureGridSrc from '../assets/guide-selection/texture-grid.svg';
 import { useReducedMotion } from '../hooks/useReducedMotion';
 import styles from './GuideSelectionPage.module.scss';
 
-const guideLabels = ['Curator', 'Strategist', 'Builder', 'Explorer'] as const;
+const guideOptions = [
+  { label: 'Curator', theme: 'curator' },
+  { label: 'Strategist', theme: 'strategist' },
+  { label: 'Builder', theme: 'builder' },
+  { label: 'Explorer', theme: 'explorer' },
+] as const;
 
 function SelectionNuni() {
   const floatLayerRef = useRef<HTMLDivElement>(null);
@@ -116,10 +120,10 @@ function SelectionNuni() {
 
 export default function GuideSelectionPage() {
   return (
-    <main className={styles.page}>
+    <main className={styles.page} data-guide-theme="strategist">
       <section className={styles.section} aria-labelledby="guide-selection-title">
         <div className={styles.canvas}>
-          <img className={styles.textureGrid} src={textureGridSrc} alt="" aria-hidden="true" />
+          <div className={styles.textureGrid} aria-hidden="true" />
 
           <div className={styles.intro}>
             <p className={styles.eyebrow}>( CHOOSE YOUR GUIDE )</p>
@@ -134,10 +138,11 @@ export default function GuideSelectionPage() {
           </div>
 
           <nav className={styles.rail} aria-label="가이드 선택">
-            {guideLabels.map((label) => (
+            {guideOptions.map(({ label, theme }) => (
               <button
                 key={label}
                 className={label === 'Strategist' ? styles.activeGuide : styles.guideOption}
+                data-guide-theme={theme}
                 type="button"
                 aria-pressed={label === 'Strategist'}
                 disabled={label !== 'Strategist'}

@@ -10,7 +10,7 @@
   min-block-size: 100svh;
   overflow-x: clip;
   color: #16150f;
-  background: #ddd0ed;
+  background: var(--guide-color-primary);
 }
 
 .heroSection {
@@ -18,7 +18,7 @@
   display: grid;
   block-size: min(56.25vw, 100svh);
   overflow: hidden;
-  background: #ddd0ed;
+  background: var(--guide-color-primary);
   place-items: start center;
 }
 
@@ -42,11 +42,16 @@
 
 .heroGround {
   z-index: 0;
+  background: var(--guide-color-primary);
 }
 
 .heroGrid {
   z-index: 1;
   block-size: 56.25vw;
+  background-image: var(--guide-texture-hero, var(--guide-texture-image));
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: var(--guide-texture-size);
 }
 
 :global(.hero-text-block) {
@@ -429,7 +434,7 @@
   font-size: 14px;
   font-weight: 400;
   line-height: 1.5;
-  background: #d4c3e8;
+  background: var(--guide-color-accent);
   border: 1px solid rgb(22 21 15 / 35%);
   border-radius: 16px 16px 4px;
 }
@@ -510,7 +515,7 @@
 }
 
 .nuniChatQuestions .nuniChatQuestionActive {
-  background: #d4c3e8;
+  background: var(--guide-color-accent);
   border-color: rgb(22 21 15 / 55%);
 }
 
@@ -796,6 +801,10 @@
 .aboutGrid {
   z-index: 1;
   block-size: 56.25vw;
+  background-image: var(--guide-texture-about, var(--guide-texture-image));
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: var(--guide-texture-size);
   opacity: 0.3;
 }
 
@@ -805,7 +814,7 @@
   inset: 0 0 auto;
   block-size: 4.84375cqw;
   overflow: hidden;
-  color: #ddd0ed;
+  color: var(--guide-color-primary);
   background: #000;
 }
 
@@ -848,11 +857,20 @@
   white-space: nowrap;
 }
 
-.tickerItem img {
+.tickerStar {
   display: block;
   inline-size: 3.645833cqw;
   block-size: 3.645833cqw;
   flex: none;
+  background: var(--guide-color-primary);
+  -webkit-mask-image: var(--guide-star-mask);
+  -webkit-mask-position: center;
+  -webkit-mask-repeat: no-repeat;
+  -webkit-mask-size: contain;
+  mask-image: var(--guide-star-mask);
+  mask-position: center;
+  mask-repeat: no-repeat;
+  mask-size: contain;
   user-select: none;
 }
 
@@ -1062,7 +1080,7 @@
 }
 
 .journeySection:has(.journeyCanvasLight) {
-  background: #ddd0ed;
+  background: var(--guide-color-primary);
 }
 
 .journeySection:has(.journeyCanvasWhite) {
@@ -1079,7 +1097,7 @@
 }
 
 .journeyCanvasLight {
-  background: #ddd0ed;
+  background: var(--guide-color-primary);
 }
 
 .journeyCanvasWhite {
@@ -1102,9 +1120,37 @@
   block-size: 100%;
 }
 
+.guidePrimaryGround {
+  background: var(--guide-color-primary);
+}
+
 .journeyGrid {
   z-index: 1;
   block-size: 56.328125cqw;
+  background-image: var(--guide-texture-journey, var(--guide-texture-image));
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: var(--guide-texture-size);
+}
+
+.journeyGrid[data-texture-section='discovery'] {
+  background-image: var(--guide-texture-journey-discovery, var(--guide-texture-image));
+}
+
+.journeyGrid[data-texture-section='observation'] {
+  background-image: var(--guide-texture-journey-observation, var(--guide-texture-image));
+}
+
+.journeyGrid[data-texture-section='movement'] {
+  background-image: var(--guide-texture-journey-movement, var(--guide-texture-image));
+}
+
+.journeyGrid[data-texture-section='expansion'] {
+  background-image: var(--guide-texture-journey-expansion, var(--guide-texture-image));
+}
+
+.journeyGrid[data-texture-section='reality'] {
+  background-image: var(--guide-texture-journey-reality, var(--guide-texture-image));
 }
 
 .journeyGhostNumber {
@@ -1389,6 +1435,10 @@
 .projectsIntroGrid {
   z-index: 1;
   block-size: 56.328125cqw;
+  background-image: var(--guide-texture-projects, var(--guide-texture-image));
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: var(--guide-texture-size);
 }
 
 .projectsIntroChapter {
@@ -2080,6 +2130,10 @@
 .skillsGrid {
   z-index: 1;
   block-size: 56.328125cqw;
+  background-image: var(--guide-texture-journey, var(--guide-texture-image));
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: var(--guide-texture-size);
   filter: brightness(0) invert(1);
 }
 
@@ -2174,6 +2228,8 @@
   inset: 0;
   inline-size: 100%;
   block-size: 100%;
+  background: var(--guide-color-primary);
+  border-radius: inherit;
 }
 
 .skillsPlayBoxGrid {
@@ -2250,7 +2306,7 @@
 }
 
 .skillsChipProgram {
-  background: #ddd0ed;
+  background: var(--guide-color-primary);
   border: 1px solid rgb(22 21 15 / 35%);
 }
 
@@ -2265,7 +2321,7 @@
   inline-size: 100%;
   block-size: min(56.25vw, 100svh);
   overflow: hidden;
-  background: #ddd0ed;
+  background: var(--guide-color-primary);
   place-items: start center;
 }
 
@@ -2275,7 +2331,7 @@
   block-size: min(56.25vw, 100svh);
   overflow: hidden;
   container-type: size;
-  background: #ddd0ed;
+  background: var(--guide-color-primary);
 }
 
 .contactGround,
@@ -2290,6 +2346,10 @@
 }
 
 .contactGround {
+  background: var(--guide-color-primary);
+}
+
+.contactGround {
   z-index: 0;
   block-size: 100%;
 }
@@ -2297,6 +2357,10 @@
 .contactGrid {
   z-index: 1;
   block-size: 56.328125cqw;
+  background-image: var(--guide-texture-journey, var(--guide-texture-image));
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: var(--guide-texture-size);
   filter: brightness(0);
 }
 
@@ -2562,7 +2626,7 @@
 
 .closingBrand {
   inset-block-start: 3.124167cqw;
-  color: #ddd0ed;
+  color: var(--guide-color-primary);
 }
 
 .closingDisciplines {
@@ -2592,7 +2656,7 @@
   font-weight: 800;
   font-variation-settings: 'opsz' 96, 'wdth' 100;
   letter-spacing: -0.625cqw;
-  -webkit-text-stroke: 0.052083cqw #ddd0ed;
+  -webkit-text-stroke: 0.052083cqw var(--guide-color-primary);
 }
 
 .mainHeader {
@@ -2644,10 +2708,14 @@
   gap: 0.625vw;
 }
 
-.guideChangeLink img {
+.guideChangeDot {
   display: block;
   inline-size: 0.5208vw;
   block-size: 0.5208vw;
+  flex: none;
+  background: var(--guide-color-primary);
+  border: 0.052083vw solid rgb(22 21 15 / 50%);
+  border-radius: 50%;
 }
 
 .mainNavigation .contactLink {

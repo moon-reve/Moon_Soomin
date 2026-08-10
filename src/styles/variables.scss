@@ -1,1 +1,57 @@
 // Shared design tokens
+
+// Guide palettes
+//
+// Each guide owns a named palette. Components consume the semantic
+// --guide-color-* aliases below, so adding another guide only requires a new
+// palette selector instead of replacing colors throughout the page.
+:root {
+  --guide-strategist-primary: #ddd0ed;
+  --guide-strategist-accent: #d4c3e8;
+  --guide-strategist-soft: #e3d8e9;
+  --guide-curator-primary: #f5ee77;
+  --guide-builder-primary: #c3e9ac;
+  --guide-explorer-primary: #b9d1eb;
+  --guide-texture-image: none;
+  --guide-texture-size: 100% 100%;
+}
+
+[data-guide-theme='strategist'] {
+  --guide-color-primary: var(--guide-strategist-primary);
+  --guide-color-accent: var(--guide-strategist-accent);
+  --guide-color-soft: var(--guide-strategist-soft);
+  --guide-texture-selection: url('../assets/guide-selection/texture-grid.svg');
+  --guide-texture-hero: url('../assets/strategist-hero/texture-grid.svg');
+  --guide-texture-about: url('../assets/strategist-about/texture-grid.svg');
+  --guide-texture-journey: url('../assets/strategist-journey-01/texture-grid.svg');
+  --guide-texture-journey-discovery: url('../assets/strategist-journey-02/texture-grid.svg');
+  --guide-texture-journey-observation: url('../assets/strategist-journey-03/texture-grid.svg');
+  --guide-texture-journey-movement: url('../assets/strategist-journey-04/texture-grid.svg');
+  --guide-texture-journey-expansion: url('../assets/strategist-journey-05/texture-grid.svg');
+  --guide-texture-journey-reality: url('../assets/strategist-journey-06/texture-grid.svg');
+  --guide-texture-projects: url('../assets/strategist-projects-intro/texture-grid.svg');
+}
+
+[data-guide-theme='curator'] {
+  --guide-color-primary: var(--guide-curator-primary);
+  --guide-color-accent: color-mix(in srgb, var(--guide-curator-primary) 92%, #16150f);
+  --guide-color-soft: color-mix(in srgb, var(--guide-curator-primary) 72%, #fff);
+  --guide-texture-image: url('../assets/guide-textures/curator-paper.svg');
+  --guide-texture-size: 112.387cqw 61.189cqw;
+}
+
+[data-guide-theme='builder'] {
+  --guide-color-primary: var(--guide-builder-primary);
+  --guide-color-accent: color-mix(in srgb, var(--guide-builder-primary) 92%, #16150f);
+  --guide-color-soft: color-mix(in srgb, var(--guide-builder-primary) 72%, #fff);
+  --guide-texture-image: url('../assets/guide-textures/builder-dot.svg');
+  --guide-texture-size: 101.74cqw 57.729cqw;
+}
+
+[data-guide-theme='explorer'] {
+  --guide-color-primary: var(--guide-explorer-primary);
+  --guide-color-accent: color-mix(in srgb, var(--guide-explorer-primary) 92%, #16150f);
+  --guide-color-soft: color-mix(in srgb, var(--guide-explorer-primary) 72%, #fff);
+  --guide-texture-image: url('../assets/guide-textures/explorer-contour.svg');
+  --guide-texture-size: 117.188cqw 68.976cqw;
+}

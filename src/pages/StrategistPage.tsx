@@ -14,51 +14,42 @@ import { playIdle, resetAutoBlink, resetIdle, startAutoBlink } from '../animatio
 import { NuniSpeechBubble } from '../components/nuni/NuniSpeechBubble';
 import aboutGroundSrc from '../assets/strategist-about/ground.svg';
 import aboutStarSrc from '../assets/strategist-about/star.svg';
-import aboutTextureGridSrc from '../assets/strategist-about/texture-grid.svg';
 import aboutUnderlineSrc from '../assets/strategist-about/underline.svg';
 import contactTickSrc from '../assets/strategist-contact/contact-tick.svg';
 import contactButtonSrc from '../assets/strategist-contact/cta-button.svg';
 import contactEmailUnderlineSrc from '../assets/strategist-contact/email-underline.svg';
-import contactGroundSrc from '../assets/strategist-contact/ground.svg';
 import contactResumeUnderlineSrc from '../assets/strategist-contact/resume-underline.svg';
 import contactStatusDotSrc from '../assets/strategist-contact/status-dot.svg';
 import closingGroundSrc from '../assets/strategist-closing/ground.svg';
 import journeyGroundSrc from '../assets/strategist-journey-01/ground.svg';
-import journeyPhotoSrc from '../assets/strategist-journey-01/photo.png';
+import journeyPhotoSrc from '../assets/strategist-journey-01/photo.webp';
 import journeyTextureGridSrc from '../assets/strategist-journey-01/texture-grid.svg';
 import discoveryCropMarksSrc from '../assets/strategist-journey-02/crop-marks.svg';
-import discoveryGroundSrc from '../assets/strategist-journey-02/ground.svg';
-import discoveryPhotoSrc from '../assets/strategist-journey-02/japan-cafe.jpeg';
+import discoveryPhotoSrc from '../assets/strategist-journey-02/japan-cafe.webp';
 import discoveryPhotoBorderSrc from '../assets/strategist-journey-02/photo-border.svg';
 import discoveryRulersSrc from '../assets/strategist-journey-02/rulers.svg';
-import discoveryTextureGridSrc from '../assets/strategist-journey-02/texture-grid.svg';
 import observationCropMarksSrc from '../assets/strategist-journey-03/crop-marks.svg';
 import observationGroundSrc from '../assets/strategist-journey-03/ground.svg';
-import observationPhotoSrc from '../assets/strategist-journey-03/photo.png';
+import observationPhotoSrc from '../assets/strategist-journey-03/photo.webp';
 import observationPhotoBorderSrc from '../assets/strategist-journey-03/photo-border.svg';
 import observationRulersSrc from '../assets/strategist-journey-03/rulers.svg';
-import observationTextureGridSrc from '../assets/strategist-journey-03/texture-grid.svg';
 import movementGroundSrc from '../assets/strategist-journey-04/ground.svg';
-import movementPhotoSrc from '../assets/strategist-journey-04/photo.png';
-import movementTextureGridSrc from '../assets/strategist-journey-04/texture-grid.svg';
+import movementPhotoSrc from '../assets/strategist-journey-04/photo.webp';
 import expansionCropMarksSrc from '../assets/strategist-journey-05/crop-marks.svg';
 import expansionGroundSrc from '../assets/strategist-journey-05/ground.svg';
-import expansionPhotoSrc from '../assets/strategist-journey-05/photo.png';
+import expansionPhotoSrc from '../assets/strategist-journey-05/photo.webp';
 import expansionPhotoBorderSrc from '../assets/strategist-journey-05/photo-border.svg';
 import expansionRulersSrc from '../assets/strategist-journey-05/rulers.svg';
-import expansionTextureGridSrc from '../assets/strategist-journey-05/texture-grid.svg';
 import journeyWhiteCropMarksSrc from '../assets/strategist-journey-common/crop-marks-white.svg';
 import journeyWhitePhotoBorderSrc from '../assets/strategist-journey-common/photo-border-white.svg';
 import journeyWhiteRulersSrc from '../assets/strategist-journey-common/rulers-white.svg';
 import realityCropMarksSrc from '../assets/strategist-journey-06/crop-marks.svg';
-import realityGroundSrc from '../assets/strategist-journey-06/ground.svg';
-import realityPhotoSrc from '../assets/strategist-journey-06/photo.png';
+import realityPhotoSrc from '../assets/strategist-journey-06/photo.webp';
 import realityPhotoBorderSrc from '../assets/strategist-journey-06/photo-border.svg';
 import realityRulersSrc from '../assets/strategist-journey-06/rulers.svg';
-import realityTextureGridSrc from '../assets/strategist-journey-06/texture-grid.svg';
 import cardFrontShadowSrc from '../assets/strategist-project-cards/front-shadow.svg';
 import cardFrontShellSrc from '../assets/strategist-project-cards/front-shell.svg';
-import marshallCoverSrc from '../assets/strategist-project-cards/marshall-cover.png';
+import marshallCoverSrc from '../assets/strategist-project-cards/marshall-cover.webp';
 import marshallCoverBorderSrc from '../assets/strategist-project-cards/marshall-cover-border.svg';
 import marshallRuleSrc from '../assets/strategist-project-cards/marshall-rule.svg';
 import routeBackLogoSrc from '../assets/strategist-project-cards/route-back-logo.svg';
@@ -66,14 +57,12 @@ import routeCoverSrc from '../assets/strategist-project-cards/route-cover.svg';
 import routeCoverBorderSrc from '../assets/strategist-project-cards/route-cover-border.svg';
 import routeLogoSrc from '../assets/strategist-project-cards/route-logo.svg';
 import vinerBackLogoSrc from '../assets/strategist-project-cards/viner-back-logo.svg';
-import vinerCoverSrc from '../assets/strategist-project-cards/viner-cover.png';
+import vinerCoverSrc from '../assets/strategist-project-cards/viner-cover.webp';
 import vinerCoverBorderSrc from '../assets/strategist-project-cards/viner-cover-border.svg';
 import projectsGroundSrc from '../assets/strategist-projects-intro/ground.svg';
-import projectsTextureGridSrc from '../assets/strategist-projects-intro/texture-grid.svg';
 import skillsGroundSrc from '../assets/strategist-skills/ground.svg';
 import skillsInstructionDotSrc from '../assets/strategist-skills/instruction-dot.svg';
 import skillsPlayBoxGridSrc from '../assets/strategist-skills/play-box-grid.svg';
-import skillsPlayBoxSrc from '../assets/strategist-skills/play-box.svg';
 import circleAnnotationSrc from '../assets/strategist-hero/circle-annotation.svg';
 import copyAccentSrc from '../assets/strategist-hero/copy-accent.svg';
 import {
@@ -81,7 +70,6 @@ import {
   HERO_CIRCLE_END_PATH,
   HERO_CIRCLE_START_PATH,
 } from '../assets/strategist-hero/circle-draw-path';
-import groundSrc from '../assets/strategist-hero/ground.svg';
 import heroKickerDotSrc from '../assets/strategist-hero/hero-kicker-dot.svg';
 import nuniBodySrc from '../assets/strategist-hero/nuni-body.svg';
 import nuniCheeksSrc from '../assets/strategist-hero/nuni-cheeks.svg';
@@ -97,7 +85,6 @@ import nuniChatStatusDotSrc from '../assets/nuni-chat/status-dot.svg';
 import nuniChatSurfaceSrc from '../assets/nuni-chat/modal-surface.svg';
 import sectionDotActiveSrc from '../assets/strategist-hero/section-dot-active.svg';
 import sectionDotSrc from '../assets/strategist-hero/section-dot.svg';
-import textureGridSrc from '../assets/strategist-hero/texture-grid.svg';
 import { aboutMessageGroups, aboutMessageGroupWeights } from '../data/aboutMessages';
 import {
   contactMainMessage,
@@ -1477,7 +1464,11 @@ function TickerSequence({ hidden = false }: { hidden?: boolean }) {
       {tickerLabels.map((label) => (
         <div className={styles.tickerItem} key={label}>
           <span>{label}</span>
-          <img src={aboutStarSrc} alt="" aria-hidden="true" draggable="false" />
+          <span
+            className={styles.tickerStar}
+            style={{ '--guide-star-mask': `url("${aboutStarSrc}")` } as CSSProperties}
+            aria-hidden="true"
+          />
         </div>
       ))}
     </div>
@@ -1554,7 +1545,7 @@ function AboutSection() {
     <section id="about" className={styles.aboutSection} aria-labelledby="about-title">
       <div className={styles.aboutCanvas}>
         <img className={styles.aboutGround} src={aboutGroundSrc} alt="" aria-hidden="true" />
-        <img className={styles.aboutGrid} src={aboutTextureGridSrc} alt="" aria-hidden="true" />
+        <div className={styles.aboutGrid} aria-hidden="true" />
 
         <AboutTicker />
 
@@ -1608,7 +1599,7 @@ function JourneySection() {
     <section id="journey" className={styles.journeySection} aria-labelledby="journey-title">
       <div className={styles.journeyCanvas}>
         <img className={styles.journeyGround} src={journeyGroundSrc} alt="" aria-hidden="true" />
-        <img className={styles.journeyGrid} src={journeyTextureGridSrc} alt="" aria-hidden="true" />
+        <div className={styles.journeyGrid} data-texture-section="journey" aria-hidden="true" />
 
         <p
           className={`${styles.journeyGhostNumber} ${styles.journeyGhostNumberWhite}`}
@@ -1684,8 +1675,8 @@ function JourneyDiscoverySection() {
       aria-labelledby="journey-discovery-title"
     >
       <div className={`${styles.journeyCanvas} ${styles.journeyCanvasLight}`}>
-        <img className={styles.journeyGround} src={discoveryGroundSrc} alt="" aria-hidden="true" />
-        <img className={styles.journeyGrid} src={discoveryTextureGridSrc} alt="" aria-hidden="true" />
+        <div className={`${styles.journeyGround} ${styles.guidePrimaryGround}`} aria-hidden="true" />
+        <div className={styles.journeyGrid} data-texture-section="discovery" aria-hidden="true" />
 
         <p className={styles.journeyGhostNumber} aria-hidden="true">02</p>
 
@@ -1759,7 +1750,7 @@ function JourneyObservationSection() {
     >
       <div className={`${styles.journeyCanvas} ${styles.journeyCanvasWhite}`}>
         <img className={styles.journeyGround} src={observationGroundSrc} alt="" aria-hidden="true" />
-        <img className={styles.journeyGrid} src={observationTextureGridSrc} alt="" aria-hidden="true" />
+        <div className={styles.journeyGrid} data-texture-section="observation" aria-hidden="true" />
 
         <p className={styles.journeyGhostNumber} aria-hidden="true">03</p>
 
@@ -1835,7 +1826,7 @@ function JourneyMovementSection() {
     >
       <div className={styles.journeyCanvas}>
         <img className={styles.journeyGround} src={movementGroundSrc} alt="" aria-hidden="true" />
-        <img className={styles.journeyGrid} src={movementTextureGridSrc} alt="" aria-hidden="true" />
+        <div className={styles.journeyGrid} data-texture-section="movement" aria-hidden="true" />
 
         <p
           className={`${styles.journeyGhostNumber} ${styles.journeyGhostNumberWhite}`}
@@ -1918,7 +1909,7 @@ function JourneyExpansionSection() {
     >
       <div className={`${styles.journeyCanvas} ${styles.journeyCanvasWhite}`}>
         <img className={styles.journeyGround} src={expansionGroundSrc} alt="" aria-hidden="true" />
-        <img className={styles.journeyGrid} src={expansionTextureGridSrc} alt="" aria-hidden="true" />
+        <div className={styles.journeyGrid} data-texture-section="expansion" aria-hidden="true" />
 
         <p className={styles.journeyGhostNumber} aria-hidden="true">05</p>
 
@@ -1993,8 +1984,8 @@ function JourneyRealitySection() {
       aria-labelledby="journey-reality-title"
     >
       <div className={`${styles.journeyCanvas} ${styles.journeyCanvasLight}`}>
-        <img className={styles.journeyGround} src={realityGroundSrc} alt="" aria-hidden="true" />
-        <img className={styles.journeyGrid} src={realityTextureGridSrc} alt="" aria-hidden="true" />
+        <div className={`${styles.journeyGround} ${styles.guidePrimaryGround}`} aria-hidden="true" />
+        <div className={styles.journeyGrid} data-texture-section="reality" aria-hidden="true" />
 
         <p className={styles.journeyGhostNumber} aria-hidden="true">06</p>
 
@@ -2451,7 +2442,7 @@ function ProjectsIntroSection() {
         }}
       >
         <img className={styles.projectsIntroGround} src={projectsGroundSrc} alt="" aria-hidden="true" />
-        <img className={styles.projectsIntroGrid} src={projectsTextureGridSrc} alt="" aria-hidden="true" />
+        <div className={styles.projectsIntroGrid} aria-hidden="true" />
 
         <div className={styles.projectsIntroChapter}>
           <p className={styles.projectsIntroEyebrow}>Portfolio</p>
@@ -3347,7 +3338,7 @@ function SkillsSection() {
     <section ref={sectionRef} id="skills" className={styles.skillsSection} aria-labelledby="skills-title">
       <div className={styles.skillsCanvas}>
         <img className={styles.skillsGround} src={skillsGroundSrc} alt="" aria-hidden="true" />
-        <img className={styles.skillsGrid} src={journeyTextureGridSrc} alt="" aria-hidden="true" />
+        <div className={styles.skillsGrid} aria-hidden="true" />
 
         <div className={`${styles.skillsContentBox} skills-content-box`}>
           <div className={`${styles.skillsHeaderRow} skills-header-row`}>
@@ -3360,7 +3351,7 @@ function SkillsSection() {
 
           <div ref={playBoxRef} className={styles.skillsPlayBox}>
             <div className={styles.skillsPlayBoxSurface} aria-hidden="true">
-              <img className={styles.skillsPlayBoxBase} src={skillsPlayBoxSrc} alt="" />
+              <span className={styles.skillsPlayBoxBase} aria-hidden="true" />
               <img className={styles.skillsPlayBoxGrid} src={skillsPlayBoxGridSrc} alt="" />
             </div>
 
@@ -3437,8 +3428,8 @@ function ContactSection() {
           </div>
         </div>
 
-        <img className={styles.contactGround} src={contactGroundSrc} alt="" aria-hidden="true" />
-        <img className={styles.contactGrid} src={journeyTextureGridSrc} alt="" aria-hidden="true" />
+        <div className={styles.contactGround} aria-hidden="true" />
+        <div className={styles.contactGrid} aria-hidden="true" />
       </div>
     </section>
   );
@@ -3463,13 +3454,13 @@ export default function StrategistPage() {
   useSmoothScroll();
 
   return (
-    <main className={styles.strategistPage}>
+    <main className={styles.strategistPage} data-guide-theme="strategist">
       <ScrollNuni />
       <SectionNavigation />
       <section id="hero" className={styles.heroSection} aria-labelledby="hero-title">
         <div className={styles.heroCanvas}>
-          <img className={styles.heroGround} src={groundSrc} alt="" aria-hidden="true" />
-          <img className={styles.heroGrid} src={textureGridSrc} alt="" aria-hidden="true" />
+          <div className={styles.heroGround} aria-hidden="true" />
+          <div className={styles.heroGrid} aria-hidden="true" />
           <p className={`${styles.closingMessage} ${styles.heroMessage}`}>
             © 2026 — From “what if?” to “here it is.”
           </p>
