@@ -18,18 +18,16 @@ import aboutUnderlineSrc from '../assets/strategist-about/underline.svg';
 import contactTickSrc from '../assets/strategist-contact/contact-tick.svg';
 import contactButtonSrc from '../assets/strategist-contact/cta-button.svg';
 import contactEmailUnderlineSrc from '../assets/strategist-contact/email-underline.svg';
-import contactGithubUnderlineSrc from '../assets/strategist-contact/github-underline.svg';
 import contactGroundSrc from '../assets/strategist-contact/ground.svg';
 import contactResumeUnderlineSrc from '../assets/strategist-contact/resume-underline.svg';
 import contactStatusDotSrc from '../assets/strategist-contact/status-dot.svg';
 import closingGroundSrc from '../assets/strategist-closing/ground.svg';
-import closingTextureGridSrc from '../assets/strategist-closing/texture-grid.svg';
 import journeyGroundSrc from '../assets/strategist-journey-01/ground.svg';
 import journeyPhotoSrc from '../assets/strategist-journey-01/photo.png';
 import journeyTextureGridSrc from '../assets/strategist-journey-01/texture-grid.svg';
 import discoveryCropMarksSrc from '../assets/strategist-journey-02/crop-marks.svg';
 import discoveryGroundSrc from '../assets/strategist-journey-02/ground.svg';
-import discoveryPhotoSrc from '../assets/strategist-journey-02/photo.png';
+import discoveryPhotoSrc from '../assets/strategist-journey-02/japan-cafe.jpeg';
 import discoveryPhotoBorderSrc from '../assets/strategist-journey-02/photo-border.svg';
 import discoveryRulersSrc from '../assets/strategist-journey-02/rulers.svg';
 import discoveryTextureGridSrc from '../assets/strategist-journey-02/texture-grid.svg';
@@ -1906,9 +1904,9 @@ const projectShortDescriptions: Record<ProjectCardName, readonly [string, string
 };
 
 const projectRoles: Record<ProjectCardName, string> = {
-  route: 'Solo Project',
-  marshall: 'Team Leader',
-  viner: 'Team Leader',
+  route: '( Solo Project )',
+  marshall: '( Team Leader )',
+  viner: '( Team Leader )',
 };
 
 const projectContributions: Record<ProjectCardName, readonly string[]> = {
@@ -2351,6 +2349,22 @@ function ProjectsIntroSection() {
                       </p>
                     ))}
                   </div>
+                  <div className={styles.projectsResponsibilities}>
+                    {projectResponsibilities[previousProject].map((responsibility, lineIndex) => (
+                      <p
+                        key={responsibility}
+                        className={styles.projectBodyLineOutgoing}
+                        style={getProjectExitStyle(lineIndex + 7)}
+                        onAnimationEnd={
+                          lineIndex === projectResponsibilities[previousProject].length - 1
+                            ? finishPreviousProjectExit
+                            : undefined
+                        }
+                      >
+                        • {responsibility}
+                      </p>
+                    ))}
+                  </div>
                 </div>
               </div>
             )}
@@ -2388,6 +2402,17 @@ function ProjectsIntroSection() {
                       </p>
                     ))}
                   </div>
+                  <div className={styles.projectsResponsibilities}>
+                    {projectResponsibilities[selectedProject].map((responsibility, lineIndex) => (
+                      <p
+                        key={responsibility}
+                        className={styles.projectRevealLine}
+                        style={getProjectRevealStyle(lineIndex + 7)}
+                      >
+                        • {responsibility}
+                      </p>
+                    ))}
+                  </div>
                 </div>
               </div>
             )}
@@ -2420,40 +2445,6 @@ function ProjectsIntroSection() {
                 </p>
               ))}
             </div>
-            {previousProject && (
-              <div className={styles.projectsResponsibilities}>
-                {projectResponsibilities[previousProject].map((responsibility, lineIndex) => (
-                  <p
-                    key={responsibility}
-                    className={styles.projectBodyLineOutgoing}
-                    style={getProjectExitStyle(lineIndex + 7)}
-                    onAnimationEnd={
-                      lineIndex === projectResponsibilities[previousProject].length - 1
-                        ? finishPreviousProjectExit
-                        : undefined
-                    }
-                  >
-                    • {responsibility}
-                  </p>
-                ))}
-              </div>
-            )}
-            {selectedProject && (
-              <div
-                key={selectedProject}
-                className={styles.projectsResponsibilities}
-              >
-                {projectResponsibilities[selectedProject].map((responsibility, lineIndex) => (
-                  <p
-                    key={responsibility}
-                    className={styles.projectRevealLine}
-                    style={getProjectRevealStyle(lineIndex + 7)}
-                  >
-                    • {responsibility}
-                  </p>
-                ))}
-              </div>
-            )}
           </div>
         </div>
 
@@ -2493,6 +2484,7 @@ function SkillsSection() {
   const playBoxRef = useRef<HTMLDivElement>(null);
   const chipRefs = useRef<Array<HTMLLIElement | null>>([]);
   const prefersReducedMotion = useReducedMotion();
+  const [physicsCycle, setPhysicsCycle] = useState(0);
 
   useEffect(() => {
     const section = sectionRef.current;
@@ -2500,9 +2492,14 @@ function SkillsSection() {
     const chips = chipRefs.current.filter((chip): chip is HTMLLIElement => Boolean(chip));
     if (!section || !playBox || chips.length === 0) return undefined;
 
-    chips.forEach((chip) => { chip.style.opacity = '0'; });
+    chips.forEach((chip) => {
+      chip.style.opacity = '0';
+      chip.style.removeProperty('transform');
+      chip.classList.remove(styles.skillsChipDragging);
+    });
 
     let physicsStarted = false;
+    let resetRequested = false;
     let animationFrame = 0;
     let positionCheckFrame = 0;
     let resizeObserver: ResizeObserver | null = null;
@@ -2653,6 +2650,7 @@ function SkillsSection() {
           carryFollowsNuni: false,
         };
         chipBodies.push(chipBody);
+        element.style.transform = `translate3d(${spawnX - width / 2}px, ${spawnY - height / 2}px, 0) rotate(${body.angle}rad)`;
 
         if (sequenceIndex > 0) {
           accumulatedDelay += prefersReducedMotion ? 0 : 65 + Math.random() * 75;
@@ -3088,11 +3086,19 @@ function SkillsSection() {
       positionCheckFrame = 0;
       const rect = section.getBoundingClientRect();
       const viewportMidpoint = window.innerHeight * 0.5;
-      if (rect.top <= viewportMidpoint && rect.bottom >= viewportMidpoint) startChipPhysics();
+      const isSectionActive = rect.top <= viewportMidpoint && rect.bottom >= viewportMidpoint;
+      if (isSectionActive) {
+        startChipPhysics();
+        return;
+      }
+      if (physicsStarted && !resetRequested) {
+        resetRequested = true;
+        setPhysicsCycle((cycle) => cycle + 1);
+      }
     };
 
     const requestCheck = () => {
-      if (positionCheckFrame || physicsStarted) return;
+      if (positionCheckFrame || resetRequested) return;
       positionCheckFrame = window.requestAnimationFrame(checkSectionPosition);
     };
 
@@ -3120,8 +3126,13 @@ function SkillsSection() {
         Composite.clear(engine.world, false, true);
         Engine.clear(engine);
       }
+      chips.forEach((chip) => {
+        chip.style.opacity = '0';
+        chip.style.removeProperty('transform');
+        chip.classList.remove(styles.skillsChipDragging);
+      });
     };
-  }, [prefersReducedMotion]);
+  }, [physicsCycle, prefersReducedMotion]);
 
   return (
     <section ref={sectionRef} id="skills" className={styles.skillsSection} aria-labelledby="skills-title">
@@ -3208,18 +3219,6 @@ function ContactSection() {
               <img className={styles.contactMethodUnderline} src={contactEmailUnderlineSrc} alt="" aria-hidden="true" />
             </a>
 
-            <a
-              className={`${styles.contactMethod} ${styles.contactMethodGithub}`}
-              href="https://github.com/moon-reve"
-              target="_blank"
-              rel="noreferrer"
-            >
-              <img className={styles.contactMethodTick} src={contactTickSrc} alt="" aria-hidden="true" />
-              <span className={styles.contactMethodLabel}>GitHub</span>
-              <span className={styles.contactMethodValue}>https://github.com/moon-reve</span>
-              <img className={styles.contactMethodUnderline} src={contactGithubUnderlineSrc} alt="" aria-hidden="true" />
-            </a>
-
             <div className={`${styles.contactMethod} ${styles.contactMethodResume}`}>
               <img className={styles.contactMethodTick} src={contactTickSrc} alt="" aria-hidden="true" />
               <span className={styles.contactMethodLabel}>Resume</span>
@@ -3241,10 +3240,11 @@ function ClosingSection() {
     <section id="closing" className={styles.closingSection} aria-label="Moon Soomin closing">
       <div className={styles.closingCanvas}>
         <img className={styles.closingGround} src={closingGroundSrc} alt="" aria-hidden="true" />
-        <img className={styles.closingGrid} src={closingTextureGridSrc} alt="" aria-hidden="true" />
+        <img className={styles.closingGrid} src={journeyTextureGridSrc} alt="" aria-hidden="true" />
         <p className={styles.closingBrand}>REVE</p>
         <p className={styles.closingDisciplines}>PRODUCT THINKING · UI/UX · FRONT-END · AI</p>
         <p className={styles.closingWordmark} aria-label="moon soomin">moon soomin*</p>
+        <p className={styles.closingMessage}>Hope this was a good experience.</p>
       </div>
     </section>
   );
@@ -3261,6 +3261,9 @@ export default function StrategistPage() {
         <div className={styles.heroCanvas}>
           <img className={styles.heroGround} src={groundSrc} alt="" aria-hidden="true" />
           <img className={styles.heroGrid} src={textureGridSrc} alt="" aria-hidden="true" />
+          <p className={`${styles.closingMessage} ${styles.heroMessage}`}>
+            © 2026 — From “what if?” to “here it is.”
+          </p>
 
           <div className="hero-text-block">
             <div className="hero-kicker">

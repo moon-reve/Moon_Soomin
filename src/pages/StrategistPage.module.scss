@@ -1286,6 +1286,8 @@
   inset-inline-start: 1.666667cqw;
   inline-size: 33.333333cqw;
   block-size: 25.520833cqw;
+  border-radius: 1.5625cqw;
+  object-fit: cover;
 }
 
 .journeyPhotoBorder {
@@ -1447,7 +1449,7 @@
   inset-block-start: 4.0625cqw;
   inset-inline-start: 0;
   inline-size: 20cqw;
-  block-size: 9.5cqw;
+  block-size: 22cqw;
   overflow: hidden;
 }
 
@@ -1484,19 +1486,35 @@
   margin: 0;
 }
 
+.projectsShortDescription {
+  font-family: 'Gowun Dodum', 'Pretendard', sans-serif;
+  font-size: 20px;
+  font-weight: 400;
+  letter-spacing: -0.01em;
+  line-height: 1.2;
+}
+
 .projectsSummaryMeta {
   display: flex;
   flex-direction: column;
-  margin-block-start: 20px;
+  margin-block-start: 30px;
 }
 
 .projectsSummaryMeta .projectsSummaryRole {
-  margin-block-end: 12px;
+  margin-block-end: 20px;
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 400;
+  letter-spacing: 0.13125cqw;
 }
 
 .projectsSummaryContributions {
   display: flex;
   flex-direction: column;
+}
+
+.projectsSummaryContent .projectsResponsibilities {
+  position: static;
+  margin-block-start: 30px;
 }
 
 .projectsHeadlineOutgoing {
@@ -1527,8 +1545,6 @@
 
 .projectsIntroBody,
 .projectsResponsibilities {
-  position: absolute;
-  inset: 0;
   margin: 0;
   color: #16150f;
   font-family: 'Pretendard', sans-serif;
@@ -1537,6 +1553,11 @@
   letter-spacing: -0.016667cqw;
   line-height: 1.9;
   white-space: nowrap;
+}
+
+.projectsIntroBody {
+  position: absolute;
+  inset: 0;
 }
 
 .projectsIntroBody p,
@@ -2440,13 +2461,8 @@
   inline-size: 8.072917cqw;
 }
 
-.contactMethodGithub {
-  inset-inline-start: 17.083333cqw;
-  inline-size: 12.083333cqw;
-}
-
 .contactMethodResume {
-  inset-inline-start: 34.53125cqw;
+  inset-inline-start: 17.083333cqw;
   inline-size: 10.104167cqw;
 }
 
@@ -2518,12 +2534,15 @@
 
 .closingGrid {
   z-index: 1;
-  block-size: 24.006563cqw;
+  inline-size: auto;
+  block-size: auto;
+  max-inline-size: none;
 }
 
 .closingBrand,
 .closingDisciplines,
-.closingWordmark {
+.closingWordmark,
+.closingMessage {
   position: absolute;
   z-index: 2;
   margin: 0;
@@ -2531,7 +2550,8 @@
 }
 
 .closingBrand,
-.closingDisciplines {
+.closingDisciplines,
+.closingMessage {
   inset-inline-start: 2.083333cqw;
   font-family: 'JetBrains Mono', monospace;
   font-size: 0.729167cqw;
@@ -2548,6 +2568,19 @@
 .closingDisciplines {
   inset-block-start: 4.219063cqw;
   color: #fff;
+}
+
+.closingMessage {
+  inset-block-end: 50px;
+  inset-inline-start: auto;
+  inset-inline-end: 5%;
+  color: #fff;
+  opacity: 0.42;
+  text-align: right;
+}
+
+.heroMessage {
+  color: #000;
 }
 
 .closingWordmark {
