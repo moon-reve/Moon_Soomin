@@ -1612,6 +1612,29 @@
   margin-block-start: 30px;
 }
 
+.projectGitLink {
+  display: inline-block;
+  margin-block-start: 24px;
+  color: #16150f;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  line-height: 1.4;
+  text-decoration-line: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 4px;
+}
+
+.projectGitLink:hover {
+  text-decoration-thickness: 2px;
+}
+
+.projectGitLink:focus-visible {
+  outline: 1px solid currentcolor;
+  outline-offset: 5px;
+}
+
 .projectsHeadlineOutgoing {
   animation: project-headline-out 0.52s cubic-bezier(0.76, 0, 0.24, 1) both;
   animation-delay: calc(var(--project-headline-index, 0) * 0.11s);

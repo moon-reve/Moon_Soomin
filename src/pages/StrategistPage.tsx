@@ -2122,6 +2122,12 @@ const projectCardUrls: Record<ProjectCardName, string> = {
   viner: 'https://wine-app-eight-wine.vercel.app/',
 };
 
+const projectGitUrls: Record<ProjectCardName, string> = {
+  route: 'https://github.com/moon-reve/Route_react.git',
+  marshall: 'https://github.com/moon-reve/marshall_rebrand.git',
+  viner: 'https://github.com/moon-reve/wine_app.git',
+};
+
 const initialProjectCardSlots: Record<ProjectCardName, ProjectCardSlotName> = {
   route: 'front',
   marshall: 'right',
@@ -2538,16 +2544,23 @@ function ProjectsIntroSection() {
                         key={responsibility}
                         className={styles.projectBodyLineOutgoing}
                         style={getProjectExitStyle(lineIndex + 7)}
-                        onAnimationEnd={
-                          lineIndex === projectResponsibilities[previousProject].length - 1
-                            ? finishPreviousProjectExit
-                            : undefined
-                        }
                       >
                         • {responsibility}
                       </p>
                     ))}
                   </div>
+                  <a
+                    className={`${styles.projectGitLink} ${styles.projectBodyLineOutgoing}`}
+                    style={getProjectExitStyle(projectResponsibilities[previousProject].length + 7)}
+                    href={projectGitUrls[previousProject]}
+                    target="_blank"
+                    rel="noreferrer"
+                    aria-hidden="true"
+                    tabIndex={-1}
+                    onAnimationEnd={finishPreviousProjectExit}
+                  >
+                    Git 바로가기 ↗
+                  </a>
                 </div>
               </div>
             )}
@@ -2596,6 +2609,15 @@ function ProjectsIntroSection() {
                       </p>
                     ))}
                   </div>
+                  <a
+                    className={`${styles.projectGitLink} ${styles.projectRevealLine}`}
+                    style={getProjectRevealStyle(projectResponsibilities[selectedProject].length + 7)}
+                    href={projectGitUrls[selectedProject]}
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    Git 바로가기 ↗
+                  </a>
                 </div>
               </div>
             )}
