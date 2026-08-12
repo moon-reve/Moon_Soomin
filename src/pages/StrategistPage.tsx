@@ -153,6 +153,7 @@ const nuniChatAnswers: Record<NuniChatQuestion, string> = {
   '이력서 볼 수 있나요?': '물론입니다. 아래 버튼을 통해 이력서를 확인하실 수 있습니다.',
   '연락하고 싶어요.': '감사합니다. 아래에서 편한 방법으로 연락해 주세요.',
 };
+const resumePreviewUrl = 'https://drive.google.com/file/d/1rd6fKcfkRV_huBhlGQAKE5rn20TNP5Ba/view?usp=drive_link';
 const nuniChatTargetSectionIds: Partial<Record<NuniChatQuestion, string>> = {
   '왜 UI/UX를 선택했나요?': 'hero',
   '이전 경험이 어떻게 도움이 되었나요?': 'journey',
@@ -1278,18 +1279,26 @@ function ScrollNuni() {
 
                     {question === '이력서 볼 수 있나요?' && (
                       <div className={styles.nuniChatAnswerActions}>
-                        <button type="button" disabled title="이력서 PDF 파일 연결 예정">
-                          Resume PDF 다운로드 &amp; 열기
-                        </button>
+                        <a
+                          href={resumePreviewUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          Resume PDF 미리보기 ↗
+                        </a>
                       </div>
                     )}
 
                     {question === '연락하고 싶어요.' && (
                       <div className={styles.nuniChatAnswerActions}>
                         <a href="mailto:ssachra@gmail.com">✉️ Email</a>
-                        <button type="button" disabled title="이력서 PDF 파일 연결 예정">
-                          📄 Resume
-                        </button>
+                        <a
+                          href={resumePreviewUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          📄 Resume ↗
+                        </a>
                       </div>
                     )}
                   </div>
@@ -3440,12 +3449,18 @@ function ContactSection() {
               <img className={styles.contactMethodUnderline} src={contactEmailUnderlineSrc} alt="" aria-hidden="true" />
             </a>
 
-            <div className={`${styles.contactMethod} ${styles.contactMethodResume}`}>
+            <a
+              className={`${styles.contactMethod} ${styles.contactMethodResume}`}
+              href={resumePreviewUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="이력서 PDF 미리보기 (새 탭)"
+            >
               <img className={styles.contactMethodTick} src={contactTickSrc} alt="" aria-hidden="true" />
               <span className={styles.contactMethodLabel}>Resume</span>
               <span className={styles.contactMethodValue}>PDF Preview &amp; Download</span>
               <img className={styles.contactMethodUnderline} src={contactResumeUnderlineSrc} alt="" aria-hidden="true" />
-            </div>
+            </a>
           </div>
         </div>
 
