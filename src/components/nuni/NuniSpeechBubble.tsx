@@ -3,16 +3,19 @@ import styles from './NuniSpeechBubble.module.scss';
 
 interface NuniSpeechBubbleProps {
   anchorRef: RefObject<HTMLElement | null>;
+  sizeAnchorRef?: RefObject<HTMLElement | null>;
   message: string | null;
   isVisible: boolean;
 }
 
 export function NuniSpeechBubble({
   anchorRef,
+  sizeAnchorRef,
   message,
   isVisible,
 }: NuniSpeechBubbleProps) {
   const bubbleRef = useRef<HTMLElement>(null);
+  const normalizedMessage = message?.replace(/\s*\n\s*/g, ' ') ?? null;
 
   useEffect(() => {
     const anchor = anchorRef.current;
@@ -22,6 +25,11 @@ export function NuniSpeechBubble({
     let frame = 0;
     const updatePosition = () => {
       const anchorRect = anchor.getBoundingClientRect();
+      const sizeAnchorRect = sizeAnchorRef?.current?.getBoundingClientRect() ?? anchorRect;
+      bubble.style.setProperty(
+        '--nuni-speech-max-width',
+        `${sizeAnchorRect.width * 2.75}px`,
+      );
       const bubbleWidth = bubble.offsetWidth;
       const bubbleHeight = bubble.offsetHeight;
       const viewportPadding = 16;
@@ -54,7 +62,7 @@ export function NuniSpeechBubble({
       if (frame) window.cancelAnimationFrame(frame);
       window.removeEventListener('resize', updatePosition);
     };
-  }, [anchorRef, isVisible, message]);
+  }, [anchorRef, sizeAnchorRef, isVisible, normalizedMessage]);
 
   return (
     <aside
@@ -68,7 +76,7 @@ export function NuniSpeechBubble({
       aria-hidden={!isVisible}
     >
       <div className={styles.bubble}>
-        <p>{message}</p>
+        <p>{normalizedMessage}</p>
         <span className={styles.tail} aria-hidden="true" />
       </div>
     </aside>

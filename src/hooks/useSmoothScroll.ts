@@ -3,17 +3,49 @@ import Lenis from 'lenis';
 import { useReducedMotion } from './useReducedMotion';
 
 let activeLenis: Lenis | null = null;
-let isSmoothScrollLocked = false;
+let smoothScrollLockDepth = 0;
 
 export function setSmoothScrollLocked(isLocked: boolean) {
-  isSmoothScrollLocked = isLocked;
+  smoothScrollLockDepth = Math.max(
+    0,
+    smoothScrollLockDepth + (isLocked ? 1 : -1),
+  );
 
-  if (isLocked) {
+  if (smoothScrollLockDepth > 0) {
     activeLenis?.stop();
     return;
   }
 
+  // A guided tour moves the native window while Lenis is stopped. Sync its
+  // internal position before restarting so it cannot pull the page back to
+  // the stale pre-tour target (usually the hero).
+  activeLenis?.scrollTo(window.scrollY, {
+    force: true,
+    immediate: true,
+  });
   activeLenis?.start();
+}
+
+export function setPageScrollPosition(scrollY: number) {
+  const nextScrollY = Math.max(0, scrollY);
+
+  // While Guided Tour owns the page, Lenis must not receive destinations at
+  // all. Its old target can otherwise resume between section transitions and
+  // pull the document back toward the hero.
+  if (smoothScrollLockDepth > 0) {
+    window.scrollTo({ top: nextScrollY, left: 0, behavior: 'auto' });
+    return;
+  }
+
+  if (activeLenis) {
+    activeLenis.scrollTo(nextScrollY, {
+      force: true,
+      immediate: true,
+    });
+    return;
+  }
+
+  window.scrollTo(0, nextScrollY);
 }
 
 export function scrollToPageTarget(target: HTMLElement, immediate = false) {
@@ -49,7 +81,7 @@ export function useSmoothScroll() {
     });
 
     activeLenis = lenis;
-    if (isSmoothScrollLocked) lenis.stop();
+    if (smoothScrollLockDepth > 0) lenis.stop();
 
     return () => {
       if (activeLenis === lenis) activeLenis = null;

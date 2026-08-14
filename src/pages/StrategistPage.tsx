@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, type CSSProperties } from 'react';
+import { useCallback, useEffect, useRef, useState, type CSSProperties } from 'react';
 import { gsap } from 'gsap';
 import {
   Bodies,
@@ -12,6 +12,13 @@ import {
 } from 'matter-js';
 import { playIdle, resetAutoBlink, resetIdle, startAutoBlink } from '../animations';
 import { NuniSpeechBubble } from '../components/nuni/NuniSpeechBubble';
+import GuidedTour, {
+  guidedProjectReadyEvent,
+  guidedProjectSelectEvent,
+  guidedSkillCatchCompleteEvent,
+  guidedSkillThrowAcceptedEvent,
+  guidedSkillThrowEvent,
+} from '../components/tour/GuidedTour';
 import aboutGroundSrc from '../assets/strategist-about/ground.svg';
 import aboutStarSrc from '../assets/strategist-about/star.svg';
 import aboutUnderlineSrc from '../assets/strategist-about/underline.svg';
@@ -570,7 +577,15 @@ const nuniSpeechSections = [
   },
 ] as const satisfies readonly NuniSpeechSectionConfig[];
 
-function ScrollNuni() {
+function ScrollNuni({
+  isGuidedTourActive,
+  guidedSpeech,
+  isGuidedSpeechVisible,
+}: {
+  isGuidedTourActive: boolean;
+  guidedSpeech: string | null;
+  isGuidedSpeechVisible: boolean;
+}) {
   const sceneRef = useRef<HTMLDivElement>(null);
   const ambientMotionRef = useRef<HTMLDivElement>(null);
   const characterRef = useRef<HTMLDivElement>(null);
@@ -586,7 +601,7 @@ function ScrollNuni() {
   const [chatQuestionHistory, setChatQuestionHistory] = useState<NuniChatQuestion[]>([]);
   const { message: speechMessage, isVisible: isSpeechVisible } = useNuniSpeech(
     nuniSpeechSections,
-    isChatOpen,
+    isChatOpen || isGuidedTourActive,
   );
   const latestChatQuestion = chatQuestionHistory.at(-1) ?? null;
 
@@ -1174,15 +1189,15 @@ function ScrollNuni() {
   return (
     <>
       <div ref={sceneRef} className={styles.heroNuni}>
-        <button
-          className={styles.nuniChatTrigger}
-          type="button"
-          aria-label={isChatOpen ? '누니 챗봇 닫기' : '누니 챗봇 열기'}
-          aria-expanded={isChatOpen}
-          aria-controls="nuni-chat-panel"
-          onClick={toggleNuniChat}
-        >
-          <div ref={ambientMotionRef} className={styles.heroNuniAmbientMotion}>
+        <div ref={ambientMotionRef} className={styles.heroNuniAmbientMotion}>
+          <button
+            className={styles.nuniChatTrigger}
+            type="button"
+            aria-label={isChatOpen ? '누니 챗봇 닫기' : '누니 챗봇 열기'}
+            aria-expanded={isChatOpen}
+            aria-controls="nuni-chat-panel"
+            onClick={toggleNuniChat}
+          >
             <span ref={shadowRef} className={styles.heroNuniShadow} aria-hidden="true">
               <img src={nuniShadowSrc} alt="" draggable="false" />
             </span>
@@ -1211,13 +1226,14 @@ function ScrollNuni() {
                 </span>
               </div>
             </div>
-          </div>
-        </button>
+          </button>
+        </div>
       </div>
       <NuniSpeechBubble
-        anchorRef={sceneRef}
-        message={speechMessage}
-        isVisible={isSpeechVisible}
+        anchorRef={ambientMotionRef}
+        sizeAnchorRef={sceneRef}
+        message={isGuidedTourActive ? guidedSpeech : speechMessage}
+        isVisible={isGuidedTourActive ? isGuidedSpeechVisible : isSpeechVisible}
       />
 
       {isChatOpen && (
@@ -2356,6 +2372,7 @@ function ProjectCard({
   return (
     <article
       className={`${styles.projectCardSlot} ${className} ${isFlipped ? styles.projectCardFlipped : ''}`}
+      data-project={project}
       aria-label={`${projectCardLabels[project]} 프로젝트 카드`}
       aria-pressed={isFront}
       role="button"
@@ -2387,8 +2404,9 @@ function ProjectsIntroSection() {
   const [previousProject, setPreviousProject] = useState<ProjectCardName | null>(null);
   const [isReturningToIntro, setIsReturningToIntro] = useState(false);
   const prefersReducedMotion = useReducedMotion();
+  const guidedProjectRequestRef = useRef<ProjectCardName | null>(null);
 
-  const bringProjectForward = (project: ProjectCardName) => {
+  const bringProjectForward = useCallback((project: ProjectCardName) => {
     publishProjectInteraction({ hasClickedProject: true });
     if (project === selectedProject) return;
     setIsReturningToIntro(false);
@@ -2406,7 +2424,7 @@ function ProjectsIntroSection() {
       };
     });
     setFlippedProject(null);
-  };
+  }, [prefersReducedMotion, selectedProject]);
 
   const resetProjectCopy = () => {
     if (!selectedProject) return;
@@ -2427,6 +2445,11 @@ function ProjectsIntroSection() {
 
   useEffect(() => {
     const openDeck = () => setIsDeckExpanded(true);
+    const selectGuidedProject = (event: Event) => {
+      guidedProjectRequestRef.current = (event as CustomEvent<ProjectCardName>).detail;
+      setIsDeckExpanded(true);
+      bringProjectForward(guidedProjectRequestRef.current);
+    };
     const closeDeck = () => {
       setIsDeckExpanded(false);
       setCardSlots(initialProjectCardSlots);
@@ -2437,11 +2460,32 @@ function ProjectsIntroSection() {
     };
     window.addEventListener(projectDeckOpenEvent, openDeck);
     window.addEventListener(projectDeckCloseEvent, closeDeck);
+    window.addEventListener(guidedProjectSelectEvent, selectGuidedProject);
     return () => {
       window.removeEventListener(projectDeckOpenEvent, openDeck);
       window.removeEventListener(projectDeckCloseEvent, closeDeck);
+      window.removeEventListener(guidedProjectSelectEvent, selectGuidedProject);
     };
-  }, []);
+  }, [bringProjectForward]);
+
+  useEffect(() => {
+    const requestedProject = guidedProjectRequestRef.current;
+    if (
+      !requestedProject
+      || selectedProject !== requestedProject
+      || cardSlots[requestedProject] !== 'front'
+    ) return undefined;
+
+    const readyTimer = window.setTimeout(() => {
+      if (guidedProjectRequestRef.current !== requestedProject) return;
+      guidedProjectRequestRef.current = null;
+      window.dispatchEvent(new CustomEvent(guidedProjectReadyEvent, {
+        detail: requestedProject,
+      }));
+    }, prefersReducedMotion ? 500 : 1220);
+
+    return () => window.clearTimeout(readyTimer);
+  }, [cardSlots, prefersReducedMotion, selectedProject]);
 
   return (
     <section
@@ -2728,6 +2772,8 @@ function SkillsSection() {
     let engine: Engine | null = null;
     let physicsMouse: Mouse | null = null;
     let nuniCatchTimeline: gsap.core.Timeline | null = null;
+    let pendingGuidedSkill: SkillSpeechLabel | null = null;
+    let launchGuidedSkillByLabel: ((label: SkillSpeechLabel) => boolean) | null = null;
     let nuniCatchCooldownUntil = 0;
     let skillPointerGeneration = 0;
     let skillPointerIsDown = false;
@@ -2746,6 +2792,13 @@ function SkillsSection() {
     playBox.addEventListener('pointerdown', handleSkillPointerDown);
     window.addEventListener('pointerup', handleSkillPointerRelease);
     window.addEventListener('pointercancel', handleSkillPointerRelease);
+
+    const handleGuidedSkillThrow = (event: Event) => {
+      const label = (event as CustomEvent<SkillSpeechLabel>).detail;
+      pendingGuidedSkill = label;
+      if (launchGuidedSkillByLabel?.(label)) pendingGuidedSkill = null;
+    };
+    window.addEventListener(guidedSkillThrowEvent, handleGuidedSkillThrow);
 
     const startChipPhysics = () => {
       if (physicsStarted) return;
@@ -2771,6 +2824,10 @@ function SkillsSection() {
       };
 
       const chipBodies: ChipBody[] = [];
+      const guidedInFlight = new Set<ChipBody>();
+      const guidedClearanceTargets = new Map<ChipBody, number>();
+      const guidedClearedNuni = new Set<ChipBody>();
+      let guidedNuniStartTransform: { x: number; y: number; scale: number } | null = null;
       let walls: Body[] = [];
 
       const makeWalls = () => {
@@ -2812,7 +2869,13 @@ function SkillsSection() {
             thickness,
             wallOptions,
           ),
-          Bodies.rectangle(width / 2, height + thickness / 2, width + thickness * 2, thickness, wallOptions),
+          Bodies.rectangle(
+            width / 2,
+            height + thickness / 2,
+            width + thickness * 2,
+            thickness,
+            wallOptions,
+          ),
         ];
         Composite.add(engine.world, walls);
       };
@@ -2889,9 +2952,72 @@ function SkillsSection() {
           });
           Body.setAngularVelocity(body, (Math.random() - 0.5) * 0.045);
           element.style.opacity = '1';
+          if (
+            pendingGuidedSkill === chipBody.label
+            && launchGuidedSkillByLabel?.(chipBody.label)
+          ) {
+            pendingGuidedSkill = null;
+          }
         }, accumulatedDelay);
         chipDropTimers.push(timer);
       });
+
+      const launchGuidedSkill = (chipBody: ChipBody): boolean => {
+        const nuni = document.querySelector<HTMLElement>(`.${styles.heroNuni}`);
+        if (!nuni || !engine || !chipBody.active || chipBody.carried) return false;
+        if (guidedInFlight.has(chipBody)) {
+          window.dispatchEvent(new CustomEvent(guidedSkillThrowAcceptedEvent, {
+            detail: chipBody.label,
+          }));
+          return true;
+        }
+        const playBoxRect = playBox.getBoundingClientRect();
+        const nuniRect = nuni.getBoundingClientRect();
+        const targetY = nuniRect.top - playBoxRect.top - chipBody.height;
+        const verticalVelocity = gsap.utils.clamp(
+          -20,
+          -15,
+          (targetY - chipBody.body.position.y) / 34 - 10,
+        );
+        const nuniCenterX = nuniRect.left + nuniRect.width / 2 - playBoxRect.left;
+        const horizontalDirection = Math.sign(nuniCenterX - chipBody.body.position.x);
+        const horizontalVelocity = gsap.utils.clamp(
+          -7,
+          7,
+          chipBody.body.velocity.x * 0.35 + horizontalDirection * 3.5,
+        );
+
+        guidedInFlight.add(chipBody);
+        guidedClearanceTargets.set(chipBody, targetY);
+        guidedClearedNuni.delete(chipBody);
+        guidedNuniStartTransform = {
+          x: Number(gsap.getProperty(nuni, 'x')) || 0,
+          y: Number(gsap.getProperty(nuni, 'y')) || 0,
+          scale: Number(gsap.getProperty(nuni, 'scaleX')) || 1,
+        };
+        chipBody.catchEligibleUntil = performance.now() + 7000;
+        Body.setVelocity(chipBody.body, { x: horizontalVelocity, y: verticalVelocity });
+        Body.setAngularVelocity(chipBody.body, 0.025);
+        Body.setSleeping(chipBody.body, false);
+        window.dispatchEvent(new CustomEvent(skillInteractionChangeEvent, {
+          detail: { hasThrownSkill: true },
+        }));
+        window.dispatchEvent(new CustomEvent(guidedSkillThrowAcceptedEvent, {
+          detail: chipBody.label,
+        }));
+        return true;
+      };
+
+      launchGuidedSkillByLabel = (label: SkillSpeechLabel) => {
+        const chipBody = chipBodies.find((candidate) => candidate.label === label);
+        return chipBody ? launchGuidedSkill(chipBody) : false;
+      };
+      if (
+        pendingGuidedSkill
+        && launchGuidedSkillByLabel(pendingGuidedSkill)
+      ) {
+        pendingGuidedSkill = null;
+      }
 
       physicsMouse = Mouse.create(playBox);
       physicsMouse.pixelRatio = 1;
@@ -3106,6 +3232,14 @@ function SkillsSection() {
           onComplete: () => {
             chipBody.carryFollowsNuni = true;
             window.dispatchEvent(new CustomEvent(skillCatchEvent, { detail: chipBody.label }));
+            if (guidedInFlight.delete(chipBody)) {
+              guidedClearanceTargets.delete(chipBody);
+              guidedClearedNuni.delete(chipBody);
+              window.dispatchEvent(new CustomEvent(guidedSkillCatchCompleteEvent, {
+                detail: chipBody.label,
+              }));
+              guidedNuniStartTransform = null;
+            }
           },
         });
 
@@ -3170,9 +3304,13 @@ function SkillsSection() {
         chipBody.catchEligibleUntil = 0;
         const playBoxRect = playBox.getBoundingClientRect();
         const currentNuniRect = nuni.getBoundingClientRect();
-        const startX = Number(gsap.getProperty(nuni, 'x')) || currentNuniRect.left;
-        const startY = Number(gsap.getProperty(nuni, 'y')) || currentNuniRect.top;
-        const startScale = Number(gsap.getProperty(nuni, 'scaleX')) || 1;
+        const guidedStart = guidedInFlight.has(chipBody) ? guidedNuniStartTransform : null;
+        const startX = guidedStart?.x
+          ?? (Number(gsap.getProperty(nuni, 'x')) || currentNuniRect.left);
+        const startY = guidedStart?.y
+          ?? (Number(gsap.getProperty(nuni, 'y')) || currentNuniRect.top);
+        const startScale = guidedStart?.scale
+          ?? (Number(gsap.getProperty(nuni, 'scaleX')) || 1);
         const projectedChipX = playBoxRect.left
           + chipBody.body.position.x
           + chipBody.body.velocity.x * 14;
@@ -3209,6 +3347,21 @@ function SkillsSection() {
         if (!engine) return;
         const delta = Math.min(32, Math.max(8, time - previousTime));
         previousTime = time;
+        guidedInFlight.forEach((chipBody) => {
+          if (!chipBody.active || chipBody.carried || guidedClearedNuni.has(chipBody)) return;
+          const clearanceY = guidedClearanceTargets.get(chipBody);
+          if (clearanceY === undefined) return;
+          if (chipBody.body.position.y <= clearanceY) {
+            guidedClearedNuni.add(chipBody);
+            return;
+          }
+          if (chipBody.body.velocity.y > -8) {
+            Body.applyForce(chipBody.body, chipBody.body.position, {
+              x: 0,
+              y: -chipBody.body.mass * 0.0015,
+            });
+          }
+        });
         Engine.update(engine, delta * 0.75);
         chipBodies.forEach((chipBody) => {
           const {
@@ -3264,7 +3417,7 @@ function SkillsSection() {
             }
 
             if (
-              time - catchAttempt.startedAt > 4000
+              time - catchAttempt.startedAt > (guidedInFlight.has(chipBody) ? 12000 : 4000)
               || (body.velocity.y > 0 && chipBottom > nuniRect.bottom)
             ) {
               cancelCatchAttempt(catchAttempt);
@@ -3281,7 +3434,14 @@ function SkillsSection() {
             const nuni = document.querySelector<HTMLElement>(`.${styles.heroNuni}`);
             if (!nuni) return;
             const chipViewportY = playBox.getBoundingClientRect().top + body.position.y;
-            if (chipViewportY < nuni.getBoundingClientRect().top) catchHighChip(chipBody);
+            const guidedChipIsDescending = !guidedInFlight.has(chipBody)
+              || body.velocity.y >= 0;
+            if (
+              guidedChipIsDescending
+              && chipViewportY < nuni.getBoundingClientRect().top
+            ) {
+              catchHighChip(chipBody);
+            }
           }
         });
         animationFrame = window.requestAnimationFrame(updatePhysics);
@@ -3342,6 +3502,8 @@ function SkillsSection() {
       playBox.removeEventListener('pointerdown', handleSkillPointerDown);
       window.removeEventListener('pointerup', handleSkillPointerRelease);
       window.removeEventListener('pointercancel', handleSkillPointerRelease);
+      window.removeEventListener(guidedSkillThrowEvent, handleGuidedSkillThrow);
+      launchGuidedSkillByLabel = null;
       if (positionCheckFrame) window.cancelAnimationFrame(positionCheckFrame);
       if (animationFrame) window.cancelAnimationFrame(animationFrame);
       chipDropTimers.forEach((timer) => window.clearTimeout(timer));
@@ -3489,10 +3651,31 @@ function ClosingSection() {
 export default function StrategistPage() {
   useSmoothScroll();
   const { selectedGuide } = useGuide();
+  const [isGuidedTourActive, setIsGuidedTourActive] = useState(() => {
+    const entryMode = window.sessionStorage.getItem('moon-soomin:portfolio-entry-mode');
+    window.sessionStorage.removeItem('moon-soomin:portfolio-entry-mode');
+    return entryMode === 'guided';
+  });
+  const [guidedSpeech, setGuidedSpeech] = useState<string | null>(null);
+  const [isGuidedSpeechVisible, setIsGuidedSpeechVisible] = useState(false);
 
   return (
     <main className={styles.strategistPage} data-guide-theme={selectedGuide}>
-      <ScrollNuni />
+      <ScrollNuni
+        isGuidedTourActive={isGuidedTourActive}
+        guidedSpeech={guidedSpeech}
+        isGuidedSpeechVisible={isGuidedSpeechVisible}
+      />
+      {isGuidedTourActive && (
+        <GuidedTour
+          guide={selectedGuide}
+          onActiveChange={setIsGuidedTourActive}
+          onSpeechChange={(message, visible) => {
+            setGuidedSpeech(message);
+            setIsGuidedSpeechVisible(visible);
+          }}
+        />
+      )}
       <SectionNavigation />
       <section id="hero" className={styles.heroSection} aria-labelledby="hero-title">
         <div className={styles.heroCanvas}>

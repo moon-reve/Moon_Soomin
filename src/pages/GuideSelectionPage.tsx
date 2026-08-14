@@ -117,6 +117,10 @@ export default function GuideSelectionPage() {
   const { selectedGuide, selectGuide } = useGuide();
   const selectedGuideData = guides.find(({ id }) => id === selectedGuide) ?? guides[1];
 
+  const selectEntryMode = (mode: 'guided' | 'explore') => {
+    window.sessionStorage.setItem('moon-soomin:portfolio-entry-mode', mode);
+  };
+
   return (
     <main className={styles.page} data-guide-theme={selectedGuide}>
       <section className={styles.section} aria-labelledby="guide-selection-title">
@@ -148,13 +152,21 @@ export default function GuideSelectionPage() {
                 {label}
               </button>
             ))}
-            <Link className={styles.beginButton} to="/strategist">
+            <Link
+              className={styles.beginButton}
+              to="/strategist"
+              onClick={() => selectEntryMode('guided')}
+            >
               <span>Begin</span>
               <span aria-hidden="true">→</span>
             </Link>
           </nav>
 
-          <Link className={styles.skipButton} to="/strategist">
+          <Link
+            className={styles.skipButton}
+            to="/strategist"
+            onClick={() => selectEntryMode('explore')}
+          >
             Skip &amp; Explore on your own →
           </Link>
         </div>
