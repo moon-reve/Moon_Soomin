@@ -18,13 +18,15 @@
 
 .canvas {
   position: relative;
+  display: grid;
   inline-size: min(100vw, calc(100svh * 16 / 9));
   aspect-ratio: 16 / 9;
   overflow: hidden;
   container-type: inline-size;
+  place-items: center;
 }
 
-.textureGrid {
+.canvas::before {
   position: absolute;
   z-index: 0;
   inset: 0;
@@ -35,6 +37,7 @@
   background-position: center;
   background-repeat: no-repeat;
   background-size: var(--guide-texture-size);
+  content: '';
   opacity: var(--guide-texture-opacity);
   pointer-events: none;
   animation: guide-texture-in 360ms ease both;
@@ -90,16 +93,23 @@
   border-radius: 50%;
 }
 
-.intro {
-  position: absolute;
+.selectionContent {
   z-index: 3;
-  inset-block-start: 16.4815%;
-  inset-inline-start: 50%;
+  display: grid;
+  inline-size: 100%;
+  grid-template-rows: repeat(5, auto);
+  justify-items: center;
+}
+
+.intro {
+  position: relative;
+  z-index: 3;
+  align-self: center;
   text-align: center;
-  transform: translateX(-50%);
 }
 
 .intro h1 {
+  margin-block-start: -0.2604cqw;
   font-family: 'Bricolage Grotesque', sans-serif;
   font-size: 5.4167cqw;
   font-weight: 800;
@@ -109,10 +119,6 @@
 }
 
 .eyebrow {
-  position: absolute;
-  z-index: 1;
-  inset-block-start: 0;
-  inset-inline-start: 50%;
   font-family: 'JetBrains Mono', monospace;
   font-size: 0.7292cqw;
   font-weight: 400;
@@ -120,16 +126,16 @@
   line-height: 1.2857;
   text-transform: uppercase;
   white-space: nowrap;
-  transform: translate(-50%, 0);
 }
 
 .nuniScene {
-  position: absolute;
+  position: relative;
   z-index: 2;
-  inset-block-start: 22.2222%;
-  inset-inline-start: 32.8125%;
-  inline-size: 34.375%;
-  block-size: 48.1481%;
+  align-self: center;
+  inline-size: auto;
+  max-inline-size: none;
+  block-size: 27.0833cqw;
+  aspect-ratio: 660 / 520;
 }
 
 .lightPool {
@@ -145,8 +151,8 @@
   position: absolute;
   z-index: 2;
   inset: 0;
-  transform: scale(0.75);
-  transform-origin: center;
+  inline-size: 100%;
+  block-size: 100%;
 }
 
 .floatLayer {
@@ -263,13 +269,11 @@
 }
 
 .guideCopy {
-  position: absolute;
+  position: relative;
   z-index: 4;
-  inset-block-start: 65.5556%;
-  inset-inline-start: 50%;
+  align-self: center;
   text-align: center;
-  transform: translateX(-50%);
-  animation: guide-copy-in 300ms ease both;
+  animation: guide-copy-flow-in 300ms ease both;
 }
 
 .guideCopy h2 {
@@ -292,26 +296,27 @@
 }
 
 .rail {
-  position: absolute;
+  position: relative;
   z-index: 6;
-  inset-block-start: 76.2037%;
-  inset-inline-start: 26.75%;
-  display: flex;
-  inline-size: 46.5%;
-  block-size: 7.2222%;
+  display: grid;
+  inline-size: 46.5cqw;
+  max-inline-size: 100%;
+  block-size: auto;
   align-items: center;
-  justify-content: flex-start;
-  column-gap: 0.2604cqw;
-  padding-inline: 0.6771cqw;
+  align-self: center;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  column-gap: 0.5208cqw;
+  margin-block-start: 1.0417cqw;
+  padding: 0.6771cqw;
   background: rgb(255 255 255 / 50%);
   border: 0.0484cqw solid rgb(22 21 15 / 13%);
-  border-radius: 4.375cqw;
+  border-radius: 999px;
 }
 
 .rail button,
 .rail a {
   appearance: none;
-  padding: 0;
+  padding: 0.7292cqw 1.5625cqw;
   color: #16150f;
   background: transparent;
   border: 0;
@@ -327,8 +332,6 @@
 .guideOption,
 .activeGuide {
   display: grid;
-  inline-size: 8.5417cqw;
-  block-size: 2.5cqw;
   place-items: center;
 }
 
@@ -351,30 +354,26 @@
   to { opacity: var(--guide-texture-opacity); }
 }
 
-@keyframes guide-copy-in {
+@keyframes guide-copy-flow-in {
   from {
     opacity: 0;
-    transform: translate(-50%, 5px);
+    transform: translateY(5px);
   }
 
   to {
     opacity: 1;
-    transform: translate(-50%, 0);
+    transform: translateY(0);
   }
 }
 
 .beginButton {
   display: flex;
-  inline-size: 9.21875cqw;
-  block-size: 2.7083cqw;
   align-items: center;
   justify-content: center;
   gap: 0.78125cqw;
-  margin-inline-start: 0.625cqw;
-  padding-inline: 0 !important;
   color: #fffeea !important;
   background: #16150f !important;
-  border-radius: 3.3333cqw !important;
+  border-radius: 999px !important;
   cursor: pointer;
 }
 
@@ -390,10 +389,10 @@
 }
 
 .skipButton {
-  position: absolute;
+  position: relative;
   z-index: 6;
-  inset-block-start: 85.9259%;
-  inset-inline-start: 50%;
+  align-self: center;
+  margin-block-start: 1.40625cqw;
   padding: 0;
   color: rgb(22 21 15 / 55%);
   background: transparent;
@@ -405,7 +404,6 @@
   text-underline-position: from-font;
   white-space: nowrap;
   cursor: pointer;
-  transform: translateX(-50%);
 }
 
 .dotLinks,
@@ -471,7 +469,7 @@
   }
 
   .intro {
-    inset-block-start: 16%;
+    align-self: center;
   }
 
   .intro h1 {
@@ -483,15 +481,12 @@
   }
 
   .nuniScene {
-    inset-block-start: 27%;
-    inset-inline-start: 5%;
-    inline-size: 90%;
+    inline-size: 67.5cqw;
     block-size: auto;
-    aspect-ratio: 660 / 520;
   }
 
   .guideCopy {
-    inset-block-start: 65%;
+    align-self: center;
   }
 
   .guideCopy h2 {
@@ -504,37 +499,48 @@
   }
 
   .rail {
-    inset-block-start: 75%;
-    inset-inline-start: 5%;
-    inline-size: 90%;
-    block-size: 7%;
+    inline-size: 92cqw;
+    margin-block-start: 4cqw;
+    padding: 1.3cqw;
+    border-width: 0.1cqw;
   }
 
-  .rail button {
+  .rail button,
+  .rail a {
     font-size: 2.3cqw;
   }
 
-  .guideOption,
-  .activeGuide {
-    inline-size: 17cqw;
-    block-size: 8cqw;
+  .skipButton {
+    margin-block-start: 2.5svh;
+    font-size: 2.5cqw;
+  }
+}
+
+@media (max-width: 760px) {
+  .rail {
+    inline-size: 92cqw;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 5px;
+    padding: 2.5cqw;
+    border-radius: 4cqw;
+  }
+
+  .rail button,
+  .rail a {
+    padding: 3cqw;
+    font-size: 3.6cqw;
   }
 
   .beginButton {
-    inline-size: 18cqw;
-    block-size: 9cqw;
-  }
-
-  .skipButton {
-    inset-block-start: 84.5%;
-    font-size: 2.5cqw;
+    grid-column: 1 / -1;
+    gap: 2cqw;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .page,
   .beginButton,
-  .textureGrid,
+  .canvas::before,
   .guideCopy {
     animation: none;
     transition: none;

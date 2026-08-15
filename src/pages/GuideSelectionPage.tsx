@@ -125,50 +125,50 @@ export default function GuideSelectionPage() {
     <main className={styles.page} data-guide-theme={selectedGuide}>
       <section className={styles.section} aria-labelledby="guide-selection-title">
         <div className={styles.canvas}>
-          <div key={`texture-${selectedGuide}`} className={styles.textureGrid} aria-hidden="true" />
+          <div className={styles.selectionContent}>
+            <div className={styles.intro}>
+              <p className={styles.eyebrow}>( CHOOSE YOUR GUIDE )</p>
+              <h1 id="guide-selection-title">Before We begin</h1>
+            </div>
 
-          <div className={styles.intro}>
-            <p className={styles.eyebrow}>( CHOOSE YOUR GUIDE )</p>
-            <h1 id="guide-selection-title">Before We begin</h1>
-          </div>
+            <SelectionNuni guideName={selectedGuideData.name} />
 
-          <SelectionNuni guideName={selectedGuideData.name} />
+            <div key={`copy-${selectedGuide}`} className={styles.guideCopy} aria-live="polite">
+              <h2>{selectedGuideData.name}</h2>
+              <p>{selectedGuideData.description}</p>
+            </div>
 
-          <div key={`copy-${selectedGuide}`} className={styles.guideCopy} aria-live="polite">
-            <h2>{selectedGuideData.name}</h2>
-            <p>{selectedGuideData.description}</p>
-          </div>
-
-          <nav className={styles.rail} aria-label="가이드 선택">
-            {guides.map(({ id, label }) => (
-              <button
-                key={label}
-                className={id === selectedGuide ? styles.activeGuide : styles.guideOption}
-                data-guide-theme={id}
-                type="button"
-                aria-pressed={id === selectedGuide}
-                onClick={() => selectGuide(id)}
+            <nav className={styles.rail} aria-label="가이드 선택">
+              {guides.map(({ id, label }) => (
+                <button
+                  key={label}
+                  className={id === selectedGuide ? styles.activeGuide : styles.guideOption}
+                  data-guide-theme={id}
+                  type="button"
+                  aria-pressed={id === selectedGuide}
+                  onClick={() => selectGuide(id)}
+                >
+                  {label}
+                </button>
+              ))}
+              <Link
+                className={styles.beginButton}
+                to="/strategist"
+                onClick={() => selectEntryMode('guided')}
               >
-                {label}
-              </button>
-            ))}
-            <Link
-              className={styles.beginButton}
-              to="/strategist"
-              onClick={() => selectEntryMode('guided')}
-            >
-              <span>Begin</span>
-              <span aria-hidden="true">→</span>
-            </Link>
-          </nav>
+                <span>Begin</span>
+                <span aria-hidden="true">→</span>
+              </Link>
+            </nav>
 
-          <Link
-            className={styles.skipButton}
-            to="/strategist"
-            onClick={() => selectEntryMode('explore')}
-          >
-            Skip &amp; Explore on your own →
-          </Link>
+            <Link
+              className={styles.skipButton}
+              to="/strategist"
+              onClick={() => selectEntryMode('explore')}
+            >
+              Skip &amp; Explore on your own →
+            </Link>
+          </div>
         </div>
       </section>
     </main>
