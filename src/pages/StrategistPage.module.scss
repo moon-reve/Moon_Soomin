@@ -316,8 +316,8 @@
   z-index: 82;
   inset-block-start: 50%;
   inset-inline-start: 50%;
-  inline-size: min(908px, calc(100vw - 32px), calc((100svh - 32px) * 1.427673));
-  aspect-ratio: 908 / 636;
+  container-type: inline-size;
+  inline-size: min(756.66px, calc(100vw - 32px), calc((100svh - 32px) * 1.386));
   outline: none;
   transform: translate(-50%, -50%);
 }
@@ -333,28 +333,28 @@
 
 .nuniChatShadow {
   z-index: 0;
-  inset-block-start: 22.58%;
+  inset-block-start: 15.82cqw;
   inset-inline-start: 0.88%;
   inline-size: 99.12%;
-  block-size: 77.42%;
+  block-size: calc(100% - 13.84cqw);
 }
 
 .nuniChatSurface {
   z-index: 1;
-  inset-block-start: 19.74%;
+  inset-block-start: 13.83cqw;
   inset-inline-start: 0;
   inline-size: 99.12%;
-  block-size: 77.43%;
+  block-size: calc(100% - 13.83cqw);
 }
 
 .nuniChatHeader {
   position: absolute;
   z-index: 3;
-  inset-block-start: 23.46%;
+  inset-block-start: 16.43cqw;
   inset-inline-start: 3.63%;
   display: flex;
   inline-size: 91.96%;
-  block-size: 3.15%;
+  block-size: 2.21cqw;
   align-items: center;
   justify-content: space-between;
 }
@@ -362,30 +362,30 @@
 .nuniChatHeader > div {
   display: flex;
   align-items: center;
-  gap: 11px;
+  gap: 9.17px;
 }
 
 .nuniChatHeader > div > img {
   display: block;
-  inline-size: 10px;
-  block-size: 10px;
+  inline-size: 8.33px;
+  block-size: 8.33px;
 }
 
 .nuniChatHeader p {
   margin: 0;
   color: rgb(22 21 15 / 75%);
   font-family: 'JetBrains Mono', monospace;
-  font-size: 13px;
+  font-size: 11px;
   font-weight: 400;
-  letter-spacing: 0.65px;
+  letter-spacing: 0.54px;
   line-height: normal;
   white-space: nowrap;
 }
 
 .nuniChatHeader > button {
   display: block;
-  inline-size: 24px;
-  block-size: 24px;
+  inline-size: 20px;
+  block-size: 20px;
   padding: 0;
   cursor: pointer;
   background: transparent;
@@ -394,8 +394,8 @@
 
 .nuniChatHeader > button img {
   display: block;
-  inline-size: 13.6px;
-  block-size: 13.6px;
+  inline-size: 11.33px;
+  block-size: 11.33px;
   margin: auto;
 }
 
@@ -407,29 +407,29 @@
 }
 
 .nuniChatHeaderDivider {
-  inset-block-start: 29.82%;
+  inset-block-start: 20.89cqw;
 }
 
 .nuniChatQuestionDivider {
-  inset-block-start: 74.51%;
+  inset-block-start: 52.19cqw;
 }
 
 .nuniChatConversation {
   position: absolute;
   z-index: 3;
-  inset-block-start: 34.82%;
-  inset-block-end: 25.49%;
+  inset-block-start: 24.39cqw;
   inset-inline-start: 3.52%;
   display: flex;
   box-sizing: border-box;
   inline-size: 91.96%;
+  block-size: 27.8cqw;
   flex-direction: column;
-  gap: 14px;
-  padding-block-end: 24px;
+  gap: 11.67px;
+  padding-block-end: 20px;
   overflow-x: hidden;
   overflow-y: auto;
   overscroll-behavior: contain;
-  scroll-padding-block-end: 24px;
+  scroll-padding-block-end: 20px;
   scrollbar-color: rgb(22 21 15 / 24%) transparent;
   scrollbar-width: thin;
 }
@@ -440,17 +440,17 @@
   inline-size: fit-content;
   block-size: fit-content;
   align-items: center;
-  padding: 25px 30px;
+  padding: 20.83px 25px;
   background: rgb(22 21 15 / 6%);
   border: 1px solid rgb(22 21 15 / 14%);
-  border-radius: 16px;
+  border-radius: 13.33px;
 }
 
 .nuniChatGreeting p {
   margin: 0;
   color: #16150f;
   font-family: 'Pretendard', sans-serif;
-  font-size: 17px;
+  font-size: 15px;
   font-weight: 400;
   line-height: normal;
   white-space: nowrap;
@@ -464,30 +464,30 @@
   align-self: flex-end;
   max-inline-size: 72%;
   margin: 0;
-  padding: 12px 18px;
+  padding: 10px 15px;
   color: #16150f;
   font-family: 'Pretendard', sans-serif;
-  font-size: 14px;
+  font-size: 12px;
   font-weight: 400;
   line-height: 1.5;
   background: var(--guide-color-accent);
   border: 1px solid rgb(22 21 15 / 35%);
-  border-radius: 16px 16px 4px;
+  border-radius: 13.33px 13.33px 3.33px;
 }
 
 .nuniChatAnswer {
   box-sizing: border-box;
   align-self: flex-start;
   max-inline-size: 78%;
-  padding: 16px 20px;
+  padding: 13.33px 16.67px;
   color: #16150f;
   font-family: 'Pretendard', sans-serif;
-  font-size: 14px;
+  font-size: 12px;
   font-weight: 400;
   line-height: 1.65;
   background: rgb(22 21 15 / 6%);
   border: 1px solid rgb(22 21 15 / 14%);
-  border-radius: 16px 16px 16px 4px;
+  border-radius: 13.33px 13.33px 13.33px 3.33px;
 }
 
 .nuniChatAnswer > p {
@@ -497,16 +497,16 @@
 .nuniChatAnswerActions {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
-  margin-block-start: 14px;
+  gap: 6.67px;
+  margin-block-start: 11.67px;
 }
 
 .nuniChatAnswerActions a,
 .nuniChatAnswerActions button {
   display: inline-flex;
-  min-block-size: 34px;
+  min-block-size: 28.33px;
   align-items: center;
-  padding: 8px 14px;
+  padding: 6.67px 11.67px;
   color: #fffeea;
   font: inherit;
   line-height: 1;
@@ -514,7 +514,7 @@
   cursor: pointer;
   background: #16150f;
   border: 1px solid #16150f;
-  border-radius: 30px;
+  border-radius: 25px;
 }
 
 .nuniChatAnswerActions button:disabled {
@@ -525,29 +525,31 @@
 }
 
 .nuniChatQuestions {
-  position: absolute;
+  position: relative;
   z-index: 3;
-  inset-block-start: 78.46%;
-  inset-inline-start: 3.52%;
   display: flex;
+  box-sizing: border-box;
   inline-size: 92.95%;
+  margin-block-start: 52.19cqw;
+  margin-inline-start: 3.52%;
+  padding-block: 20px;
   flex-wrap: wrap;
-  gap: 12px 11px;
+  gap: 10px 9.17px;
 }
 
 .nuniChatQuestions button {
-  min-block-size: 35px;
-  padding: 9px 30px;
+  min-block-size: 29.17px;
+  padding: 7.5px 25px;
   color: #16150f;
   font-family: 'Pretendard', sans-serif;
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 400;
   line-height: normal;
   white-space: nowrap;
   cursor: pointer;
   background: #fffeea;
   border: 1px solid rgb(22 21 15 / 32%);
-  border-radius: 40px;
+  border-radius: 33.33px;
 }
 
 .nuniChatQuestions .nuniChatQuestionActive {

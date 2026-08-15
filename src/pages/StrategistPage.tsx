@@ -983,6 +983,7 @@ function ScrollNuni({
     const journeyStack = document.querySelector<HTMLElement>(`.${styles.journeyStack}`);
     const journeyWaypoints = sections.filter(({ element }) => element.parentElement === journeyStack);
     const projectsWaypoint = sections.find(({ waypoint }) => waypoint.id === 'projects')?.waypoint;
+    const skillsEntry = sections.find(({ waypoint }) => waypoint.id === 'skills');
     const projectTapWaypoint = { id: 'projects-tap', x: 53.5, y: 23.5, scale: 1.08 } as const;
     const projectCard = document.querySelector<HTMLElement>(`.${styles.projectsCard01}`);
     const easeJourneyExit = gsap.parseEase('power2.inOut');
@@ -1128,7 +1129,16 @@ function ScrollNuni({
       let closest = sections[0];
       let closestDistance = Number.POSITIVE_INFINITY;
 
+      if (skillsEntry) {
+        const skillsRect = skillsEntry.element.getBoundingClientRect();
+        if (skillsRect.top <= viewportAnchor && skillsRect.bottom >= viewportAnchor) {
+          closest = skillsEntry;
+          closestDistance = 0;
+        }
+      }
+
       sections.forEach((entry) => {
+        if (closestDistance === 0) return;
         const rect = entry.element.getBoundingClientRect();
         const stack = entry.element.parentElement;
         const sectionAnchor = stack?.classList.contains(styles.journeyStack)
@@ -2980,11 +2990,11 @@ function SkillsSection() {
           (targetY - chipBody.body.position.y) / 34 - 10,
         );
         const nuniCenterX = nuniRect.left + nuniRect.width / 2 - playBoxRect.left;
-        const horizontalDirection = Math.sign(nuniCenterX - chipBody.body.position.x);
         const horizontalVelocity = gsap.utils.clamp(
-          -7,
-          7,
-          chipBody.body.velocity.x * 0.35 + horizontalDirection * 3.5,
+          -9,
+          9,
+          chipBody.body.velocity.x * 0.2
+            + (nuniCenterX - chipBody.body.position.x) / 40,
         );
 
         guidedInFlight.add(chipBody);
@@ -3433,12 +3443,13 @@ function SkillsSection() {
           ) {
             const nuni = document.querySelector<HTMLElement>(`.${styles.heroNuni}`);
             if (!nuni) return;
+            const nuniRect = nuni.getBoundingClientRect();
             const chipViewportY = playBox.getBoundingClientRect().top + body.position.y;
             const guidedChipIsDescending = !guidedInFlight.has(chipBody)
               || body.velocity.y >= 0;
             if (
               guidedChipIsDescending
-              && chipViewportY < nuni.getBoundingClientRect().top
+              && chipViewportY - height / 2 < nuniRect.top + nuniRect.height * 0.35
             ) {
               catchHighChip(chipBody);
             }
