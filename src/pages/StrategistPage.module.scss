@@ -16,7 +16,8 @@
 .heroSection {
   position: relative;
   display: grid;
-  block-size: min(56.25vw, 100svh);
+  block-size: 100vh;
+  block-size: 100svh;
   overflow: hidden;
   background: var(--guide-color-primary);
   place-items: start center;
@@ -25,7 +26,7 @@
 .heroCanvas {
   position: relative;
   inline-size: 100vw;
-  block-size: min(56.25vw, 100svh);
+  block-size: 100%;
   overflow: hidden;
   container-type: size;
 }
@@ -47,7 +48,7 @@
 
 .heroGrid {
   z-index: 1;
-  block-size: 56.25vw;
+  block-size: 100%;
   background-image: var(--guide-texture-hero, var(--guide-texture-image));
   background-position: center;
   background-repeat: no-repeat;
@@ -272,12 +273,11 @@
     transform 180ms ease;
 }
 
-@media (hover: hover) and (pointer: fine) {
-  .nuniChatTrigger:hover::after,
-  .nuniChatTrigger:focus-visible::after {
-    opacity: 1;
-    transform: translate(-50%, 0);
-  }
+.nuniChatTrigger:hover::after,
+.nuniChatTrigger:focus::after,
+.nuniChatTrigger:focus-visible::after {
+  opacity: 1;
+  transform: translate(-50%, 0);
 }
 
 .nuniChatTrigger:focus-visible {
@@ -697,7 +697,7 @@
   justify-content: flex-end;
   color: rgb(22 21 15 / 42%);
   font-family: 'SF Pro Text', -apple-system, BlinkMacSystemFont, sans-serif;
-  font-size: 0.7318cqw;
+  font-size: 14px;
   font-style: italic;
   font-weight: 400;
   line-height: 1.2;
@@ -758,7 +758,9 @@
   inset-inline-end: 0.0391cqw;
   display: block;
   inline-size: 0.5208cqw;
-  block-size: 0.9259cqh;
+  block-size: 0.5208cqw;
+  aspect-ratio: 1;
+  flex: none;
 }
 
 .sectionDot img {
@@ -773,7 +775,7 @@
   inset-block-start: 0.3148cqh;
   inset-inline-end: 0;
   inline-size: 0.599cqw;
-  block-size: 1.0648cqh;
+  block-size: 0.599cqw;
 }
 
 .sectionNavigation .activeSection .sectionDot img {
@@ -782,13 +784,36 @@
   block-size: 100%;
 }
 
+@media (min-width: 761px) and (max-width: 1366px) {
+  .sectionNavigation a {
+    font-size: 12px;
+  }
+}
+
+@media (min-width: 761px) and (max-width: 1024px) {
+  .heroTitle {
+    font-size: 18cqw;
+  }
+
+  .heroNuni {
+    inline-size: 7.8vw;
+    block-size: 8.45vw;
+  }
+
+  .beliefCopy {
+    margin-block-start: 50px;
+    font-size: 1.7578cqw;
+    line-height: 150%;
+  }
+}
+
 .heroAmbientField {
   position: absolute;
   z-index: 5;
   inset: 0;
   display: block;
   inline-size: 100%;
-  block-size: 56.25vw;
+  block-size: 100%;
   pointer-events: none;
 }
 
@@ -1111,7 +1136,8 @@
   position: relative;
   display: grid;
   inline-size: 100%;
-  block-size: min(56.25vw, 100svh);
+  block-size: 100vh;
+  block-size: 100svh;
   overflow: hidden;
   background: #242424;
   place-items: start center;
@@ -1128,7 +1154,7 @@
 .journeyCanvas {
   position: relative;
   inline-size: 100vw;
-  block-size: min(56.25vw, 100svh);
+  block-size: 100%;
   overflow: hidden;
   container-type: size;
   background: #242424;
@@ -1164,7 +1190,7 @@
 
 .journeyGrid {
   z-index: 1;
-  block-size: 56.328125cqw;
+  block-size: 100%;
   background-image: var(--guide-texture-journey, var(--guide-texture-image));
   background-position: center;
   background-repeat: no-repeat;
@@ -1447,7 +1473,8 @@
   position: relative;
   display: grid;
   inline-size: 100%;
-  block-size: min(56.25vw, 100svh);
+  block-size: 100vh;
+  block-size: 100svh;
   overflow: hidden;
   background: #fff;
   place-items: start center;
@@ -1456,7 +1483,7 @@
 .projectsIntroCanvas {
   position: relative;
   inline-size: 100vw;
-  block-size: min(56.25vw, 100svh);
+  block-size: 100%;
   overflow: hidden;
   container-type: size;
   background: #fff;
@@ -1480,7 +1507,7 @@
 
 .projectsIntroGrid {
   z-index: 1;
-  block-size: 56.328125cqw;
+  block-size: 100%;
   background-image: var(--guide-texture-projects, var(--guide-texture-image));
   background-position: center;
   background-repeat: no-repeat;
@@ -2166,7 +2193,8 @@
   position: relative;
   display: grid;
   inline-size: 100%;
-  block-size: min(56.25vw, 100svh);
+  block-size: 100vh;
+  block-size: 100svh;
   overflow: hidden;
   background: #16150f;
   place-items: start center;
@@ -2175,7 +2203,7 @@
 .skillsCanvas {
   position: relative;
   inline-size: 100vw;
-  block-size: min(56.25vw, 100svh);
+  block-size: 100%;
   overflow: hidden;
   container-type: size;
   background: #16150f;
@@ -2199,7 +2227,7 @@
 
 .skillsGrid {
   z-index: 1;
-  block-size: 56.328125cqw;
+  block-size: 100%;
   background-image: var(--guide-texture-journey, var(--guide-texture-image));
   background-position: center;
   background-repeat: no-repeat;
@@ -2395,7 +2423,8 @@
   position: relative;
   display: grid;
   inline-size: 100%;
-  block-size: min(56.25vw, 100svh);
+  block-size: 100vh;
+  block-size: 100svh;
   overflow: hidden;
   background: var(--guide-color-primary);
   place-items: start center;
@@ -2404,7 +2433,7 @@
 .contactCanvas {
   position: relative;
   inline-size: 100vw;
-  block-size: min(56.25vw, 100svh);
+  block-size: 100%;
   overflow: hidden;
   container-type: size;
   background: var(--guide-color-primary);
@@ -2432,7 +2461,7 @@
 
 .contactGrid {
   z-index: 1;
-  block-size: 56.328125cqw;
+  block-size: 100%;
   background-image: var(--guide-texture-journey, var(--guide-texture-image));
   background-position: center;
   background-repeat: no-repeat;
@@ -2682,6 +2711,17 @@
   background-size: var(--guide-texture-closing-size, var(--guide-texture-size));
   opacity: var(--guide-texture-opacity);
   filter: brightness(0) invert(1);
+}
+
+.heroGrid,
+.aboutGrid,
+.journeyGrid,
+.projectsIntroGrid,
+.skillsGrid,
+.contactGrid,
+.closingGrid {
+  background-repeat: repeat-y;
+  background-size: 100cqw auto;
 }
 
 .closingBrand,

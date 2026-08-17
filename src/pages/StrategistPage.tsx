@@ -411,7 +411,7 @@ function HeroAmbientDots() {
       ref={svgRef}
       className={styles.heroAmbientField}
       viewBox="0 0 1920 1080"
-      preserveAspectRatio="none"
+      preserveAspectRatio="xMidYMid slice"
       aria-hidden="true"
     >
       <g className={styles.heroAmbientLinks}>
@@ -982,6 +982,9 @@ function ScrollNuni({
       .filter((entry): entry is { waypoint: (typeof nuniSectionWaypoints)[number]; element: HTMLElement } => Boolean(entry.element));
     const journeyStack = document.querySelector<HTMLElement>(`.${styles.journeyStack}`);
     const journeyWaypoints = sections.filter(({ element }) => element.parentElement === journeyStack);
+    const heroEntry = sections.find(({ waypoint }) => waypoint.id === 'hero');
+    const aboutEntry = sections.find(({ waypoint }) => waypoint.id === 'about');
+    const journeyEntry = sections.find(({ waypoint }) => waypoint.id === 'journey');
     const projectsWaypoint = sections.find(({ waypoint }) => waypoint.id === 'projects')?.waypoint;
     const skillsEntry = sections.find(({ waypoint }) => waypoint.id === 'skills');
     const projectTapWaypoint = { id: 'projects-tap', x: 53.5, y: 23.5, scale: 1.08 } as const;
@@ -1151,12 +1154,41 @@ function ScrollNuni({
         }
       });
 
-      if (!closest || (!immediate && !force && closest.waypoint.id === activeId)) return;
+      if (heroEntry && aboutEntry && journeyEntry) {
+        const aboutRect = aboutEntry.element.getBoundingClientRect();
+        const journeyMoveStart = window.innerHeight * 0.25;
+        const aboutIsInViewport = aboutRect.top < window.innerHeight && aboutRect.bottom > 0;
+
+        if (aboutIsInViewport) {
+          if (aboutRect.bottom > window.innerHeight) {
+            closest = heroEntry;
+          } else if (aboutRect.top > journeyMoveStart) {
+            closest = aboutEntry;
+          } else {
+            closest = journeyEntry;
+          }
+        }
+      }
+
+      const isTrackingAbout = closest?.waypoint.id === 'about' && activeId === 'about';
+      if (!closest || (!immediate && !force && closest.waypoint.id === activeId && !isTrackingAbout)) return;
       activeId = closest.waypoint.id;
       syncActiveJourneyKey(activeId);
       const { x, y, scale } = closest.waypoint;
       const targetX = (x / 100) * window.innerWidth;
-      const targetY = (y / 100) * window.innerWidth;
+      const isTabletHero = closest.waypoint.id === 'hero'
+        && window.innerWidth >= 761
+        && window.innerWidth <= 1024;
+      let targetY: number;
+      if (closest.waypoint.id === 'about') {
+        const aboutRect = closest.element.getBoundingClientRect();
+        const renderedNuniHeight = scene.offsetHeight * scale;
+        targetY = aboutRect.top + ((aboutRect.height - renderedNuniHeight) * 0.5);
+      } else if (isTabletHero) {
+        targetY = window.innerHeight * 0.35;
+      } else {
+        targetY = (y / 100) * window.innerWidth;
+      }
 
       if (immediate || prefersReducedMotion) {
         gsap.set(scene, { x: targetX, y: targetY, scale });
@@ -1167,8 +1199,8 @@ function ScrollNuni({
         x: targetX,
         y: targetY,
         scale,
-        duration: 1.15,
-        ease: 'power3.out',
+        duration: isTrackingAbout ? 0.35 : 1.15,
+        ease: isTrackingAbout ? 'power2.out' : 'power3.out',
         overwrite: 'auto',
       });
     };
